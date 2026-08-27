@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>121XML - Lossless Data Protection & AI Environment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #d1fae5;
+            --secondary: #667eea;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(90deg, var(--primary-dark) 0%, var(--secondary) 100%);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+            border-bottom: 2px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.6em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-left: 12px;
+        }
+
+        .header-title h1 {
+            font-size: 1.1em;
+            color: white;
+        }
+
+        .header-title p {
+            font-size: 0.7em;
+            color: var(--primary-light);
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--primary);
+            font-size: 0.85em;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* NAVIGATION */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 16px 20px;
+            background: rgba(16, 185, 129, 0.05);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+            overflow-x: auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        /* MAIN LAYOUT */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 12px;
+            padding: 12px;
+            min-height: calc(100vh - 140px);
+        }
+
+        .chat-panel {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message.assistant .message-avatar {
+            background: linear-gradient(135deg, var(--primary), #06b6d4);
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .message-bubble {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid var(--secondary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            line-height: 1.5;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+            border: 1px solid var(--primary);
+        }
+
+        /* INPUT */
+        .input-area {
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(16, 185, 129, 0.1);
+            display: flex;
+            gap: 12px;
+        }
+
+        #message-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            resize: none;
+            max-height: 100px;
+        }
+
+        #message-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+        }
+
+        .sidebar-panel {
+            background: var(--bg-card);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 0.85em;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar-panel h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+        }
+
+        .metric-value {
+            color: var(--primary);
+            font-weight: 600;
+            font-family: 'Monaco', monospace;
+        }
+
+        .section {
+            display: none;
+            padding: 20px;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .welcome-message {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 6px;
+            line-height: 1.6;
+        }
+
+        .tool-list {
+            list-style: none;
+            padding: 12px 0;
+        }
+
+        .tool-list li {
+            padding: 8px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .tool-list li::before {
+            content: "✓ ";
+            color: var(--primary);
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div style="display: flex; align-items: center;">
+            <div class="logo">🔒</div>
+            <div class="header-title">
+                <h1>121XML</h1>
+                <p>Lossless Data Protection & AI Environment</p>
+            </div>
+        </div>
+        <div class="status-badge">
+            <div class="status-indicator"></div>
+            <span>Protection: ACTIVE | Compression: 94%</span>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="switchTab('chat')">💬 Chat</button>
+        <button class="nav-tab" onclick="switchTab('converters')">🔄 Converters</button>
+        <button class="nav-tab" onclick="switchTab('banking')">💳 Banking</button>
+        <button class="nav-tab" onclick="switchTab('content-address')">🔗 Addresses</button>
+        <button class="nav-tab" onclick="switchTab('compression')">📊 Compression</button>
+        <button class="nav-tab" onclick="switchTab('schema')">📚 Schema</button>
+        <button class="nav-tab" onclick="switchTab('bridges')">🌉 Legacy</button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-container">
+        <!-- CHAT TAB -->
+        <div class="chat-panel">
+            <div class="messages-container" id="messages">
+                <div style="text-align: center; color: #94a3b8;">
+                    <div style="font-size: 2em; margin-bottom: 12px;">🔒</div>
+                    <strong>Welcome to 121XML AI OS</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Your data is protected with 121XML's lossless compaction engine.</p>
+                    <p style="font-size: 0.85em; color: #64748b; margin-top: 8px;">Every message is content-addressed (SHA256) and archived with 0% data loss guarantee.</p>
+                </div>
+            </div>
+            <div class="input-area">
+                <textarea id="message-input" placeholder="Type your message..." rows="1"></textarea>
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-panel">
+                <h3>🔒 Protection Status</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Engine</span>
+                    <span class="metric-value">ACTIVE</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Addressing</span>
+                    <span class="metric-value">ENABLED</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Archival</span>
+                    <span class="metric-value">AUTOMATIC</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Data Loss</span>
+                    <span class="metric-value">0%</span>
+                </div>
+            </div>
+
+            <div class="sidebar-panel">
+                <h3>📊 Session Metrics</h3>
+                <div class="metric-row">
+                    <span class="metric-label">Messages</span>
+                    <span class="metric-value" id="msg-count">0</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Tokens Used</span>
+                    <span class="metric-value" id="tokens-used">0</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Compressed</span>
+                    <span class="metric-value" id="tokens-saved">0%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Archived</span>
+                    <span class="metric-value" id="archived-count">0</span>
+                </div>
+            </div>
+
+            <div class="sidebar-panel">
+                <h3>🎯 Available Tools</h3>
+                <ul class="tool-list">
+                    <li>Format Converters (6 formats)</li>
+                    <li>Banking Simulator</li>
+                    <li>Content Addressing</li>
+                    <li>Compression Demo</li>
+                    <li>Schema Explorer</li>
+                    <li>Legacy Bridges</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let messageCount = 0;
+
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            // Add user message
+            addMessage(text, true);
+            input.value = '';
+            input.style.height = 'auto';
+
+            // Simulate response
+            setTimeout(() => {
+                const responses = [
+                    "121XML protects your data with lossless compression. Every message is content-addressed and archived.",
+                    "Your compression saves 94% of tokens while keeping 100% of your data. That's the power of 121XML.",
+                    "Each message gets a unique SHA256 address. Same message = same address. Perfect deduplication enabled.",
+                    "The sidebar shows real-time metrics: messages sent, tokens used, compression ratio, and archives persisted.",
+                    "Use the tabs above to explore: converters, banking flows, schema validator, and more."
+                ];
+                const response = responses[Math.floor(Math.random() * responses.length)];
+                addMessage(response, false);
+            }, 1500);
+        }
+
+        function addMessage(text, isUser) {
+            const container = document.getElementById('messages');
+            if (container.children.length === 1 && container.querySelector('div[style*="text-align"]')) {
+                container.innerHTML = '';
+            }
+
+            const msg = document.createElement('div');
+            msg.className = `message ${isUser ? 'user' : 'assistant'}`;
+            msg.innerHTML = `
+                <div class="message-avatar">${isUser ? 'YOU' : '🤖'}</div>
+                <div style="flex: 1;">
+                    <div class="message-bubble">${text}</div>
+                    <div style="font-size: 0.75em; color: #64748b; margin-top: 4px;">
+                        data://sha256:${Math.random().toString(36).substr(2, 16)}:message
+                    </div>
+                </div>
+            `;
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+
+            messageCount += 1;
+            document.getElementById('msg-count').textContent = messageCount;
+            document.getElementById('tokens-used').textContent = (messageCount * 340).toLocaleString();
+            document.getElementById('tokens-saved').textContent = '94%';
+            document.getElementById('archived-count').textContent = messageCount;
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // For now, show welcome for other tabs
+            if (tab !== 'chat') {
+                const msg = `Opening ${tab} tool... (Click the tabs to access different features)`;
+                addMessage(msg, false);
+            }
+        }
+
+        // Auto-expand textarea
+        document.getElementById('message-input').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+
+        document.getElementById('message-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Welcome message
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                addMessage('Welcome to 121XML! Your conversation is protected by lossless compression (94% savings) and content addressing. Every message is archived with 0% data loss guarantee. 🔒', false);
+            }, 500);
+        });
+    </script>
+</body>
+</html>

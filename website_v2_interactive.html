@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>121XML - Universal AI Data Exchange Standard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f766e;
+            --secondary: #0369a1;
+            --accent: #dc2626;
+            --success: #059669;
+            --warning: #d97706;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray-light: #e2e8f0;
+            --gray-medium: #94a3b8;
+            --gray-dark: #475569;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Header Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: white;
+            border-bottom: 2px solid var(--gray-light);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        nav {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--gray-dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 118, 110, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, var(--primary) 100%);
+            color: white;
+            padding: 120px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(15, 118, 110, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(3, 105, 161, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            margin-bottom: 20px;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 16px 36px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, white 0%, #f0f9ff 100%);
+            color: var(--primary);
+            border-color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255,255,255,0.25);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border-color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 100px 40px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-size: 48px;
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-weight: 900;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: var(--gray-medium);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Card Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            border: 2px solid var(--gray-light);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 50px rgba(15, 118, 110, 0.1);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .card p {
+            color: var(--gray-medium);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .card-link {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .card-link:hover {
+            gap: 12px;
+            color: var(--secondary);
+        }
+
+        /* Interactive Graph Section */
+        .graph-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            padding: 100px 40px;
+        }
+
+        #graph-container {
+            width: 100%;
+            height: 600px;
+            background: white;
+            border-radius: 16px;
+            border: 2px solid var(--gray-light);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            position: relative;
+        }
+
+        .graph-tooltip {
+            position: absolute;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 300px;
+        }
+
+        /* Infographic Sections */
+        .infographic-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .infographic-content h3 {
+            font-size: 36px;
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .infographic-content p {
+            font-size: 16px;
+            color: var(--gray-medium);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .infographic-visual {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            border: 2px solid var(--gray-light);
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+            text-align: center;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--gray-dark);
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: 900;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        /* Rich Content Panel */
+        .content-panel {
+            background: white;
+            border-radius: 16px;
+            border: 2px solid var(--gray-light);
+            padding: 40px;
+            margin-top: 30px;
+        }
+
+        .content-panel h4 {
+            font-size: 20px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .content-panel p {
+            color: var(--gray-dark);
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .code-snippet {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        /* Interactive Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--gray-light);
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 15px 25px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gray-medium);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-button:hover {
+            color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .infographic-section {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            nav {
+                padding: 0 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 20px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 50px 20px;
+            }
+
+            .section-header h2 {
+                font-size: 32px;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 10px;
+        }
+
+        /* Graph Node Styling */
+        .node {
+            cursor: pointer;
+        }
+
+        .node-circle {
+            fill: white;
+            stroke: var(--primary);
+            stroke-width: 3px;
+            transition: all 0.3s;
+        }
+
+        .node-circle:hover {
+            fill: var(--primary);
+            stroke-width: 4px;
+            filter: drop-shadow(0 8px 16px rgba(15, 118, 110, 0.3));
+        }
+
+        .node-label {
+            pointer-events: none;
+            font-size: 12px;
+            font-weight: 600;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            fill: var(--dark);
+        }
+
+        .link {
+            stroke: var(--gray-light);
+            stroke-width: 2px;
+        }
+
+        .link.active {
+            stroke: var(--secondary);
+            stroke-width: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">121XML</div>
+            <ul class="nav-links">
+                <li><a href="#platform">Platform</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#models">Models</a></li>
+                <li><a href="#interactive">Interactive Map</a></li>
+                <li><a href="#concepts">Concepts</a></li>
+            </ul>
+            <button class="nav-cta" onclick="document.getElementById('interactive').scrollIntoView({behavior: 'smooth'})">
+                Explore
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>The Universal Data Exchange Standard</h1>
+            <p>121XML: Vendor-neutral, self-describing, infinitely scalable. See it. Interact with it. Build with it.</p>
+            <div class="hero-buttons">
+                <a href="#architecture" class="btn btn-primary">Explore Architecture</a>
+                <a href="#interactive" class="btn btn-secondary">Interactive Map</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Overview -->
+    <section id="platform">
+        <div class="section-header">
+            <h2>Why 121XML?</h2>
+            <p>Universal protocol and schema support with complete data sovereignty and immutable content addressing</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="card" onclick="togglePanel('panel-protocol')">
+                <div class="card-icon">🔄</div>
+                <h3>Multi-Protocol</h3>
+                <p>REST, gRPC, GraphQL, WebSocket, SOAP. One agent, all protocols.</p>
+                <a href="#" class="card-link">Learn More →</a>
+            </div>
+
+            <div class="card" onclick="togglePanel('panel-schema')">
+                <div class="card-icon">📊</div>
+                <h3>Schema Agnostic</h3>
+                <p>JSON, Protobuf, GraphQL, XSD. Lossless translation between any formats.</p>
+                <a href="#" class="card-link">Learn More →</a>
+            </div>
+
+            <div class="card" onclick="togglePanel('panel-addressing')">
+                <div class="card-icon">🔗</div>
+                <h3>Content Addressing</h3>
+                <p>SHA256-based immutable addressing. Perfect caching and portability.</p>
+                <a href="#" class="card-link">Learn More →</a>
+            </div>
+
+            <div class="card" onclick="togglePanel('panel-sovereignty')">
+                <div class="card-icon">🔐</div>
+                <h3>Data Sovereignty</h3>
+                <p>User controls encryption, storage, and access. No data copying.</p>
+                <a href="#" class="card-link">Learn More →</a>
+            </div>
+
+            <div class="card" onclick="togglePanel('panel-portability')">
+                <div class="card-icon">🚀</div>
+                <h3>Perfect Portability</h3>
+                <p>Export from Claude, import to GPT. Zero vendor lock-in.</p>
+                <a href="#" class="card-link">Learn More →</a>
+            </div>
+
+            <div class="card" onclick="togglePanel('panel-audit')">
+                <div class="card-icon">📋</div>
+                <h3>Immutable Audit</h3>
+                <p>Every action logged, signed, and content-addressed forever.</p>
+                <a href="#" class="card-link">Learn More →</a>
+            </div>
+        </div>
+
+        <!-- Rich Content Panels -->
+        <div id="panel-protocol" class="content-panel" style="display:none;">
+            <h4>🔄 Multi-Protocol Support</h4>
+            <p><strong>The Problem:</strong> Building multi-protocol agents requires separate implementations for REST, gRPC, GraphQL, etc.</p>
+            <p><strong>121XML Solution:</strong> Write your agent once. Deploy to all protocols automatically.</p>
+            <div class="code-snippet">
+# Same agent, all protocols
+agent = AgentDefinition(
+  supported_protocols=["rest", "grpc", "websocket", "graphql"]
+)
+# Automatically works on all four!
+            </div>
+            <p><strong>Result:</strong> 3x code reduction, zero protocol lock-in, future-proof architecture.</p>
+            <button class="nav-cta" onclick="this.parentElement.style.display='none'" style="margin-top: 20px; width: auto;">Close</button>
+        </div>
+
+        <div id="panel-schema" class="content-panel" style="display:none;">
+            <h4>📊 Schema Agnostic Design</h4>
+            <p><strong>The Challenge:</strong> JSON Schema, Protobuf, GraphQL, XSD - incompatible formats that require custom adapters.</p>
+            <p><strong>121XML Approach:</strong> All schemas translate to/from 121XML losslessly. One schema translator for each format.</p>
+            <p><strong>Benefit:</strong> Same tool works with any schema combination. Add new schema types without touching agent logic.</p>
+            <button class="nav-cta" onclick="this.parentElement.style.display='none'" style="margin-top: 20px; width: auto;">Close</button>
+        </div>
+
+        <div id="panel-addressing" class="content-panel" style="display:none;">
+            <h4>🔗 SHA256 Content Addressing</h4>
+            <p><strong>How it works:</strong> Every 121XML object gets an immutable address based on its content hash.</p>
+            <p><strong>Format:</strong> <code>data://sha256:ABC123DEF:type</code></p>
+            <p><strong>Benefits:</strong></p>
+            <ul class="feature-list">
+                <li>Perfect caching (address = unique cache key)</li>
+                <li>Tamper detection (modified content = different address)</li>
+                <li>Zero data duplication (only addresses shared)</li>
+                <li>Infinite scalability (addresses resolve globally)</li>
+            </ul>
+            <button class="nav-cta" onclick="this.parentElement.style.display='none'" style="margin-top: 20px; width: auto;">Close</button>
+        </div>
+
+        <div id="panel-sovereignty" class="content-panel" style="display:none;">
+            <h4>🔐 User Data Sovereignty</h4>
+            <p><strong>Three-Layer Model:</strong></p>
+            <ol style="margin-left: 20px;">
+                <li><strong>User Decision:</strong> "Grant Claude access to my data"</li>
+                <li><strong>Permission Grant:</strong> Explicit, time-bounded, instantly revocable</li>
+                <li><strong>Encrypted Storage:</strong> Data encrypted with user-held keys, never copied</li>
+            </ol>
+            <p><strong>Result:</strong> GDPR/HIPAA/CCPA compliant by design. Users stay in control.</p>
+            <button class="nav-cta" onclick="this.parentElement.style.display='none'" style="margin-top: 20px; width: auto;">Close</button>
+        </div>
+
+        <div id="panel-portability" class="content-panel" style="display:none;">
+            <h4>🚀 Cross-Platform Portability</h4>
+            <p><strong>The Vision:</strong></p>
+            <div class="code-snippet">
+User creates analysis in Claude
+    ↓ (data://sha256:claude_analysis:inference)
+Share with GPT
+    ↓ (GPT references Claude's work)
+Enhance in Gemini
+    ↓ (Gemini builds on both)
+All three systems work together
+    ↓ (perfect collaboration)
+User keeps everything
+            </div>
+            <p><strong>No vendor lock-in. Complete freedom.</strong></p>
+            <button class="nav-cta" onclick="this.parentElement.style.display='none'" style="margin-top: 20px; width: auto;">Close</button>
+        </div>
+
+        <div id="panel-audit" class="content-panel" style="display:none;">
+            <h4>📋 Immutable Audit Trails</h4>
+            <p><strong>Everything is logged:</strong> Every access, every tool execution, every permission check</p>
+            <p><strong>Immutable:</strong> Audit entries are content-addressed - cannot be altered or deleted</p>
+            <p><strong>Queryable:</strong> Access logs by user, resource, permission, or time period</p>
+            <p><strong>Compliance:</strong> Built-in support for SOC 2, HIPAA, GDPR, CCPA auditing requirements</p>
+            <button class="nav-cta" onclick="this.parentElement.style.display='none'" style="margin-top: 20px; width: auto;">Close</button>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture" style="background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);">
+        <div class="section-header">
+            <h2>Three-Layer Architecture</h2>
+            <p>How 121XML translates any protocol and schema to a unified core engine</p>
+        </div>
+
+        <div class="infographic-section">
+            <div class="infographic-content">
+                <h3>Layer 1: External Systems</h3>
+                <p>Your existing systems with their own protocols and schemas:</p>
+                <ul class="feature-list">
+                    <li>REST APIs with JSON</li>
+                    <li>gRPC services with Protobuf</li>
+                    <li>GraphQL endpoints</li>
+                    <li>WebSocket streams</li>
+                    <li>SOAP services</li>
+                    <li>Custom protocols</li>
+                </ul>
+            </div>
+            <div class="infographic-visual">📡</div>
+        </div>
+
+        <div class="infographic-section">
+            <div class="infographic-visual">🔄</div>
+            <div class="infographic-content">
+                <h3>Layer 2: Translation</h3>
+                <p>Automatic conversion to/from 121XML:</p>
+                <ul class="feature-list">
+                    <li>Protocol adapters (5+ protocols)</li>
+                    <li>Schema translators (5+ schemas)</li>
+                    <li>Permission gates</li>
+                    <li>Type validation</li>
+                    <li>Error handling</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="infographic-section">
+            <div class="infographic-content">
+                <h3>Layer 3: Core Engine</h3>
+                <p>Unified 121XML processing:</p>
+                <ul class="feature-list">
+                    <li>State manager</li>
+                    <li>Tool executor</li>
+                    <li>Memory manager</li>
+                    <li>Inference engine</li>
+                    <li>Permission controller</li>
+                    <li>Audit logger</li>
+                </ul>
+            </div>
+            <div class="infographic-visual">⚙️</div>
+        </div>
+    </section>
+
+    <!-- Interactive Map Section -->
+    <section id="interactive" class="graph-section">
+        <div class="section-header">
+            <h2>Interactive Architecture Map</h2>
+            <p>Explore the 121XML ecosystem. Click nodes to see details. Hover to highlight relationships.</p>
+        </div>
+
+        <div id="graph-container"></div>
+
+        <div style="margin-top: 40px; background: white; padding: 30px; border-radius: 12px; border: 2px solid var(--gray-light);">
+            <h3 style="color: var(--primary); margin-bottom: 15px;">How to Use the Map:</h3>
+            <ul class="feature-list">
+                <li>Click on any node to see detailed information</li>
+                <li>Hover over connections to see relationships</li>
+                <li>Drag nodes to explore the network</li>
+                <li>Each color represents a different component type</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Data Models Section -->
+    <section id="models">
+        <div class="section-header">
+            <h2>Core Data Models</h2>
+            <p>All 121XML objects represented as interactive models</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('models-core')">Core Objects</button>
+            <button class="tab-button" onclick="switchTab('models-agents')">Agents & Tools</button>
+            <button class="tab-button" onclick="switchTab('models-permissions')">Permissions</button>
+            <button class="tab-button" onclick="switchTab('models-workflows')">Workflows</button>
+        </div>
+
+        <div id="models-core" class="tab-content active">
+            <div class="content-panel">
+                <h4>Core Object Model</h4>
+                <p>Every 121XML object follows this structure:</p>
+                <div class="code-snippet">
+{
+  "object_id": "unique_identifier",
+  "object_type": "definition | agent | tool | permission",
+  "profile": "urn:121xml:core-object/1.0",
+  "metadata": {
+    "created_at": "ISO8601",
+    "created_by": "user_id",
+    "version": "1.0.0"
+  },
+  "content_address": {
+    "hash": "SHA256_VALUE",
+    "format": "data://sha256:HASH:TYPE"
+  }
+}
+                </div>
+                <p><strong>Key Features:</strong></p>
+                <ul class="feature-list">
+                    <li>Self-describing via profile URI</li>
+                    <li>Immutable via content address</li>
+                    <li>Versioned for evolution</li>
+                    <li>Digitally signed for integrity</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="models-agents" class="tab-content">
+            <div class="content-panel">
+                <h4>Agent Definition Model</h4>
+                <p>Agents are defined as 121XML profiles containing:</p>
+                <div class="code-snippet">
+{
+  "agent_id": "agent_classifier",
+  "name": "Email Classifier",
+  "model": "claude-opus-5",
+  "available_tools": ["tool_read_email", "tool_classify"],
+  "supported_protocols": ["rest", "grpc", "websocket"],
+  "configuration": {
+    "temperature": 0.7,
+    "max_tokens": 2000
+  }
+}
+                </div>
+                <p><strong>Benefits:</strong> Agents are portable, versioned, and instantly deployable to any protocol.</p>
+            </div>
+        </div>
+
+        <div id="models-permissions" class="tab-content">
+            <div class="content-panel">
+                <h4>Permission Grant Model</h4>
+                <p>User-granted permissions are explicit and revocable:</p>
+                <div class="code-snippet">
+{
+  "grant_id": "uuid",
+  "user_id": "user_001",
+  "permissions": ["read", "execute"],
+  "issued_at": "2026-08-06T10:00:00Z",
+  "expires_at": "2026-08-07T10:00:00Z",
+  "status": "active | revoked | expired"
+}
+                </div>
+                <p><strong>Model:</strong> Permissions gate all access. Instantly revocable. Time-bounded.</p>
+            </div>
+        </div>
+
+        <div id="models-workflows" class="tab-content">
+            <div class="content-panel">
+                <h4>Workflow Definition Model</h4>
+                <p>Workflows are DAGs of steps with conditional routing:</p>
+                <div class="code-snippet">
+{
+  "workflow_id": "email_processing",
+  "steps": [
+    {
+      "step_id": "read",
+      "type": "tool_call",
+      "tool_id": "tool_read_email",
+      "next_on_success": "classify"
+    },
+    {
+      "step_id": "classify",
+      "type": "tool_call",
+      "next_on_success": null
+    }
+  ]
+}
+                </div>
+                <p><strong>Model:</strong> Sequential or parallel steps, conditional routing, error handling.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Concepts Section -->
+    <section id="concepts">
+        <div class="section-header">
+            <h2>Core Concepts Explained</h2>
+            <p>Understanding the axioms and rules that make 121XML universal</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('axioms')">Axioms (A1-A3)</button>
+            <button class="tab-button" onclick="switchTab('rules')">Rules (R4-R7)</button>
+        </div>
+
+        <div id="axioms" class="tab-content active">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div class="content-panel">
+                    <h4>🎯 A1: Composition Over Inheritance</h4>
+                    <p><strong>Principle:</strong> All structure via nested maps, never class hierarchies.</p>
+                    <p><strong>Why:</strong> Enables representation in Rust, Go, C++, Python, JS without language-specific features.</p>
+                    <p><strong>Example:</strong> Instead of inheritance, compose objects:</p>
+                    <div class="code-snippet">
+# Instead of: class EmailAgent extends Agent
+# Use composition:
+{
+  "agent": { "id": "...", "name": "..." },
+  "capabilities": { "read": true, "execute": true }
+}
+                    </div>
+                </div>
+
+                <div class="content-panel">
+                    <h4>📌 A2: Explicit Type Tags</h4>
+                    <p><strong>Principle:</strong> Polymorphic fields MUST have explicit type markers.</p>
+                    <p><strong>Why:</strong> Enables schema-free parsing at receiver (no schema fetch needed).</p>
+                    <p><strong>Example:</strong></p>
+                    <div class="code-snippet">
+{
+  "result": {
+    "_type": "string",
+    "value": "success"
+  }
+}
+                    </div>
+                </div>
+
+                <div class="content-panel">
+                    <h4>📚 A3: Homogeneous Sequences</h4>
+                    <p><strong>Principle:</strong> All array elements MUST be same type.</p>
+                    <p><strong>Why:</strong> Enables pre-allocation without knowing content.</p>
+                    <p><strong>Example:</strong></p>
+                    <div class="code-snippet">
+{
+  "tools": [
+    { "id": "tool1", ... },
+    { "id": "tool2", ... }
+  ]
+  // All items are same "tool" type
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="rules" class="tab-content">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div class="content-panel">
+                    <h4>🔤 R4: Alphabetically Sorted Keys</h4>
+                    <p><strong>Rule:</strong> All map keys sorted by Unicode code point.</p>
+                    <p><strong>Result:</strong> Deterministic byte order → Stable SHA256 hashing</p>
+                </div>
+
+                <div class="content-panel">
+                    <h4>∅ R5: Null is Explicit</h4>
+                    <p><strong>Rule:</strong> Three states: value (set), null (known empty), absent (never set).</p>
+                    <p><strong>Result:</strong> No ambiguity between missing and empty values</p>
+                </div>
+
+                <div class="content-panel">
+                    <h4>🆔 R6: Profile URI</h4>
+                    <p><strong>Rule:</strong> All objects declare schema via URI.</p>
+                    <p><strong>Result:</strong> Schema discovered at receiver, no schema fetch needed</p>
+                </div>
+
+                <div class="content-panel">
+                    <h4>🔐 R7: SHA256 Content Addressing</h4>
+                    <p><strong>Rule:</strong> Immutable address: data://sha256:HASH:type</p>
+                    <p><strong>Result:</strong> Tamper detection + perfect caching</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>121XML - Universal Data Exchange Standard</p>
+        <p>Vendor-neutral • Self-describing • Infinitely scalable</p>
+        <p style="margin-top: 20px; color: rgba(255,255,255,0.5);">© 2026 121XML Foundation</p>
+    </footer>
+
+    <script>
+        // Toggle rich content panels
+        function togglePanel(panelId) {
+            const panel = document.getElementById(panelId);
+            if (panel) {
+                panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Deactivate all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+
+            // Activate clicked button
+            event.target.classList.add('active');
+        }
+
+        // Interactive Graph Data
+        const graphData = {
+            nodes: [
+                { id: 1, name: "External Systems", type: "layer1", color: "#0f766e" },
+                { id: 2, name: "REST API", type: "protocol", color: "#0369a1" },
+                { id: 3, name: "gRPC", type: "protocol", color: "#0369a1" },
+                { id: 4, name: "WebSocket", type: "protocol", color: "#0369a1" },
+                { id: 5, name: "Protocol Adapters", type: "layer2", color: "#059669" },
+                { id: 6, name: "Schema Translators", type: "layer2", color: "#059669" },
+                { id: 7, name: "JSON", type: "schema", color: "#d97706" },
+                { id: 8, name: "Protobuf", type: "schema", color: "#d97706" },
+                { id: 9, name: "121XML Core Engine", type: "core", color: "#dc2626" },
+                { id: 10, name: "State Manager", type: "component", color: "#ea580c" },
+                { id: 11, name: "Tool Executor", type: "component", color: "#ea580c" },
+                { id: 12, name: "Memory Manager", type: "component", color: "#ea580c" },
+                { id: 13, name: "Permission Manager", type: "component", color: "#ea580c" },
+            ],
+            links: [
+                { source: 2, target: 5 },
+                { source: 3, target: 5 },
+                { source: 4, target: 5 },
+                { source: 7, target: 6 },
+                { source: 8, target: 6 },
+                { source: 5, target: 9 },
+                { source: 6, target: 9 },
+                { source: 9, target: 10 },
+                { source: 9, target: 11 },
+                { source: 9, target: 12 },
+                { source: 9, target: 13 },
+            ]
+        };
+
+        // Draw interactive graph
+        function drawGraph() {
+            const container = document.getElementById('graph-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            // Create SVG
+            const svg = d3.select('#graph-container').append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .style('background', 'white');
+
+            // Create simulation
+            const simulation = d3.forceSimulation(graphData.nodes)
+                .force('link', d3.forceLink(graphData.links).id(d => d.id).distance(100))
+                .force('charge', d3.forceManyBody().strength(-300))
+                .force('center', d3.forceCenter(width / 2, height / 2));
+
+            // Draw links
+            const link = svg.selectAll('.link')
+                .data(graphData.links)
+                .enter()
+                .append('line')
+                .attr('class', 'link');
+
+            // Draw nodes
+            const node = svg.selectAll('.node')
+                .data(graphData.nodes)
+                .enter()
+                .append('g')
+                .attr('class', 'node')
+                .call(d3.drag()
+                    .on('start', dragStarted)
+                    .on('drag', dragged)
+                    .on('end', dragEnded));
+
+            node.append('circle')
+                .attr('class', 'node-circle')
+                .attr('r', 30)
+                .attr('fill', d => d.color)
+                .style('opacity', 0.8);
+
+            node.append('text')
+                .attr('class', 'node-label')
+                .text(d => d.name.substring(0, 10))
+                .attr('font-size', '11px');
+
+            // Add hover effect
+            node.on('mouseover', function(event, d) {
+                d3.select(this).select('circle')
+                    .transition()
+                    .duration(200)
+                    .attr('r', 40)
+                    .style('opacity', 1);
+
+                // Show tooltip
+                const tooltip = d3.select('body').append('div')
+                    .attr('class', 'graph-tooltip')
+                    .html(`<strong>${d.name}</strong><br/>Type: ${d.type}`)
+                    .style('left', (event.pageX + 10) + 'px')
+                    .style('top', (event.pageY - 28) + 'px');
+
+                setTimeout(() => tooltip.remove(), 3000);
+            })
+            .on('mouseout', function(event, d) {
+                d3.select(this).select('circle')
+                    .transition()
+                    .duration(200)
+                    .attr('r', 30);
+            });
+
+            // Update positions on simulation tick
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                node.attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+
+            function dragStarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragEnded(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+        }
+
+        // Initialize graph when page loads
+        window.addEventListener('load', drawGraph);
+    </script>
+</body>
+</html>

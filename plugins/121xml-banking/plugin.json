@@ -1,0 +1,104 @@
+{
+  "name": "121xml-banking",
+  "version": "1.0.0",
+  "description": "Banking workflow plugin for SWIFT and ISO 20022 payments",
+  "capabilities": [
+    "tools",
+    "resources",
+    "prompts",
+    "content_addressing",
+    "schema_discovery",
+    "lossless_compression"
+  ],
+  "tools": [
+    {
+      "name": "swift_wire_transfer",
+      "description": "Execute SWIFT MT103 wire transfer",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "sender_account": {
+            "type": "string"
+          },
+          "receiver_account": {
+            "type": "string"
+          },
+          "invoice_number": {
+            "type": "string"
+          }
+        }
+      },
+      "_121xml_schema": "urn:121xml:tool-swift_wire_transfer/1.0"
+    },
+    {
+      "name": "iso20022_credit_transfer",
+      "description": "Execute ISO 20022 PACS.008 credit transfer",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "debtor_iban": {
+            "type": "string"
+          },
+          "creditor_iban": {
+            "type": "string"
+          },
+          "invoice_number": {
+            "type": "string"
+          }
+        }
+      },
+      "_121xml_schema": "urn:121xml:tool-iso20022_credit_transfer/1.0"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "banking://schema/swift-mt103",
+      "name": "SWIFT MT103 Schema",
+      "description": "SWIFT MT103 wire transfer format specification",
+      "mime_type": "application/json",
+      "_121xml_schema": "urn:121xml:resource-banking://schema/swift-mt103/1.0"
+    },
+    {
+      "uri": "banking://schema/iso20022-pacs008",
+      "name": "ISO 20022 PACS.008 Schema",
+      "description": "ISO 20022 credit transfer format specification",
+      "mime_type": "application/json",
+      "_121xml_schema": "urn:121xml:resource-banking://schema/iso20022-pacs008/1.0"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "payment_workflow",
+      "description": "Template for payment workflow execution",
+      "arguments": [
+        {
+          "name": "workflow_type",
+          "type": "string"
+        },
+        {
+          "name": "amount",
+          "type": "number"
+        },
+        {
+          "name": "currency",
+          "type": "string"
+        }
+      ],
+      "template": "Execute {workflow_type} for {amount} {currency}",
+      "_121xml_schema": "urn:121xml:prompt-payment_workflow/1.0"
+    }
+  ],
+  "generated": "2026-08-06T21:08:11.674105Z"
+}

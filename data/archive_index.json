@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "created": "2026-08-07T22:20:00Z",
+  "files": [
+    {
+      "phase": "A",
+      "name": "Technical Architecture",
+      "file": "public_technical_architecture.html",
+      "hash": "bf1d39a612f9f18cd16b56a909475e3012353596bf98f1fad2195b3dbd0990fe",
+      "size_kb": 96,
+      "status": "production"
+    },
+    {
+      "phase": "B",
+      "name": "UI Specifications",
+      "file": "public_ui_specifications.html",
+      "hash": "becb073b2efd50acc174b1ff3c0f9d7c979cd6c41cb270ae05e99b40516501b0",
+      "size_kb": 48,
+      "status": "production"
+    },
+    {
+      "phase": "C",
+      "name": "GTM Strategy (Internal)",
+      "file": "public_gtm_strategy.html",
+      "hash": "b2768b694aa0d3eca9fadb63e505d47517a7cfaf3abe70e863ffed2b3c596551",
+      "size_kb": 32,
+      "status": "production",
+      "access": "password_protected"
+    },
+    {
+      "phase": "D",
+      "name": "API Reference",
+      "file": "public_api_reference.html",
+      "hash": "a9a6987ea47b62258c117043e78480305ea32448d1d0d7899b912650eb910269",
+      "size_kb": 28,
+      "status": "production"
+    }
+  ],
+  "total_size_kb": 204,
+  "qa_status": "all_passed",
+  "deployment_ready": true
+}

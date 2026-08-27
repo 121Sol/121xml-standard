@@ -1,0 +1,295 @@
+<title>121XQ AI OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#f6f4f0; --surface:#ffffff; --panel:#efeae2; --ink:#181410; --muted:#6a6154;
+    --line:#e0d8cc; --accent:#b3781a; --accent-soft:#b3781a1f; --violet:#7a4fd6; --jade:#0d7c64;
+    --mono:"Cascadia Code","SF Mono","JetBrains Mono",Consolas,monospace;
+    --sans:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0d0b08; --surface:#17130d; --panel:#211a12; --ink:#f0eadf; --muted:#a99b86;
+    --line:#302518; --accent:#e0a94e; --accent-soft:#e0a94e1f; --violet:#a184e8; --jade:#37bd9d;}}
+  :root[data-theme="dark"]{
+    --bg:#0d0b08; --surface:#17130d; --panel:#211a12; --ink:#f0eadf; --muted:#a99b86;
+    --line:#302518; --accent:#e0a94e; --accent-soft:#e0a94e1f; --violet:#a184e8; --jade:#37bd9d;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none}
+  code,.mono{font-family:var(--mono)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,36px)}
+  nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav-in{max-width:1080px;margin:0 auto;padding:12px clamp(16px,4vw,36px);display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .brand{font-family:var(--mono);font-weight:700;font-size:18px;letter-spacing:-.01em;margin-right:auto}
+  .brand b{color:var(--accent)}
+  .tabs{display:flex;gap:4px;flex-wrap:wrap}
+  .tab{font:inherit;font-size:14px;color:var(--muted);background:none;border:0;padding:8px 13px;border-radius:8px;cursor:pointer;transition:.15s}
+  .tab:hover{color:var(--ink);background:var(--panel)}
+  .tab[aria-selected="true"]{color:var(--accent);background:var(--accent-soft);font-weight:600}
+  .panel{display:none;animation:fade .4s ease both}
+  .panel[data-active]{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  section{padding:clamp(38px,6vw,72px) 0}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-size:clamp(34px,7vw,68px);line-height:1.03;letter-spacing:-.03em;margin:0 0 18px;text-wrap:balance;font-weight:700}
+  h2{font-size:clamp(24px,4vw,36px);letter-spacing:-.02em;margin:0 0 14px;text-wrap:balance;font-weight:680}
+  h3{font-size:19px;margin:0 0 8px;font-weight:640}
+  .lede{font-size:clamp(17px,2.4vw,21px);color:var(--muted);max-width:60ch;margin:0 0 26px}
+  p{max-width:64ch}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-block;padding:12px 20px;border-radius:10px;font-weight:600;font-size:15px}
+  .btn.p{background:var(--accent);color:#1a1408}
+  .btn.s{border:1px solid var(--line);color:var(--ink)}
+  .grid{display:grid;gap:16px}
+  .g4{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .sys{border-top:3px solid var(--accent)}
+  .sys.v{border-top-color:var(--violet)} .sys.j{border-top-color:var(--jade)} .sys.g{border-top-color:var(--accent)}
+  .chip{display:inline-block;font-family:var(--mono);font-size:12px;padding:3px 9px;border-radius:20px;background:var(--panel);color:var(--muted);border:1px solid var(--line)}
+  .note{font-size:13.5px;color:var(--muted);border-left:2px solid var(--accent);padding:4px 0 4px 14px;margin:20px 0;max-width:64ch}
+  footer{border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:14px}
+  .gf{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:820px){.gf{grid-template-columns:1.6fr 1fr}}
+  .gf-stage{background:var(--surface);border:1px solid var(--line);border-radius:14px;min-height:440px;position:relative;overflow:hidden}
+  .gf-controls{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:3}
+  .gf-controls button{font:inherit;font-size:12.5px;font-family:var(--mono);padding:6px 11px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--muted);cursor:pointer}
+  .gf-controls button.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .gf-info{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .gf-info h3{font-family:var(--mono)}
+  .gf-info .kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14px}
+  .gf-info .kv b{font-family:var(--mono);font-weight:600}
+  .gf-hint{font-size:13px;color:var(--muted)}
+  .breadcrumb{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-bottom:6px}
+  .stat{font-family:var(--mono)}
+</style>
+
+<nav><div class="nav-in">
+  <div class="brand">1<b>2</b>1XQ</div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-t="overview">Overview</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="objectmap">121ObjectMap</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="systems">Systems</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="arch">Architecture</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="contact">Contact</button>
+  </div>
+</div></nav>
+
+<!-- OVERVIEW -->
+<div class="panel" data-active data-p="overview"><div class="wrap">
+  <section>
+    <p class="eyebrow">The AI operating system for your data</p>
+    <h1>One layer above every AI.</h1>
+    <p class="lede">121XQ runs on the 121XML standard to make Claude, GPT and Gemini interchangeable —
+    converting formats, preserving data losslessly, and keeping an immutable, owned audit trail. One
+    OS, many industry systems, one shared way to see everything.</p>
+    <div class="row">
+      <a class="btn p" data-goto="objectmap">Open 121ObjectMap →</a>
+      <a class="btn s" data-goto="systems">Explore the systems</a>
+    </div>
+  </section>
+  <section style="padding-top:0">
+    <div class="grid g4">
+      <div class="card"><div class="stat" style="font-size:30px;color:var(--accent)">7</div><h3 style="margin:6px 0 4px">AI engines</h3><p style="margin:0;font-size:14px">Claude, GPT, Gemini, Together, Cohere, Mistral, Azure — swap anytime, no re-processing.</p></div>
+      <div class="card"><div class="stat" style="font-size:30px;color:var(--accent)">0%</div><h3 style="margin:6px 0 4px">Data loss</h3><p style="margin:0;font-size:14px">Bit-perfect round-trips via explicit null/absent and canonical bytes.</p></div>
+      <div class="card"><div class="stat" style="font-size:30px;color:var(--accent)">SHA-256</div><h3 style="margin:6px 0 4px">Owned audit</h3><p style="margin:0;font-size:14px">Every object content-addressed and signed. Tamper-evident by construction.</p></div>
+      <div class="card"><div class="stat" style="font-size:30px;color:var(--accent)">Tab 2</div><h3 style="margin:6px 0 4px">121ObjectMap everywhere</h3><p style="margin:0;font-size:14px">The same relationship board in every system — click, drill, intervene.</p></div>
+    </div>
+  </section>
+  <section style="padding-top:0">
+    <h2>Vendor-neutral, by design</h2>
+    <p class="lede" style="font-size:17px">121XQ is not another model. It is the layer that makes models
+    fungible — choose the best AI per task, keep one format, one audit trail, one graph.</p>
+    <p class="note">The standard that powers this — 121XML — is documented at 121xml.com. 121XQ is the
+    runtime that applies it across industries.</p>
+  </section>
+</div></div>
+
+<!-- 121OBJECTMAP -->
+<div class="panel" data-p="objectmap"><div class="wrap">
+  <section>
+    <p class="eyebrow">121ObjectMap · standard second tab</p>
+    <h2>See the whole system. Drill anywhere. Intervene.</h2>
+    <p class="lede" style="font-size:17px">Every object in 121XQ — a business, a data packet, a workflow —
+    renders as a live, drillable relationship map. The identical component ships as Tab 2 in every system.</p>
+    <div class="gf">
+      <div class="gf-stage">
+        <div class="gf-controls">
+          <button id="ds-sys" class="on">121XQ Systems</button>
+          <button id="ds-obj">Data Object</button>
+          <button id="ds-reset">Reset</button>
+        </div>
+        <svg id="gf-svg" viewBox="0 0 640 460" role="img" aria-label="Interactive relationship graph. Click a node to see attributes and drill into children."></svg>
+      </div>
+      <div class="gf-info" id="gf-info">
+        <div class="breadcrumb" id="gf-crumb">root</div>
+        <h3 id="gf-title">Click any node</h3>
+        <p class="gf-hint" id="gf-sub">Nodes carry sensible icons and colors; edges are labelled lines.
+          Select a node to reveal its attributes and drill into the next layer.</p>
+        <div id="gf-kvs"></div>
+      </div>
+    </div>
+  </section>
+</div></div>
+
+<!-- SYSTEMS -->
+<div class="panel" data-p="systems"><div class="wrap">
+  <section>
+    <p class="eyebrow">The systems</p>
+    <h2>One OS. An industry system for each domain.</h2>
+    <p class="lede" style="font-size:17px">Every system reuses the same standard, the same skills and tools,
+    and the same 121ObjectMap board — specialized for its industry.</p>
+    <div class="grid g2">
+      <div class="card sys g"><span class="chip">DevTeam</span><h3 style="margin-top:12px">121DevTeam</h3>
+        <p style="margin:0">Orchestrated AI engineering agents — plan, build, review, deploy — with every
+        artifact content-addressed and auditable.</p></div>
+      <div class="card sys j"><span class="chip">Healthcare</span><h3 style="margin-top:12px">121Healthcare</h3>
+        <p style="margin:0">HL7 v2 → FHIR → CDISC interoperability with lossless conversion and HIPAA-ready
+        immutable audit trails.</p></div>
+      <div class="card sys g"><span class="chip">FinTech</span><h3 style="margin-top:12px">121FinTech</h3>
+        <p style="margin:0">SWIFT ↔ ISO 20022 transformation, zero-loss migration, and SHA-256 audit for
+        payments compliance.</p></div>
+      <div class="card sys v"><span class="chip">Solutions</span><h3 style="margin-top:12px">121Solutions</h3>
+        <p style="margin:0">The business suite — CRM, Analytics, Skills, Pay, Club, Ride, BPO, BizMatch,
+        SmarterMergers — unified on one data fabric.</p></div>
+    </div>
+    <p class="note">Skills and tools are shared across systems; a capability built once is available
+    everywhere, and 121ObjectMap makes every system legible through one lens.</p>
+  </section>
+</div></div>
+
+<!-- ARCHITECTURE -->
+<div class="panel" data-p="arch"><div class="wrap">
+  <section>
+    <p class="eyebrow">Architecture</p>
+    <h2>Sovereign, self-describing, verifiable.</h2>
+    <div class="grid g3">
+      <div class="card"><h3 class="mono">Local control</h3><p style="margin:0">Public/private-key ownership;
+        you choose where data lives. No mandatory cloud.</p></div>
+      <div class="card"><h3 class="mono">Any → any</h3><p style="margin:0">Self-describing packets carry
+        their own structure and semantics — any protocol decodes without external namespaces.</p></div>
+      <div class="card"><h3 class="mono">Content-addressed</h3><p style="margin:0">Objects addressed by the
+        hash of their canonical bytes — immutable, deduplicated, tamper-evident.</p></div>
+    </div>
+    <p style="margin-top:24px">Under the hood, every object is a signed Merkle-DAG of facets — <code>payload</code>,
+    <code>shape</code>, <code>context</code>, <code>rules</code>, <code>relations</code>, <code>provenance</code>,
+    and optional 4-D <code>space</code>. The full standard is at 121xml.com.</p>
+    <p class="note">Hardware/processor-level acceleration is a separate long-horizon track (121XMLSilicon)
+    and is deliberately not part of the software runtime.</p>
+  </section>
+</div></div>
+
+<!-- CONTACT -->
+<div class="panel" data-p="contact"><div class="wrap">
+  <section>
+    <p class="eyebrow">Contact</p>
+    <h2>Partner with 121XQ.</h2>
+    <p class="lede" style="font-size:17px">We work <em>with</em> standards bodies and enterprises, not
+    against them — making your standard AI-portable and content-verifiable.</p>
+    <div class="grid g3">
+      <div class="card"><h3>Standards bodies</h3><p style="margin:0">Co-develop a profile that makes your
+        standard AI-native and grows your membership.</p></div>
+      <div class="card"><h3>Enterprises</h3><p style="margin:0">Pilot 121XQ on one workflow — a payment
+        migration, a clinical interop, a data-sovereignty need.</p></div>
+      <div class="card"><h3>Developers</h3><p style="margin:0">Build on the open 121XML core; ship skills
+        and tools that work across every 121XQ system.</p></div>
+    </div>
+    <p class="note">A 121 Solutions project · solutions.121.us · 121xml.com</p>
+  </section>
+</div></div>
+
+<footer><div class="wrap">
+  <b class="mono">121XQ AI OS</b> · the layer that makes AI systems fungible · a 121 Solutions project.
+  Standard: 121XML. Draft site — pre-launch.
+</div></footer>
+
+<script>
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  var panels=[].slice.call(document.querySelectorAll('.panel'));
+  function show(name){
+    tabs.forEach(function(t){t.setAttribute('aria-selected', t.dataset.t===name);});
+    panels.forEach(function(p){ if(p.dataset.p===name){p.setAttribute('data-active','');} else {p.removeAttribute('data-active');}});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.t);});});
+  document.querySelectorAll('[data-goto]').forEach(function(a){a.addEventListener('click',function(){show(a.dataset.goto);});});
+
+  var SVG='http://www.w3.org/2000/svg';
+  var svg=document.getElementById('gf-svg');
+  var css=getComputedStyle(document.documentElement);
+  function c(v){return css.getPropertyValue(v).trim();}
+  var TYPE={
+    os:{icon:'🧠',color:'#b3781a'}, sys:{icon:'📦',color:'#7a4fd6'}, skill:{icon:'⚙️',color:'#0d7c64'},
+    role:{icon:'🎯',color:'#b3781a'}, out:{icon:'📈',color:'#2f6db0'},
+    obj:{icon:'🧩',color:'#b3781a'}, facet:{icon:'🔷',color:'#7a4fd6'}, val:{icon:'🔖',color:'#0d7c64'}
+  };
+  var SYS={id:'xq',type:'os',label:'121XQ AI OS',attrs:{engines:'7',standard:'121XML',audit:'SHA-256'},children:[
+    {id:'dev',type:'sys',label:'121DevTeam',attrs:{domain:'Engineering'},children:[
+      {id:'plan',type:'skill',label:'Plan/Build/Review',attrs:{agents:'6'},children:[]},
+      {id:'deploy',type:'skill',label:'Deploy',attrs:{targets:'CI/CD'},children:[]}]},
+    {id:'health',type:'sys',label:'121Healthcare',attrs:{domain:'Clinical'},children:[
+      {id:'fhir',type:'skill',label:'HL7→FHIR→CDISC',attrs:{loss:'0%'},children:[]}]},
+    {id:'fin',type:'sys',label:'121FinTech',attrs:{domain:'Payments'},children:[
+      {id:'iso',type:'skill',label:'SWIFT↔ISO20022',attrs:{audit:'immutable'},children:[]}]},
+    {id:'sol',type:'sys',label:'121Solutions',attrs:{domain:'Business'},children:[
+      {id:'crm',type:'skill',label:'CRM · Pay · Analytics',attrs:{apps:'9'},children:[]},
+      {id:'sm',type:'role',label:'SmarterMergers',attrs:{site:'smartermergers.com'},children:[]}]}]};
+  var OBJ={id:'inv',type:'obj',label:'Invoice Object',attrs:{cid:'bafy…9f2',signed:'yes'},children:[
+    {id:'pl',type:'facet',label:'payload',attrs:{amount:'$450,000',from:'Acme',to:'Smith & Co'},children:[]},
+    {id:'sh',type:'facet',label:'shape',attrs:{profile:'urn:121xml:iso20022/pain.001'},children:[]},
+    {id:'pr',type:'facet',label:'provenance',attrs:{owner:'did:key:z6Mk…',ts:'2026-08-19T18:00Z'},children:[
+      {id:'sig',type:'val',label:'signature',attrs:{alg:'Ed25519'},children:[]}]},
+    {id:'rl',type:'facet',label:'relations',attrs:{edges:'2'},children:[
+      {id:'e1',type:'val',label:'→ PO-8842',attrs:{rel:'fulfils'},children:[]}]}]};
+
+  var root=SYS, expanded={}, selected=null;
+  function reset(){expanded={}; expanded[root.id]=true; selected=null; draw(); info(root,[root.label]);}
+  function layout(node){
+    var levels=[];
+    function walk(n,d,parent){levels[d]=levels[d]||[]; levels[d].push({n:n,parent:parent});
+      if(expanded[n.id]&&n.children) n.children.forEach(function(ch){walk(ch,d+1,n);});}
+    walk(node,0,null);
+    var W=640,H=460, colW=W/(levels.length+0.4), pos={}, nodes=[], edges=[];
+    levels.forEach(function(row,d){var gap=H/(row.length+1);
+      row.forEach(function(e,i){var x=40+colW*d+colW*0.5, y=gap*(i+1); pos[e.n.id]={x:x,y:y};
+        nodes.push({x:x,y:y,n:e.n});
+        if(e.parent) edges.push({from:pos[e.parent.id],to:{x:x,y:y}});});});
+    return {nodes:nodes,edges:edges};
+  }
+  function draw(){
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    var L=layout(root);
+    L.edges.forEach(function(e){var ln=document.createElementNS(SVG,'path');var mx=(e.from.x+e.to.x)/2;
+      ln.setAttribute('d','M'+e.from.x+' '+e.from.y+' C '+mx+' '+e.from.y+' '+mx+' '+e.to.y+' '+e.to.x+' '+e.to.y);
+      ln.setAttribute('fill','none');ln.setAttribute('stroke',c('--muted'));ln.setAttribute('stroke-width','1.3');ln.setAttribute('opacity','.5');svg.appendChild(ln);});
+    L.nodes.forEach(function(nd){var g=document.createElementNS(SVG,'g');g.style.cursor='pointer';
+      var ty=TYPE[nd.n.type]||{icon:'•',color:c('--accent')};var hasKids=nd.n.children&&nd.n.children.length;
+      var r=nd.n===root?26:20;
+      var circ=document.createElementNS(SVG,'circle');circ.setAttribute('cx',nd.x);circ.setAttribute('cy',nd.y);circ.setAttribute('r',r);
+      circ.setAttribute('fill',c('--surface'));circ.setAttribute('stroke',selected===nd.n?c('--accent'):ty.color);circ.setAttribute('stroke-width',selected===nd.n?3:2);g.appendChild(circ);
+      var ic=document.createElementNS(SVG,'text');ic.setAttribute('x',nd.x);ic.setAttribute('y',nd.y+5);ic.setAttribute('text-anchor','middle');ic.setAttribute('font-size','16');ic.textContent=ty.icon;g.appendChild(ic);
+      var lb=document.createElementNS(SVG,'text');lb.setAttribute('x',nd.x);lb.setAttribute('y',nd.y+r+14);lb.setAttribute('text-anchor','middle');lb.setAttribute('font-size','11.5');lb.setAttribute('fill',c('--ink'));lb.textContent=nd.n.label;g.appendChild(lb);
+      if(hasKids){var badge=document.createElementNS(SVG,'text');badge.setAttribute('x',nd.x+r-2);badge.setAttribute('y',nd.y-r+6);badge.setAttribute('font-size','12');badge.setAttribute('fill',ty.color);badge.setAttribute('font-family',c('--mono'));badge.textContent=expanded[nd.n.id]?'−':'+';g.appendChild(badge);}
+      g.addEventListener('click',function(){selected=nd.n;if(hasKids)expanded[nd.n.id]=!expanded[nd.n.id];
+        var path=[];(function find(n,acc){acc.push(n.label);if(n===nd.n){path=acc.slice();return true;}if(n.children)for(var i=0;i<n.children.length;i++){if(find(n.children[i],acc.slice()))return true;}return false;})(root,[]);
+        draw();info(nd.n,path);});
+      svg.appendChild(g);});
+  }
+  function info(node,path){
+    document.getElementById('gf-crumb').textContent=(path||[node.label]).join('  ›  ');
+    var ty=TYPE[node.type]||{icon:'•'};
+    document.getElementById('gf-title').textContent=ty.icon+'  '+node.label;
+    document.getElementById('gf-sub').textContent=node.type.toUpperCase()+(node.children&&node.children.length?'  ·  '+node.children.length+' child object(s) — click to '+(expanded[node.id]?'collapse':'expand'):'  ·  leaf');
+    var kv=document.getElementById('gf-kvs');kv.innerHTML='';var a=node.attrs||{};
+    Object.keys(a).forEach(function(k){var d=document.createElement('div');d.className='kv';d.innerHTML='<span>'+k+'</span><b>'+a[k]+'</b>';kv.appendChild(d);});
+    if(!Object.keys(a).length){var d=document.createElement('div');d.className='gf-hint';d.textContent='No attributes on this node.';kv.appendChild(d);}
+  }
+  document.getElementById('ds-sys').addEventListener('click',function(){root=SYS;this.classList.add('on');document.getElementById('ds-obj').classList.remove('on');reset();});
+  document.getElementById('ds-obj').addEventListener('click',function(){root=OBJ;this.classList.add('on');document.getElementById('ds-sys').classList.remove('on');reset();});
+  document.getElementById('ds-reset').addEventListener('click',reset);
+  reset();
+})();
+</script>

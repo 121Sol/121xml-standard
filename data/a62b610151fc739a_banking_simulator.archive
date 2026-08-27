@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>121XML Banking Workflow Simulator - Enhanced</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .workflow-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .workflow-column {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .workflow-column h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .step-content p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .bank-path {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: white;
+            border-radius: 6px;
+            margin: 15px 0;
+            border: 2px solid #e0e0e0;
+        }
+
+        .bank-box {
+            text-align: center;
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 6px;
+            flex: 1;
+            border: 2px solid #667eea;
+        }
+
+        .bank-box h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .bank-box p {
+            color: #666;
+            font-size: 0.85em;
+        }
+
+        .arrow {
+            color: #667eea;
+            font-size: 1.5em;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .simulation-controls {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .simulation-controls h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .control-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .results-panel {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results-panel.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-item h4 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .result-item p {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-pending {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 50px;
+            width: 2px;
+            height: 30px;
+            background: #667eea;
+        }
+
+        .timeline-marker {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-weight: bold;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .timeline-content h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .timeline-content p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .fee-breakdown {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+
+        .fee-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .fee-row:last-child {
+            border-bottom: none;
+        }
+
+        .fee-row.total {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 1024px) {
+            .workflow-container {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .control-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bank-path {
+                flex-direction: column;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 121XML Banking Workflow Simulator</h1>
+            <p>Real-time payment flow simulation with SWIFT & ISO 20022</p>
+        </div>
+
+        <!-- Sample Payment Overview -->
+        <div class="workflow-container">
+            <div class="workflow-column">
+                <h2>SWIFT MT103 Workflow</h2>
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Initiate Payment</h3>
+                        <p>Acme Manufacturing initiates wire transfer for invoice INV-2026-08-0042</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Bank Processing</h3>
+                        <p>Chase Bank validates SWIFT MT103 message format and funds</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Currency Conversion</h3>
+                        <p>Deutsche Bank converts USD to GBP at rate 0.79 (typical exchange)</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Final Transfer</h3>
+                        <p>West Bank GB credits Smith & Associates account in GBP</p>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 30px; color: #333;">Bank Routing Path</h3>
+                <div class="bank-path">
+                    <div class="bank-box">
+                        <h4>🏦 Acme Bank</h4>
+                        <p>CHIUS33XXX</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="bank-box">
+                        <h4>💱 Deutsche Bank</h4>
+                        <p>DEUTDEDD</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="bank-box">
+                        <h4>🏦 West Bank GB</h4>
+                        <p>WESTGBXXXX</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-column">
+                <h2>ISO 20022 PACS.008 Workflow</h2>
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Initiate Transfer</h3>
+                        <p>Acme Manufacturing sends ISO 20022 PACS.008 message</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Direct Clearing</h3>
+                        <p>ISO 20022 clearing house processes credit transfer</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Settlement</h3>
+                        <p>Funds settle in destination bank's clearing account</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Credit Confirmation</h3>
+                        <p>Smith & Associates account credited with immediate notification</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px; color: #333;">Direct Routing</h3>
+                <div class="bank-path">
+                    <div class="bank-box">
+                        <h4>🏦 Acme Manufacturing</h4>
+                        <p>Originator</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="bank-box">
+                        <h4>🔄 ISO 20022</h4>
+                        <p>Clearing</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="bank-box">
+                        <h4>🏦 Smith & Associates</h4>
+                        <p>Beneficiary</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Transaction Amount</div>
+                <div class="metric-value">$450,000</div>
+                <div class="metric-label">USD</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Exchange Rate</div>
+                <div class="metric-value">0.79</div>
+                <div class="metric-label">USD to GBP</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Converted Amount</div>
+                <div class="metric-value">£355,500</div>
+                <div class="metric-label">GBP</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Settlement Time</div>
+                <div class="metric-value">3 Days</div>
+                <div class="metric-label">SWIFT Typical</div>
+            </div>
+        </div>
+
+        <!-- Simulation Controls -->
+        <div class="simulation-controls">
+            <h3>🎮 Simulate Custom Payment</h3>
+            
+            <div class="control-group">
+                <div class="form-group">
+                    <label for="amount">Payment Amount (USD)</label>
+                    <input type="number" id="amount" value="450000" min="100" max="10000000" step="100">
+                </div>
+                <div class="form-group">
+                    <label for="currency">Currency</label>
+                    <select id="currency">
+                        <option value="USD">USD (US Dollar)</option>
+                        <option value="EUR">EUR (Euro)</option>
+                        <option value="GBP">GBP (British Pound)</option>
+                        <option value="JPY">JPY (Japanese Yen)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="form-group">
+                    <label for="from-bank">Originating Bank</label>
+                    <select id="from-bank">
+                        <option value="CHIUS33XXX">Chase Bank (CHIUS33XXX)</option>
+                        <option value="BOFA">Bank of America (BOFAUS3N)</option>
+                        <option value="CITI">Citibank (CITIUS33)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="to-bank">Destination Bank</label>
+                    <select id="to-bank">
+                        <option value="WESTGBXXXX">West Bank GB (WESTGBXXXX)</option>
+                        <option value="HSBC">HSBC (HBKAGB)</option>
+                        <option value="LLOYDS">Lloyds (LOYDGB)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="form-group">
+                    <label for="format">Message Format</label>
+                    <select id="format">
+                        <option value="SWIFT">SWIFT MT103</option>
+                        <option value="ISO20022">ISO 20022 PACS.008</option>
+                        <option value="BOTH">Both (Parallel)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="conversion">Include Currency Conversion</label>
+                    <select id="conversion">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" onclick="runSimulation()">▶ Run Simulation</button>
+                <button class="btn-secondary" onclick="resetSimulation()">↻ Reset</button>
+            </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="results-panel" id="results">
+            <h3>📊 Simulation Results</h3>
+            
+            <div class="result-item">
+                <h4>Transaction Details</h4>
+                <p id="result-details"></p>
+            </div>
+
+            <div class="result-item">
+                <h4>Fee Breakdown</h4>
+                <div class="fee-breakdown" id="fee-breakdown"></div>
+            </div>
+
+            <div class="result-item">
+                <h4>Timeline</h4>
+                <div class="timeline" id="timeline"></div>
+            </div>
+
+            <div class="result-item">
+                <h4>Validation</h4>
+                <p id="result-validation"></p>
+                <span class="status-badge status-success" id="result-status"></span>
+            </div>
+
+            <div class="result-item">
+                <h4>121XML Conversion</h4>
+                <p id="result-121xml"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function runSimulation() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const currency = document.getElementById('currency').value;
+            const fromBank = document.getElementById('from-bank').value;
+            const toBank = document.getElementById('to-bank').value;
+            const format = document.getElementById('format').value;
+            const conversion = document.getElementById('conversion').value === 'yes';
+
+            // Exchange rates (simplified)
+            const rates = { EUR: 0.92, GBP: 0.79, JPY: 149.5 };
+            const convertedAmount = conversion && currency !== 'USD' ? (amount * rates[currency]).toFixed(2) : amount;
+
+            // Calculate fees
+            const bankFee = (amount * 0.001).toFixed(2);
+            const clearingFee = (amount * 0.0005).toFixed(2);
+            const currencyFee = conversion ? (amount * 0.002).toFixed(2) : 0;
+            const totalFees = (parseFloat(bankFee) + parseFloat(clearingFee) + parseFloat(currencyFee)).toFixed(2);
+            const netAmount = (convertedAmount - totalFees).toFixed(2);
+
+            // Build timeline
+            const timeline = [
+                { time: '0h', status: 'Initiated', desc: 'Payment instruction received' },
+                { time: '1h', status: 'Validated', desc: 'Format and funds verified' },
+                { time: '6h', status: 'Processed', desc: 'Bank processing complete' },
+                { time: '24h', status: 'Cleared', desc: 'Clearing house confirmation' },
+                { time: '72h', status: 'Settled', desc: 'Final settlement and credit' }
+            ];
+
+            // Build results HTML
+            const resultsDiv = document.getElementById('results');
+            
+            document.getElementById('result-details').innerHTML = `
+                <strong>Amount:</strong> ${amount.toLocaleString()} ${currency}<br>
+                <strong>Converted:</strong> ${convertedAmount.toLocaleString()} GBP<br>
+                <strong>From:</strong> ${fromBank}<br>
+                <strong>To:</strong> ${toBank}<br>
+                <strong>Format:</strong> ${format}<br>
+                <strong>Invoice:</strong> INV-2026-08-0042
+            `;
+
+            let feeHTML = `
+                <div class="fee-row">
+                    <span>Bank Fee (0.10%)</span>
+                    <span>$${bankFee}</span>
+                </div>
+                <div class="fee-row">
+                    <span>Clearing Fee (0.05%)</span>
+                    <span>$${clearingFee}</span>
+                </div>
+            `;
+
+            if (conversion) {
+                feeHTML += `
+                    <div class="fee-row">
+                        <span>Currency Conversion (0.20%)</span>
+                        <span>$${currencyFee}</span>
+                    </div>
+                `;
+            }
+
+            feeHTML += `
+                <div class="fee-row total">
+                    <span>Total Fees</span>
+                    <span>$${totalFees}</span>
+                </div>
+                <div class="fee-row total" style="color: #28a745;">
+                    <span>Net Amount Received</span>
+                    <span>£${netAmount}</span>
+                </div>
+            `;
+
+            document.getElementById('fee-breakdown').innerHTML = feeHTML;
+
+            // Build timeline HTML
+            let timelineHTML = '';
+            timeline.forEach((item, idx) => {
+                timelineHTML += `
+                    <div class="timeline-item">
+                        <div class="timeline-marker">${idx + 1}</div>
+                        <div class="timeline-content">
+                            <h4>${item.status} (${item.time})</h4>
+                            <p>${item.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('timeline').innerHTML = timelineHTML;
+
+            // Validation
+            document.getElementById('result-validation').innerHTML = `
+                ✓ SWIFT format: ${format.includes('SWIFT') ? 'Valid' : 'N/A'}<br>
+                ✓ ISO 20022 format: ${format.includes('ISO') ? 'Valid' : 'N/A'}<br>
+                ✓ Fund availability: Confirmed<br>
+                ✓ Beneficiary verification: Passed<br>
+                ✓ Compliance check: PASSED
+            `;
+
+            document.getElementById('result-status').textContent = 'APPROVED';
+
+            // 121XML Conversion
+            document.getElementById('result-121xml').innerHTML = `
+                <strong>121XML Converted Format:</strong><br>
+                This payment has been content-addressed and can be converted to 121XML for lossless compression and archival.<br>
+                <strong>Content Address:</strong> data://sha256:a4f2b8e1c9d3:payment_message<br>
+                <strong>Compression Ratio:</strong> 90-96% tokens freed with 0% data loss guarantee
+            `;
+
+            resultsDiv.classList.add('active');
+        }
+
+        function resetSimulation() {
+            document.getElementById('amount').value = 450000;
+            document.getElementById('currency').value = 'USD';
+            document.getElementById('from-bank').value = 'CHIUS33XXX';
+            document.getElementById('to-bank').value = 'WESTGBXXXX';
+            document.getElementById('format').value = 'SWIFT';
+            document.getElementById('conversion').value = 'yes';
+            document.getElementById('results').classList.remove('active');
+        }
+
+        // Auto-run default simulation on load
+        window.addEventListener('load', runSimulation);
+    </script>
+</body>
+</html>

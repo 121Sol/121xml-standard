@@ -1,0 +1,86 @@
+{
+  "name": "121xml-banking",
+  "description": "Banking workflow plugin for SWIFT and ISO 20022 payments",
+  "keyword": "banking",
+  "_schema": "urn:121xml:plugin-banking/1.0",
+  "tools": {
+    "swift_wire_transfer": {
+      "description": "Execute SWIFT MT103 wire transfer",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "sender_account": {
+            "type": "string"
+          },
+          "receiver_account": {
+            "type": "string"
+          },
+          "invoice_number": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "iso20022_credit_transfer": {
+      "description": "Execute ISO 20022 PACS.008 credit transfer",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "debtor_iban": {
+            "type": "string"
+          },
+          "creditor_iban": {
+            "type": "string"
+          },
+          "invoice_number": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "resources": {
+    "banking://schema/swift-mt103": {
+      "name": "SWIFT MT103 Schema",
+      "description": "SWIFT MT103 wire transfer format specification",
+      "mime_type": "application/json"
+    },
+    "banking://schema/iso20022-pacs008": {
+      "name": "ISO 20022 PACS.008 Schema",
+      "description": "ISO 20022 credit transfer format specification",
+      "mime_type": "application/json"
+    }
+  },
+  "prompts": {
+    "payment_workflow": {
+      "description": "Template for payment workflow execution",
+      "arguments": [
+        {
+          "name": "workflow_type",
+          "type": "string"
+        },
+        {
+          "name": "amount",
+          "type": "number"
+        },
+        {
+          "name": "currency",
+          "type": "string"
+        }
+      ],
+      "template": "Execute {workflow_type} for {amount} {currency}"
+    }
+  }
+}

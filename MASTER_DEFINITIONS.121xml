@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <schema_version>121xml/1.0</schema_version>
+  <document_type>master_definitions</document_type>
+  <created>2026-08-06T00:00:00Z</created>
+  <immutable>true</immutable>
+
+  <axioms>
+    <axiom>
+      <id>A1</id>
+      <name>Composition Over Inheritance</name>
+      <definition>Data structures composed from atomic types, not inherited</definition>
+    </axiom>
+    <axiom>
+      <id>A2</id>
+      <name>Explicit Type Tags</name>
+      <definition>Every data element carries type explicitly</definition>
+    </axiom>
+    <axiom>
+      <id>A3</id>
+      <name>Homogeneous Sequences</name>
+      <definition>Arrays contain only one type</definition>
+    </axiom>
+  </axioms>
+
+  <rules>
+    <rule>
+      <id>R4</id>
+      <name>Alphabetically Sorted Keys</name>
+      <required>true</required>
+    </rule>
+    <rule>
+      <id>R5</id>
+      <name>Explicit Null vs Absent</name>
+      <required>true</required>
+    </rule>
+    <rule>
+      <id>R6</id>
+      <name>Profile URI for Schema Discovery</name>
+      <required>true</required>
+    </rule>
+    <rule>
+      <id>R7</id>
+      <name>SHA256 Content Addressing</name>
+      <format>data://sha256:HASH:TYPE</format>
+      <required>true</required>
+    </rule>
+  </rules>
+
+  <data_sovereignty>
+    <principle>Data lives where user decides, secured by user</principle>
+    <three_layers>
+      <layer>User Decision - where data stored</layer>
+      <layer>Permission Grants - time-bounded access</layer>
+      <layer>Encrypted Storage - user-controlled keys</layer>
+    </three_layers>
+  </data_sovereignty>
+
+  <core_object_types>
+    <type>
+      <name>CoreObject</name>
+      <profile_uri>urn:121xml:core-object/1.0</profile_uri>
+      <fields>object_id, profile_uri, content_address, data, metadata</fields>
+    </type>
+    <type>
+      <name>Message</name>
+      <profile_uri>urn:121xml:message/1.0</profile_uri>
+      <fields>message_id, session_id, author, body, timestamp, content_address</fields>
+    </type>
+    <type>
+      <name>Tool</name>
+      <profile_uri>urn:121xml:tool/1.0</profile_uri>
+      <fields>tool_id, name, description, input_schema, output_schema, permissions_required, content_address</fields>
+    </type>
+    <type>
+      <name>Agent</name>
+      <profile_uri>urn:121xml:agent/1.0</profile_uri>
+      <fields>agent_id, name, model, description, available_tools, supported_protocols, content_address</fields>
+    </type>
+    <type>
+      <name>PermissionGrant</name>
+      <profile_uri>urn:121xml:permission-grant/1.0</profile_uri>
+      <fields>grant_id, user_id, system_id, permissions, issued_at, expires_at, status, content_address</fields>
+    </type>
+    <type>
+      <name>CompactionEvent</name>
+      <profile_uri>urn:121xml:compaction-event/1.0</profile_uri>
+      <fields>event_id, timestamp, original_token_count, compressed_token_count, compression_ratio, data_loss_percent, archived_content_count, reconstruction_possible, strategy_used, content_address</fields>
+    </type>
+  </core_object_types>
+
+  <validation_constraints>
+    <constraint>
+      <rule>All objects must have profile_uri</rule>
+      <enforcement>required</enforcement>
+    </constraint>
+    <constraint>
+      <rule>Keys must be alphabetically sorted</rule>
+      <enforcement>required</enforcement>
+    </constraint>
+    <constraint>
+      <rule>Content addressing uses R7 format</rule>
+      <enforcement>required</enforcement>
+    </constraint>
+    <constraint>
+      <rule>Compaction achieves zero data loss</rule>
+      <enforcement>required</enforcement>
+      <data_loss_percent>0</data_loss_percent>
+    </constraint>
+  </validation_constraints>
+
+  <supported_protocols>
+    <protocol>
+      <name>REST</name>
+      <content_type>application/121xml+json</content_type>
+    </protocol>
+    <protocol>
+      <name>gRPC</name>
+      <content_type>application/grpc+proto3</content_type>
+    </protocol>
+    <protocol>
+      <name>WebSocket</name>
+      <content_type>application/121xml+json</content_type>
+    </protocol>
+    <protocol>
+      <name>GraphQL</name>
+      <content_type>application/graphql+121xml</content_type>
+    </protocol>
+  </supported_protocols>
+
+  <supported_vendors>
+    <vendor>
+      <name>Anthropic Claude</name>
+      <models>claude-opus-5, claude-sonnet-5, claude-haiku-4.5</models>
+    </vendor>
+    <vendor>
+      <name>OpenAI</name>
+      <models>gpt-4-turbo, gpt-4o</models>
+    </vendor>
+    <vendor>
+      <name>Google</name>
+      <models>gemini-pro</models>
+    </vendor>
+    <vendor>
+      <name>Meta</name>
+      <models>llama-2-70b</models>
+    </vendor>
+  </supported_vendors>
+
+</root>

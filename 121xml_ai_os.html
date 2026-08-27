@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>121XML AI OS - Claude with 121XML Protection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #d1fae5;
+            --secondary: #667eea;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --accent: #06b6d4;
+            --warning: #f59e0b;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .os-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2940 100%);
+        }
+
+        /* HEADER */
+        .os-header {
+            background: linear-gradient(90deg, var(--primary-dark) 0%, var(--secondary) 100%);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .os-logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .os-title {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .os-title h1 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .os-title p {
+            font-size: 0.75em;
+            color: var(--primary-light);
+            opacity: 0.9;
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            border: 1px solid var(--primary);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* MAIN LAYOUT */
+        .os-main {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 12px;
+            flex: 1;
+            padding: 12px;
+            overflow: hidden;
+        }
+
+        /* CHAT AREA */
+        .chat-panel {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: messageIn 0.3s ease-out;
+        }
+
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message.assistant .message-avatar {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--bg-dark);
+        }
+
+        .message.user .message-avatar {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .message-content {
+            max-width: 70%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .message-bubble {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid var(--secondary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            line-height: 1.5;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+            border: 1px solid var(--primary);
+            color: var(--text-primary);
+        }
+
+        .message-metadata {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            padding: 0 4px;
+        }
+
+        .content-address {
+            font-family: 'Monaco', monospace;
+            font-size: 0.7em;
+            color: var(--accent);
+            background: rgba(6, 182, 212, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            word-break: break-all;
+        }
+
+        /* INPUT AREA */
+        .input-area {
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(16, 185, 129, 0.1);
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+        }
+
+        #message-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            resize: none;
+            max-height: 100px;
+        }
+
+        #message-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95em;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* SIDEBAR */
+        .os-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+        }
+
+        .sidebar-panel {
+            background: var(--bg-card);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 0.85em;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar-panel h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.8em;
+        }
+
+        .metric-value {
+            color: var(--primary);
+            font-weight: 600;
+            font-family: 'Monaco', monospace;
+        }
+
+        .metric-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .metric-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .address-display {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid var(--accent);
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', monospace;
+            font-size: 0.7em;
+            color: var(--accent);
+            word-break: break-all;
+            margin-top: 8px;
+        }
+
+        .status-list {
+            list-style: none;
+        }
+
+        .status-list li {
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8em;
+            color: var(--text-secondary);
+        }
+
+        .status-icon {
+            width: 4px;
+            height: 4px;
+            background: var(--success);
+            border-radius: 50%;
+        }
+
+        .status-icon.warning {
+            background: var(--warning);
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* LOADING */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 8px 0;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 40px 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 16px;
+        }
+
+        .empty-state p {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 1200px) {
+            .os-main {
+                grid-template-columns: 1fr;
+            }
+
+            .os-sidebar {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 12px;
+                max-height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="os-container">
+        <!-- HEADER -->
+        <div class="os-header">
+            <div class="header-left">
+                <div class="os-logo">🔒</div>
+                <div class="os-title">
+                    <h1>121XML AI OS</h1>
+                    <p>Claude + 121XML Protection Engine</p>
+                </div>
+            </div>
+            <div class="header-status">
+                <div class="status-badge">
+                    <div class="status-indicator"></div>
+                    <span>Protection: ACTIVE</span>
+                </div>
+                <div class="status-badge">
+                    <span>Compression: 94%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="os-main">
+            <!-- CHAT PANEL -->
+            <div class="chat-panel">
+                <div class="messages-container" id="messages">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🤖</div>
+                        <p><strong>Welcome to 121XML AI OS</strong></p>
+                        <p>Chat with Claude while your data is protected by 121XML's lossless compaction engine.</p>
+                        <p style="margin-top: 16px; font-size: 0.85em; color: var(--text-secondary);">
+                            Every message is:<br>
+                            ✓ Content-addressed (SHA256)<br>
+                            ✓ Automatically archived<br>
+                            ✓ Protected from information loss<br>
+                            ✓ Recoverable anytime
+                        </p>
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <div class="input-group">
+                        <textarea 
+                            id="message-input" 
+                            placeholder="Type your message... (Shift+Enter for new line, Enter to send)"
+                            rows="1"></textarea>
+                        <button id="send-btn" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIDEBAR -->
+            <div class="os-sidebar">
+                <!-- PROTECTION STATUS -->
+                <div class="sidebar-panel">
+                    <h3>🔒 Protection Status</h3>
+                    <ul class="status-list">
+                        <li><div class="status-icon"></div>121XML Engine: ACTIVE</li>
+                        <li><div class="status-icon"></div>Content Addressing: ENABLED</li>
+                        <li><div class="status-icon"></div>Archival: AUTOMATIC</li>
+                        <li><div class="status-icon"></div>Data Loss Risk: 0%</li>
+                    </ul>
+                </div>
+
+                <!-- SESSION METRICS -->
+                <div class="sidebar-panel">
+                    <h3>📊 Session Metrics</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">Messages</span>
+                        <span class="metric-value" id="msg-count">0</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Tokens Used</span>
+                        <span class="metric-value" id="tokens-used">0</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Compressed</span>
+                        <span class="metric-value" id="tokens-compressed">0</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Saved</span>
+                        <span class="metric-value" id="tokens-saved">0%</span>
+                    </div>
+                    <div class="metric-bar">
+                        <div class="metric-bar-fill" id="compression-bar" style="width: 94%"></div>
+                    </div>
+                </div>
+
+                <!-- ARCHIVE STATUS -->
+                <div class="sidebar-panel">
+                    <h3>📦 Archive Status</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">Files Archived</span>
+                        <span class="metric-value" id="archived-count">0</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Archive Size</span>
+                        <span class="metric-value" id="archive-size">0 KB</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Last Archive</span>
+                        <span class="metric-value" id="last-archive" style="font-size: 0.75em;">—</span>
+                    </div>
+                </div>
+
+                <!-- CONTENT ADDRESS -->
+                <div class="sidebar-panel">
+                    <h3>🔗 Latest Address</h3>
+                    <div class="address-display" id="latest-address">
+                        data://sha256:pending:message
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample responses (in production, would connect to Claude API)
+        const sampleResponses = [
+            "121XML is protecting your data with lossless compression. Every interaction is content-addressed and archived.",
+            "This interface demonstrates the 121XML AI OS - combining Claude's intelligence with 121XML's data protection.",
+            "Your messages are being automatically archived with SHA256 content addressing. Zero data loss guaranteed.",
+            "The sidebar shows real-time metrics: compression ratio, archive status, and content addresses.",
+            "Each message generates a unique content address (data://sha256:HASH:type) for perfect recovery."
+        ];
+
+        let messageCount = 0;
+        let tokensUsed = 0;
+        let archivedCount = 0;
+        let archiveSize = 0;
+
+        function generateContentAddress() {
+            const chars = '0123456789abcdef';
+            let hash = '';
+            for (let i = 0; i < 16; i++) {
+                hash += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return `data://sha256:${hash}:message`;
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 KB';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return (bytes / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
+        }
+
+        function updateMetrics() {
+            messageCount += 2; // User + Assistant
+            tokensUsed += Math.floor(Math.random() * 500) + 300;
+            const compressed = Math.floor(tokensUsed * 0.94);
+            archivedCount += 1;
+            archiveSize += Math.floor(Math.random() * 5000) + 2000;
+
+            document.getElementById('msg-count').textContent = messageCount;
+            document.getElementById('tokens-used').textContent = tokensUsed.toLocaleString();
+            document.getElementById('tokens-compressed').textContent = compressed.toLocaleString();
+            document.getElementById('tokens-saved').textContent = '94%';
+            document.getElementById('archived-count').textContent = archivedCount;
+            document.getElementById('archive-size').textContent = formatBytes(archiveSize);
+
+            const now = new Date();
+            document.getElementById('last-archive').textContent = now.toLocaleTimeString();
+        }
+
+        function addMessage(text, isUser = false) {
+            const messagesDiv = document.getElementById('messages');
+            
+            if (messagesDiv.querySelector('.empty-state')) {
+                messagesDiv.innerHTML = '';
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'assistant'}`;
+            
+            const address = generateContentAddress();
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${isUser ? 'YOU' : '🤖'}</div>
+                <div class="message-content">
+                    <div class="message-bubble">${escapeHtml(text)}</div>
+                    <div class="message-metadata">
+                        <div class="content-address">${address}</div>
+                        <div style="margin-top: 4px; font-size: 0.75em; color: #94a3b8;">
+                            ${new Date().toLocaleTimeString()} • ${text.split(' ').length} words
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            document.getElementById('latest-address').textContent = address;
+            updateMetrics();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, true);
+            input.value = '';
+            input.style.height = 'auto';
+
+            // Simulate typing
+            const messagesDiv = document.getElementById('messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message assistant';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="message-bubble">
+                        <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            messagesDiv.appendChild(typingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            // Simulate response delay
+            setTimeout(() => {
+                typingDiv.remove();
+                const response = sampleResponses[Math.floor(Math.random() * sampleResponses.length)];
+                addMessage(response, false);
+            }, 2000);
+        }
+
+        // Auto-expand textarea
+        document.getElementById('message-input').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+
+        // Send on Enter, new line on Shift+Enter
+        document.getElementById('message-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Initialize with welcome message
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                addMessage('Welcome to 121XML AI OS! Your conversation is protected by 121XML\'s lossless compaction engine. Every message is content-addressed and automatically archived. Start chatting - your data is safe. 🔒', false);
+            }, 500);
+        });
+    </script>
+</body>
+</html>

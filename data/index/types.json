@@ -1,0 +1,10 @@
+{
+  "payment": [
+    "data://sha256:e1eedc24c7b9bab911798f6d77db68ae1ea6b0c0f939ca3dce8a8118687ca096:payment",
+    "data://sha256:084ee221fd2b94f76f8f6c511732abe8660c811e8f26801609509225753c84c4:payment",
+    "data://sha256:3ff3c20c05ff0106c6faf3bc63a176af1a4921ca452a669c9a077815495302d2:payment"
+  ],
+  "resource": [
+    "data://sha256:0367ab79c1383078d3a0a91fd830f8c87b00e59194d45cdc4c0a5cabef551cda:resource"
+  ]
+}

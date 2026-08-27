@@ -1,0 +1,12 @@
+{
+  "_address": "data://sha256:e1eedc24c7b9bab911798f6d77db68ae1ea6b0c0f939ca3dce8a8118687ca096:payment",
+  "_type": "payment",
+  "_stored": "2026-08-06T21:07:10.077114Z",
+  "_hash": "e1eedc24c7b9bab911798f6d77db68ae1ea6b0c0f939ca3dce8a8118687ca096",
+  "data": {
+    "id": "pay_001",
+    "amount": 450000,
+    "currency": "USD",
+    "invoice": "INV-2026-08-0042"
+  }
+}

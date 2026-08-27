@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  121_XML instance document — canonical serialisation, profile v1.1
+  Supersedes 121_XML_Review_Findings.121xml (23 July 2026, morning).
+  Conformance target: L2. Map keys sorted by code point (R4); null explicit (R5);
+  profile URI and version declared (R6); sequences homogeneous (R1);
+  no inheritance (R2); polymorphic nodes tagged (R3).
+  (C) 121 Solutions 2026
+-->
+<map profile="https://spec.121.us/121xml/1.1" version="1.1" id="program.state.2026-07-23">
+
+  <map name="document">
+    <str name="classification">Internal</str>
+    <str name="issued">2026-07-23</str>
+    <str name="owner">Rashad Khan, Founder &amp; CEO, 121 Solutions</str>
+    <str name="supersedes">121_XML_Review_Findings.121xml</str>
+    <str name="title">121XML programme state after corrected review</str>
+  </map>
+
+  <map name="review_history">
+    <seq name="rounds" of="map">
+      <map tag="round">
+        <str name="input">121_XML_Model.docx + additional_ref.docx</str>
+        <str name="finding">Thesis only. Use cases and monetisation absent. 95% third-party filler.</str>
+        <str name="status">superseded</str>
+      </map>
+      <map tag="round">
+        <str name="input">121XML_Discussion_on_Monetizing.docx</str>
+        <str name="finding">Working prototype and full commercial strategy present. Six issues identified.</str>
+        <str name="status">current</str>
+      </map>
+    </seq>
+    <seq name="retractions" of="map">
+      <map><str name="claim">Nothing is built</str><str name="basis">Six working components evidenced in source</str></map>
+      <map><str name="claim">AST representation is impossible</str><str name="basis">Working Python AST compiler; criticism narrowed to semantic translation only</str></map>
+    </seq>
+  </map>
+
+  <map name="issues">
+    <seq name="open" of="map">
+      <map tag="issue"><int name="id">1</int><str name="title">Unsourced figures in investor material</str><str name="severity">critical</str><str name="action">Replace with Fivetran 2026 benchmark or delete</str><bool name="closed">false</bool></map>
+      <map tag="issue"><int name="id">2</int><str name="title">Token: securities and commercial conflict</str><str name="severity">critical</str><str name="action">Remove from all material; take securities counsel</str><bool name="closed">false</bool></map>
+      <map tag="issue"><int name="id">3</int><str name="title">Performance claim inverted</str><str name="severity">critical</str><str name="action">Sell zero coupling; concede byte cost</str><bool name="closed">false</bool></map>
+      <map tag="issue"><int name="id">4</int><str name="title">Silicon funded inside seed</str><str name="severity">high</str><str name="action">Move to Series B vision line; reallocate to pilots</str><bool name="closed">false</bool></map>
+      <map tag="issue"><int name="id">5</int><str name="title">Targets presented as pipeline</str><str name="severity">medium</str><str name="action">Relabel as researched, not approached</str><bool name="closed">false</bool></map>
+      <map tag="issue"><int name="id">6</int><str name="title">UK/EU outreach lawful basis</str><str name="severity">high</str><str name="action">Document basis before first contact; discard purchased list data</str><bool name="closed">false</bool></map>
+    </seq>
+  </map>
+
+  <map name="assets_built">
+    <seq name="components" of="map">
+      <map><str name="name">Python AST compiler</str><str name="status">working</str></map>
+      <map><str name="name">JSON-to-121XML proxy</str><str name="status">working</str></map>
+      <map><str name="name">SHA-256 integrity envelope</str><str name="status">working</str></map>
+      <map><str name="name">3D relationship workspace</str><str name="status">working</str></map>
+      <map><str name="name">Universal contact importer</str><str name="status">working</str></map>
+      <map><str name="name">Structural test suite</str><str name="status">working</str></map>
+    </seq>
+  </map>
+
+  <map name="deliverables_issued">
+    <seq name="files" of="map">
+      <map><str name="file">121XML_Investor_Pitch_Deck.pptx</str><str name="audience">external</str><int name="slides">13</int></map>
+      <map><str name="file">121XML_Diligence_Readiness_Review.pptx</str><str name="audience">internal</str><int name="slides">11</int></map>
+      <map><str name="file">121XML_Claim_Register_v2.docx</str><str name="audience">internal</str><null name="slides"/></map>
+      <map><str name="file">121XML_Executive_Abstract_v2.docx</str><str name="audience">external</str><null name="slides"/></map>
+      <map><str name="file">121XML_Investor_Outreach_Pack_v2.docx</str><str name="audience">internal</str><null name="slides"/></map>
+      <map><str name="file">121XML_Enterprise_Pilot_Proposal_v2.docx</str><str name="audience">external</str><null name="slides"/></map>
+      <map><str name="file">121_XML_Validation_and_Commercialisation_Review.pptx</str><str name="audience">retired</str><int name="slides">19</int></map>
+    </seq>
+  </map>
+
+  <map name="decisions_pending">
+    <seq name="items" of="str">
+      <str>Token: remove entirely, or accept a crypto-fund raise instead of an infrastructure one</str>
+      <str>Hardware: out of the seed, or hold it in and accept the focus objection</str>
+      <str>First vertical: contact federation, or M&amp;A diligence data rooms</str>
+      <str>Owner: who runs this programme, and what comes off the list to make room</str>
+    </seq>
+  </map>
+
+</map>

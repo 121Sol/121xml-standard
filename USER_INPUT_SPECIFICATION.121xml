@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<user_input_specification>
+  <schema_version>121xml/1.0</schema_version>
+  <document_type>input_specification</document_type>
+  <created>2026-08-06T21:30:00Z</created>
+  <title>121XML OS: User Input Requirements</title>
+
+  <core_question>
+    <question>What does 121XML OS need from users to operate?</question>
+    <answer>User provides data and specifications. 121XML OS provides the inference and orchestration engine.</answer>
+  </core_question>
+
+  <user_input_categories>
+    <category>
+      <name>Raw User Data</name>
+      <description>Any data user wants to process or analyze</description>
+      <formats>
+        <format>JSON</format>
+        <format>CSV</format>
+        <format>XML</format>
+        <format>Protocol Buffers</format>
+        <format>Plain text</format>
+        <format>Binary data</format>
+        <format>Any format</format>
+      </formats>
+      <processing>
+        <step>User submits data in any format</step>
+        <step>121XML OS converts to 121XML via protocol adapter</step>
+        <step>Data gets content address (R7)</step>
+        <step>Processing begins</step>
+      </processing>
+    </category>
+
+    <category>
+      <name>Specifications & Schemas</name>
+      <description>User defines what they want processed</description>
+      <specifications>
+        <spec>Business logic rules (in 121XML)</spec>
+        <spec>Data transformation rules (in 121XML)</spec>
+        <spec>Validation constraints (in 121XML)</spec>
+        <spec>Workflow definitions (in 121XML)</spec>
+        <spec>Output requirements (in 121XML)</spec>
+      </specifications>
+    </category>
+
+    <category>
+      <name>Workflow & Process Definitions</name>
+      <description>User specifies how to process data</description>
+      <examples>
+        <example>DAG workflows in 121XML</example>
+        <example>Agent orchestration rules</example>
+        <example>Tool composition chains</example>
+        <example>Conditional routing logic</example>
+        <example>Error handling strategies</example>
+      </examples>
+    </category>
+
+    <category>
+      <name>Configuration & Preferences</name>
+      <description>User preferences for how OS operates</description>
+      <preferences>
+        <pref>Where data is stored (sovereign choice)</pref>
+        <pref>Which AI system to use (or build-in)</pref>
+        <pref>Token budget and cost limits</pref>
+        <pref>Performance requirements</pref>
+        <pref>Privacy/encryption requirements</pref>
+        <pref>Audit logging preferences</pref>
+      </preferences>
+    </category>
+
+    <category>
+      <name>Permission & Access Control</name>
+      <description>User defines who can access what</description>
+      <controls>
+        <control>Data access permissions (121XML PermissionGrant)</control>
+        <control>Tool execution permissions</control>
+        <control>System resource limits</control>
+        <control>Time-bounded access</control>
+        <control>Revocation policies</control>
+      </controls>
+    </category>
+  </user_input_categories>
+
+  <minimal_viable_inputs>
+    <input>
+      <requirement>User data (any format)</requirement>
+      <format>121XML after conversion</format>
+      <required>true</required>
+    </input>
+
+    <input>
+      <requirement>Processing specification</requirement>
+      <format>121XML workflow definition</format>
+      <required>true</required>
+    </input>
+
+    <input>
+      <requirement>Output schema</requirement>
+      <format>121XML schema definition</format>
+      <required>false</required>
+      <default>Mirror input structure</default>
+    </input>
+
+    <input>
+      <requirement>AI system choice</requirement>
+      <format>121XML configuration</format>
+      <required>false</required>
+      <default>Use built-in 121XML inference</default>
+    </input>
+  </minimal_viable_inputs>
+
+  <what_user_does_NOT_need_to_provide>
+    <item>AI model implementation (OS provides it)</item>
+    <item>Infrastructure (OS handles deployment)</item>
+    <item>Protocol implementation (OS adapts all protocols)</item>
+    <item>Data format translators (OS handles all formats)</item>
+    <item>Agent orchestration logic (OS engine handles it)</item>
+    <item>Storage management (user chooses, OS handles)</item>
+  </what_user_does_NOT_need_to_provide>
+
+  <os_responsibility>
+    <responsibility>Execute workflows defined by user</responsibility>
+    <responsibility>Manage data sovereignty (respect user storage choice)</responsibility>
+    <responsibility>Provide AI inference (built-in or external)</responsibility>
+    <responsibility>Handle all protocol conversions</responsibility>
+    <responsibility>Manage token budgets and costs</responsibility>
+    <responsibility>Maintain audit trails</responsibility>
+    <responsibility>Enforce permission grants</responsibility>
+    <responsibility>Compress context losslessly</responsibility>
+    <responsibility>Enable cross-vendor portability</responsibility>
+  </os_responsibility>
+
+</user_input_specification>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>121XML AI OS - API Reference</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Monaco', 'Courier New', monospace; line-height: 1.6; color: #333; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%); color: white; padding: 40px 20px; margin-bottom: 40px; border-radius: 8px; }
+        header h1 { font-size: 2em; margin-bottom: 10px; }
+        section { background: white; padding: 30px; margin-bottom: 30px; border-radius: 8px; }
+        section h2 { color: #0066cc; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #0066cc; }
+        section h3 { color: #333; margin-top: 20px; margin-bottom: 10px; }
+        .endpoint { background: #f9f9f9; padding: 15px; margin: 15px 0; border-left: 4px solid #0066cc; border-radius: 4px; }
+        .method { display: inline-block; padding: 5px 10px; border-radius: 3px; color: white; font-weight: bold; font-size: 12px; margin-right: 10px; }
+        .method.post { background: #4caf50; }
+        .method.get { background: #2196f3; }
+        .method.put { background: #ff9800; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 4px; overflow-x: auto; margin: 10px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #0066cc; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>121XML AI OS - API Reference</h1>
+            <p style="margin-top: 10px; opacity: 0.9;">OpenAPI 3.0 | REST + WebSocket | Version 1.0</p>
+        </header>
+        
+        <section>
+            <h2>Core Endpoints</h2>
+            
+            <h3>1. Query Endpoint</h3>
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code>/api/v1/query</code>
+                <p>Send a query to the orchestration engine for routing to optimal AI system</p>
+                
+                <h4 style="margin-top: 15px;">Request</h4>
+                <pre>POST /api/v1/query HTTP/1.1
+Host: api.121xml.us
+Content-Type: application/json
+Authorization: Bearer YOUR_API_KEY
+
+{
+  "content": "What is 121XML?",
+  "model_preference": "auto",
+  "temperature": 0.7,
+  "max_tokens": 4096,
+  "system_prompt": "You are helpful..."
+}</pre>
+                
+                <h4>Response (200 OK)</h4>
+                <pre>{
+  "_type": "response",
+  "_schema": "urn:121xml:response/1.0",
+  "content": "121XML is a universal AI orchestration platform...",
+  "model_used": "claude",
+  "tokens_used": 150,
+  "_address": "data://sha256:abc123:response",
+  "cost": "$0.05"
+}</pre>
+            </div>
+            
+            <h3>2. Convert Endpoint</h3>
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code>/api/v1/convert</code>
+                <p>Convert between any two formats (SWIFT, ISO20022, JSON, etc.)</p>
+                
+                <h4 style="margin-top: 15px;">Request</h4>
+                <pre>POST /api/v1/convert HTTP/1.1
+Authorization: Bearer YOUR_API_KEY
+Content-Type: application/json
+
+{
+  "input_format": "swift",
+  "output_format": "iso20022",
+  "data": "SWIFT_MESSAGE_HERE",
+  "validate": true
+}</pre>
+            </div>
+            
+            <h3>3. Archive Endpoint</h3>
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code>/api/v1/archive</code>
+                <p>Store data with immutable SHA256 content addressing</p>
+                
+                <h4 style="margin-top: 15px;">Response includes:</h4>
+                <pre>{
+  "_address": "data://sha256:hash:type",
+  "retrieval_time_ms": 50,
+  "compression_ratio": 0.94
+}</pre>
+            </div>
+            
+            <h3>4. Memory Endpoint</h3>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api/v1/memory/{session_id}</code>
+                <p>Retrieve session memory with full conversation history</p>
+            </div>
+            
+            <h3>5. Validate Endpoint</h3>
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <code>/api/v1/validate</code>
+                <p>Validate data against 121XML schema</p>
+            </div>
+            
+            <h3>6. Metrics Endpoint</h3>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api/v1/metrics</code>
+                <p>Get real-time usage metrics and cost breakdown</p>
+            </div>
+            
+            <h3>7. Health Endpoint</h3>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <code>/api/v1/health</code>
+                <p>Check system health and AI adapter availability</p>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Authentication</h2>
+            <p>Three methods supported:</p>
+            <table>
+                <tr>
+                    <th>Method</th>
+                    <th>Use Case</th>
+                    <th>Header</th>
+                </tr>
+                <tr>
+                    <td>API Key</td>
+                    <td>Server-to-server</td>
+                    <td>Authorization: Bearer sk_...</td>
+                </tr>
+                <tr>
+                    <td>OAuth2</td>
+                    <td>User apps</td>
+                    <td>Authorization: Bearer access_token</td>
+                </tr>
+                <tr>
+                    <td>mTLS</td>
+                    <td>Enterprise</td>
+                    <td>Client cert + key</td>
+                </tr>
+            </table>
+        </section>
+        
+        <section>
+            <h2>Error Handling</h2>
+            <table>
+                <tr>
+                    <th>Code</th>
+                    <th>Meaning</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td>400</td>
+                    <td>Bad Request</td>
+                    <td>Fix request format</td>
+                </tr>
+                <tr>
+                    <td>401</td>
+                    <td>Unauthorized</td>
+                    <td>Check API key</td>
+                </tr>
+                <tr>
+                    <td>429</td>
+                    <td>Rate Limited</td>
+                    <td>Retry with backoff</td>
+                </tr>
+                <tr>
+                    <td>503</td>
+                    <td>Service Unavailable</td>
+                    <td>Auto-failover active</td>
+                </tr>
+            </table>
+        </section>
+        
+        <section>
+            <h2>SDKs Available</h2>
+            <ul style="margin-left: 20px; line-height: 2;">
+                <li><strong>Python:</strong> <code>pip install 121xml</code></li>
+                <li><strong>Node.js:</strong> <code>npm install 121xml</code></li>
+                <li><strong>Go:</strong> <code>go get github.com/121xml/sdk-go</code></li>
+            </ul>
+        </section>
+        
+        <section style="background: #e8f5e9;">
+            <h2>✅ Phase D Complete</h2>
+            <p><strong>Status:</strong> API reference ready for developer integration</p>
+            <p><strong>Endpoints:</strong> 7 (Query, Convert, Archive, Memory, Validate, Metrics, Health)</p>
+            <p><strong>SDKs:</strong> Python, Node.js, Go (auto-generated from OpenAPI)</p>
+        </section>
+    </div>
+</body>
+</html>

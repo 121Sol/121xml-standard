@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SESSION_CONTEXT_TEMPLATE.121xml
+     Template for every work session.
+     MUST be populated at the start of each session to maintain continuity.
+     Prevents memory loss and architectural drift.
+
+     Copy this template, fill in the values, and include at the start of each session.
+-->
+
+<map profile="urn:121xml:session-context/1.0" version="1.0">
+
+  <!-- SESSION METADATA -->
+  <map name="session_info">
+    <str name="session_id">SESSION_ID_HERE</str>
+    <str name="session_date">2026-08-06</str>
+    <str name="session_number">1</str>
+    <str name="agent_name">claude_opus_5</str>
+    <str name="user">Rashad Khan (RK)</str>
+  </map>
+
+  <!-- CRITICAL: REFERENCE TO MASTER DEFINITIONS -->
+  <map name="master_definitions_reference">
+    <str name="location">F:\AI\Claude\Projects\121XML\MASTER_DEFINITIONS.121xml</str>
+    <str name="status">ALWAYS READ BEFORE SESSION STARTS</str>
+    <str name="purpose">Ground truth for all architectural decisions</str>
+    <str name="contains">
+      - Core 121XML purpose
+      - Three axioms (A1-A3)
+      - Four rules (R4-R7)
+      - Sovereign data architecture
+      - Content-addressed inference
+      - Problem statement
+      - Critical boundaries
+      - Inference rules
+      - Permission grants
+    </str>
+  </map>
+
+  <!-- CORE DEFINITIONS SNAPSHOT (for reference during session) -->
+  <seq name="core_definitions_snapshot" of="map">
+
+    <map>
+      <str name="definition_id">def_121xml_core_purpose</str>
+      <str name="definition_address">data://sha256:3a4f2b5c8e9d1f7a2b4c6e8f0a1b3c5d:definition</str>
+      <str name="summary">121XML is vendor-neutral, self-describing, enables schema discovery at receiver (R6), immutable data integrity (R7), universal code generation (A1-A3).</str>
+    </map>
+
+    <map>
+      <str name="definition_id">def_121xml_axioms</str>
+      <str name="definition_address">data://sha256:7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b:definition</str>
+      <str name="summary">A1: No inheritance. A2: Explicit type tags. A3: Homogeneous sequences. Why: Enables universal code generation across all languages.</str>
+    </map>
+
+    <map>
+      <str name="definition_id">def_121xml_rules</str>
+      <str name="definition_address">data://sha256:2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f:definition</str>
+      <str name="summary">R4: Sorted keys (deterministic). R5: Explicit null. R6: Profile URI declared. R7: SHA256 hash. Why: Enables tamper detection, self-description, integrity.</str>
+    </map>
+
+    <map>
+      <str name="definition_id">def_sovereign_architecture</str>
+      <str name="definition_address">data://sha256:5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d:definition</str>
+      <str name="summary">Data lives where user decides. Encrypted. User-held keys. Permission grants. Only references shared. Complete audit trail. Instant revocation.</str>
+    </map>
+
+    <map>
+      <str name="definition_id">def_content_addressed_inference</str>
+      <str name="definition_address">data://sha256:8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f:definition</str>
+      <str name="summary">Data addressed by SHA256. Inferences reference by address, never copy. Can use/modify/enhance/replace. Full lineage tracking.</str>
+    </map>
+
+  </seq>
+
+  <!-- CRITICAL BOUNDARIES (DO NOT VIOLATE) -->
+  <seq name="critical_boundaries_reminder" of="str">
+    <str>NEVER centralize. 121XML is distributed. All access via user's local storage + permission grants.</str>
+    <str>NEVER copy user data. Only references (data addresses) are shared. Raw data stays local.</str>
+    <str>NEVER optimize for single vendor. Design for Claude + GPT + Gemini + Llama simultaneously.</str>
+    <str>NEVER forget core definitions. Always reference by address. Do not rework established decisions.</str>
+  </seq>
+
+  <!-- INFERENCE RULES (HOW TO REASON) -->
+  <seq name="inference_rules_reminder" of="str">
+    <str>Every decision must reference back to core definition by immutable address.</str>
+    <str>Check against critical boundaries BEFORE proposing architecture.</str>
+    <str>Maintain context continuity. Do not assume fresh start.</str>
+    <str>Create audit trail: what, why, which definitions, what alternatives.</str>
+  </seq>
+
+  <!-- TODAY'S TASK (Fill this in) -->
+  <map name="today_task">
+    <str name="task_description">FILL IN: What are we working on today?</str>
+    <str name="task_references">Which definitions apply to this task?</str>
+    <str name="expected_output">What will we deliver?</str>
+  </map>
+
+  <!-- INFERENCES CREATED THIS SESSION (Append as work progresses) -->
+  <seq name="session_inferences" of="map">
+    <!-- Each inference must reference back to master definitions -->
+    <!-- Format:
+    <map>
+      <str name="inference_id">NAME_OF_INFERENCE</str>
+      <str name="inference_description">What we decided</str>
+      <str name="reasoning">Why we decided it</str>
+      <seq name="references_definitions" of="str">
+        <str>data://sha256:address:definition</str>
+      </seq>
+      <seq name="references_boundaries" of="str">
+        <str>boundary_id_checked</str>
+      </seq>
+      <str name="created_timestamp">2026-08-06T HH:MM:SSZ</str>
+    </map>
+    -->
+  </seq>
+
+  <!-- AUDIT TRAIL (All decisions logged here) -->
+  <seq name="audit_trail" of="map">
+    <!-- Each decision: what, why, references, alternatives considered, outcome -->
+    <!-- Format:
+    <map>
+      <str name="decision_id">DECISION_UNIQUE_ID</str>
+      <str name="decision">What was decided</str>
+      <str name="reasoning_chain">Step 1 → Step 2 → Step 3 → Conclusion</str>
+      <seq name="definition_references" of="str">
+        <str>data://sha256:address:definition</str>
+      </seq>
+      <seq name="boundary_checks" of="str">
+        <str>boundary_checked: result</str>
+      </seq>
+      <seq name="alternatives_considered" of="str">
+        <str>Alternative 1 and why rejected</str>
+        <str>Alternative 2 and why rejected</str>
+      </seq>
+      <str name="timestamp">2026-08-06T HH:MM:SSZ</str>
+    </map>
+    -->
+  </seq>
+
+  <!-- NEXT SESSION PREP (What to carry forward) -->
+  <map name="next_session_prep">
+    <str name="items_to_reference">List work in progress that needs continuation</str>
+    <str name="outstanding_decisions">What still needs to be decided</str>
+    <str name="blocked_on">What are we waiting for / who needs to decide</str>
+    <str name="definitions_to_review">Which master definitions are most relevant next session</str>
+  </map>
+
+  <!-- SESSION INTEGRITY HASH -->
+  <str name="session_hash">sha256:session_context_TIMESTAMP</str>
+
+  <!-- METADATA -->
+  <map name="metadata">
+    <str name="created_timestamp">2026-08-06T00:00:00Z</str>
+    <str name="template_version">1.0</str>
+    <str name="instructions">
+      1. At start of EVERY session, copy this template
+      2. Fill in session_info, task description
+      3. Read MASTER_DEFINITIONS.121xml completely
+      4. Reference definitions in all inferences
+      5. Check critical boundaries before proposing anything
+      6. Log all decisions in audit_trail
+      7. At end of session, update next_session_prep
+      8. Include this file in chat when asking for continuity
+    </str>
+  </map>
+
+</map>

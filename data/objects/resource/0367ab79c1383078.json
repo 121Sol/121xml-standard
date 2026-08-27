@@ -1,0 +1,11 @@
+{
+  "_address": "data://sha256:0367ab79c1383078d3a0a91fd830f8c87b00e59194d45cdc4c0a5cabef551cda:resource",
+  "_type": "resource",
+  "_stored": "2026-08-06T21:07:10.167792Z",
+  "_hash": "0367ab79c1383078d3a0a91fd830f8c87b00e59194d45cdc4c0a5cabef551cda",
+  "data": {
+    "uri": "banking://schema/swift",
+    "name": "SWIFT Schema",
+    "content": "SWIFT MT103 specification..."
+  }
+}

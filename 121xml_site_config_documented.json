@@ -1,0 +1,848 @@
+{
+  "// ============================================================================": "CONFIGURATION FILE HEADER",
+  "// Title": "121XML AI OS - Site Configuration",
+  "// Version": "1.0 - Production Ready",
+  "// Purpose": "Complete runtime configuration for 121XML platform",
+  "// ============================================================================": true,
+
+  "site": {
+    "// Site Configuration": "Basic site information and metadata",
+    "name": "121XML AI OS",
+    "// name_doc": "Human-readable name of your 121XML instance (e.g., 'Acme Banking 121XML', 'Healthcare 121XML')",
+    
+    "version": "1.0",
+    "// version_doc": "Configuration schema version - increment when structure changes",
+    
+    "environment": "production",
+    "// environment_doc": "Environment type: 'production', 'staging', 'development', or 'test'",
+    
+    "created": "2026-08-07",
+    "// created_doc": "ISO 8601 date when this configuration was created",
+    
+    "description": "Unified 121XML platform with multi-engine AI support and comprehensive XML specification knowledge base",
+    "// description_doc": "Brief description of this 121XML deployment and its purpose"
+  },
+
+  "objectStore": {
+    "// objectStore_overview": "Configure where and how user objects are stored locally",
+    
+    "default": {
+      "// default_object_store": "Primary location for saving all user objects",
+      
+      "location": "/var/www/121xml/data/objects",
+      "// location_doc": "REQUIRED: Full path where objects will be stored. Examples: '/var/www/121xml/data/objects', '/home/user/121xml/objects', 'C:\\121xml\\objects'",
+      "// location_example": "Update this path based on your server setup. Ensure directory exists and is writable.",
+      
+      "format": "121xml",
+      "// format_doc": "Default storage format: '121xml' (recommended), 'json', 'xml', or 'mixed'",
+      
+      "compression": true,
+      "// compression_doc": "Enable lossless compression (94% token savings): true or false. Recommended: true",
+      
+      "contentAddressing": true,
+      "// contentAddressing_doc": "Enable SHA256 content addressing: true or false. Recommended: true (immutability guarantee)",
+      
+      "immutable": true,
+      "// immutable_doc": "Prevent modification of objects after creation: true or false. Recommended: true",
+      
+      "archiveRetention": "permanent",
+      "// archiveRetention_doc": "Archive retention policy: 'permanent', '1year', '90days', 'custom:days'"
+    },
+
+    "backup": {
+      "// backup_config": "Configure automatic backups of object store",
+      
+      "enabled": true,
+      "// backup_enabled_doc": "Enable automatic backups: true or false",
+      
+      "location": "/var/www/121xml/data/backups",
+      "// backup_location_doc": "REQUIRED: Full path for backup storage (separate from primary objects)",
+      "// backup_location_example": "Should be on different disk/storage than primary for redundancy",
+      
+      "frequency": "daily",
+      "// backup_frequency_doc": "Backup schedule: 'hourly', 'daily', 'weekly', 'monthly'",
+      
+      "retention_days": 90,
+      "// backup_retention_doc": "Keep backups for this many days. Example: 90 (3 months)"
+    },
+
+    "userProjects": {
+      "// userProjects_config": "Storage for grouped user work (projects, campaigns, initiatives)",
+      
+      "location": "/var/www/121xml/data/user-projects",
+      "// userProjects_location_doc": "Full path where project folders will be stored",
+      
+      "maxSizeMB": 5000,
+      "// userProjects_maxSize_doc": "Maximum project size per user in MB. Default: 5000 (5 GB)",
+      
+      "quota_enforcement": true,
+      "// quota_enforcement_doc": "Enforce storage quota: true or false. true = prevents exceeding maxSizeMB"
+    }
+  },
+
+  "aiEngines": {
+    "// aiEngines_overview": "Configure AI engines and API credentials for 121XML backend",
+    "// aiEngines_setup_instructions": [
+      "1. CRITICAL: Never commit actual API keys to version control",
+      "2. Use ENVIRONMENT VARIABLES for all sensitive credentials",
+      "3. Set environment variables on your server before deployment",
+      "4. Example: export ANTHROPIC_API_KEY='sk-ant-...'",
+      "5. Verify all required engines have API keys before deployment"
+    ],
+
+    "available": [
+      {
+        "// claude_ai_engine": "Anthropic's Claude - Recommended for 121XML",
+        
+        "id": "claude",
+        "name": "Claude (Anthropic)",
+        "provider": "Anthropic",
+        "models": ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4.5"],
+        "// models_doc": "Available Claude models in order of capability/cost",
+        
+        "apiEndpoint": "https://api.anthropic.com/v1",
+        "// apiEndpoint_doc": "Do not modify - official Anthropic API endpoint",
+        
+        "requiresKey": true,
+        "keyName": "ANTHROPIC_API_KEY",
+        "// keyName_doc": "PLACEHOLDER: Environment variable name containing your Anthropic API key. Get key from: https://console.anthropic.com/",
+        "// keyName_setup": "Linux/Mac: export ANTHROPIC_API_KEY='your-key-here' | Windows: set ANTHROPIC_API_KEY=your-key-here",
+        
+        "defaultModel": "claude-opus-5",
+        "// defaultModel_doc": "Default model when Claude is selected: opus-5 (best), sonnet-5 (balanced), haiku-4.5 (fast)",
+        
+        "costPer1kTokens": 0.015,
+        "// costPer1kTokens_doc": "Approximate cost per 1000 tokens (input+output average). Used for usage tracking.",
+        
+        "description": "Advanced reasoning, code generation, XML analysis",
+        "recommended": true,
+        "features": ["reasoning", "code", "xml", "banking", "healthcare", "complex-analysis"]
+      },
+      
+      {
+        "// openai_gpt_engine": "OpenAI GPT Models - General purpose fallback",
+        
+        "id": "openai",
+        "name": "OpenAI (GPT)",
+        "provider": "OpenAI",
+        "models": ["gpt-4-turbo", "gpt-4o", "gpt-3.5-turbo"],
+        
+        "apiEndpoint": "https://api.openai.com/v1",
+        "requiresKey": true,
+        "keyName": "OPENAI_API_KEY",
+        "// keyName_doc": "PLACEHOLDER: Environment variable for OpenAI key. Get from: https://platform.openai.com/api-keys",
+        
+        "defaultModel": "gpt-4-turbo",
+        "costPer1kTokens": 0.01,
+        "description": "General purpose language model",
+        "recommended": false,
+        "features": ["chat", "generation", "analysis"]
+      },
+
+      {
+        "// google_gemini_engine": "Google's Gemini - Multimodal capabilities",
+        
+        "id": "google",
+        "name": "Google Gemini",
+        "provider": "Google",
+        "models": ["gemini-2.0-pro", "gemini-1.5-pro", "gemini-1.5-flash"],
+        
+        "apiEndpoint": "https://generativelanguage.googleapis.com/v1beta",
+        "requiresKey": true,
+        "keyName": "GOOGLE_API_KEY",
+        "// keyName_doc": "PLACEHOLDER: Environment variable for Google API key. Get from: https://ai.google.dev/",
+        
+        "defaultModel": "gemini-2.0-pro",
+        "costPer1kTokens": 0.0075,
+        "description": "Multimodal reasoning and analysis",
+        "recommended": false,
+        "features": ["reasoning", "multimodal", "analysis"]
+      },
+
+      {
+        "// together_ai_engine": "Together AI - Cost-effective open-source models at scale",
+        
+        "id": "together",
+        "name": "Together AI",
+        "provider": "Together Computer",
+        "models": ["meta-llama/Llama-3-70b-chat-hf", "mistralai/Mixtral-8x7B-Instruct-v0.1"],
+        
+        "apiEndpoint": "https://api.together.xyz/v1",
+        "requiresKey": true,
+        "keyName": "TOGETHER_API_KEY",
+        "// keyName_doc": "PLACEHOLDER: Together AI API key from https://www.together.ai/",
+        
+        "defaultModel": "meta-llama/Llama-3-70b-chat-hf",
+        "costPer1kTokens": 0.001,
+        "description": "Open-source models at scale",
+        "recommended": false,
+        "features": ["open-source", "cost-effective", "customizable"]
+      },
+
+      {
+        "// cohere_engine": "Cohere - Semantic search and generation",
+        
+        "id": "cohere",
+        "name": "Cohere",
+        "provider": "Cohere",
+        "models": ["command-r-plus", "command-r", "command-light"],
+        
+        "apiEndpoint": "https://api.cohere.com/v1",
+        "requiresKey": true,
+        "keyName": "COHERE_API_KEY",
+        "// keyName_doc": "PLACEHOLDER: Cohere API key from https://dashboard.cohere.ai/",
+        
+        "defaultModel": "command-r-plus",
+        "costPer1kTokens": 0.003,
+        "description": "Semantic search and generation",
+        "features": ["semantic-search", "retrieval", "generation"]
+      },
+
+      {
+        "// mistral_engine": "Mistral AI - Fast and efficient models",
+        
+        "id": "mistral",
+        "name": "Mistral AI",
+        "provider": "Mistral",
+        "models": ["mistral-large", "mistral-medium", "mistral-small"],
+        
+        "apiEndpoint": "https://api.mistral.ai/v1",
+        "requiresKey": true,
+        "keyName": "MISTRAL_API_KEY",
+        "// keyName_doc": "PLACEHOLDER: Mistral API key from https://console.mistral.ai/",
+        
+        "defaultModel": "mistral-large",
+        "costPer1kTokens": 0.007,
+        "description": "Fast and efficient language models",
+        "features": ["speed", "efficiency", "reasoning"]
+      },
+
+      {
+        "// azure_openai_engine": "Microsoft Azure OpenAI - Enterprise deployment",
+        
+        "id": "azure",
+        "name": "Azure OpenAI",
+        "provider": "Microsoft",
+        "models": ["gpt-4-deployment", "gpt-4-turbo-deployment"],
+        
+        "apiEndpoint": "https://{resource}.openai.azure.com/",
+        "// apiEndpoint_doc": "Replace {resource} with your Azure resource name",
+        "requiresKey": true,
+        "keyName": "AZURE_OPENAI_KEY",
+        "// keyName_doc": "PLACEHOLDER: Azure OpenAI API key",
+        
+        "defaultModel": "gpt-4-deployment",
+        "costPer1kTokens": 0.015,
+        "description": "Enterprise OpenAI models on Azure",
+        "features": ["enterprise", "azure-integration", "compliance"]
+      }
+    ],
+
+    "selectedEngine": "claude",
+    "// selectedEngine_doc": "Default AI engine on platform startup. Options: 'claude', 'openai', 'google', 'together', 'cohere', 'mistral', 'azure'",
+    "// selectedEngine_recommendation": "Recommended: 'claude' for best 121XML compatibility",
+
+    "fallbackEngine": "openai",
+    "// fallbackEngine_doc": "If primary engine unavailable, use this engine instead",
+
+    "apiKeyManagement": {
+      "storage": "environment",
+      "// storage_doc": "Where API keys are stored: 'environment' (recommended), 'vault', 'k8s-secret'",
+      
+      "encryption": true,
+      "// encryption_doc": "Encrypt API keys at rest: true or false. Recommended: true",
+      
+      "rotation": "90days",
+      "// rotation_doc": "Rotate API keys every N days for security: '30days', '90days', '180days'",
+      
+      "auditLog": true,
+      "// auditLog_doc": "Log all API key access: true or false. Recommended: true"
+    }
+  },
+
+  "xmlSpecifications": {
+    "// xmlSpecifications_overview": "Comprehensive knowledge base of 30+ XML standards across 8 sectors",
+    "// xmlSpecifications_purpose": "Users can browse, learn about, and convert between these standards within 121XML AI OS",
+
+    "sectors": [
+      {
+        "// Finance_Banking_Insurance": "Payment systems, trading, reporting, compliance",
+        
+        "id": "finance_banking_insurance",
+        "name": "Finance / Banking / Insurance",
+        "specs": [
+          {
+            "name": "FpML",
+            "fullName": "Financial products Markup Language",
+            "version": "5.13",
+            "url": "https://www.fpml.org/",
+            "purpose": "Electronic dealing and processing of privately negotiated derivatives and structured financial products",
+            "sampleFile": "fpml_swap_example.xml",
+            "// sampleFile_doc": "Sample file path in knowledge base showing FpML usage",
+            "converter": "swift_to_fpml",
+            "// converter_doc": "Backend conversion method from SWIFT to FpML"
+          },
+          {
+            "name": "XBRL",
+            "fullName": "eXtensible Business Reporting Language",
+            "version": "2.1",
+            "url": "https://www.xbrl.org/",
+            "purpose": "Digital reporting of corporate financial data, performance, risk, and regulatory compliance",
+            "sampleFile": "xbrl_financial_report.xml",
+            "converter": "json_to_xbrl"
+          },
+          {
+            "name": "ISO 20022",
+            "fullName": "Universal Financial Industry Message Scheme",
+            "version": "2024",
+            "url": "https://www.iso20022.org/",
+            "purpose": "Standardized XML structures for financial transactions (payment initiations, credit transfers, etc.)",
+            "schemas": ["pain.001", "pacs.008", "pacs.002", "pacs.003", "camt.053"],
+            "// schemas_doc": "ISO 20022 message types: pain.001 (payments), pacs.008 (credit), pacs.002 (returns), camt.053 (statements)",
+            "sampleFile": "iso20022_payment.xml",
+            "converter": "swift_to_iso20022"
+          }
+        ]
+      },
+
+      {
+        "// Healthcare_Pharma_Medical": "Clinical data, trials, EHR, regulatory submissions",
+        
+        "id": "healthcare_pharma",
+        "name": "Healthcare / Pharma / Medical Research",
+        "specs": [
+          {
+            "name": "HL7 FHIR",
+            "fullName": "Fast Healthcare Interoperability Resources",
+            "version": "R4B (Release 4 B)",
+            "url": "https://www.hl7.org/fhir/",
+            "purpose": "Exchange of clinical, administrative, and diagnostic health data via RESTful APIs",
+            "resources": ["Patient", "Practitioner", "Observation", "Medication", "MedicationRequest", "Appointment", "Condition"],
+            "// resources_doc": "FHIR resource types for representing healthcare data elements",
+            "sampleFile": "fhir_patient_record.xml",
+            "converter": "hl7_to_fhir"
+          },
+          {
+            "name": "CDISC ODM",
+            "fullName": "Operational Data Model",
+            "version": "2.1",
+            "url": "https://www.cdisc.org/standards/foundational/odm",
+            "purpose": "Clinical trial metadata, case report forms (CRF), and patient data exchange",
+            "sampleFile": "odm_clinical_trial.xml",
+            "converter": "csv_to_odm"
+          },
+          {
+            "name": "CDISC Define-XML",
+            "fullName": "Dataset Metadata Specification",
+            "version": "2.1",
+            "url": "https://www.cdisc.org/standards/foundational/define-xml",
+            "purpose": "Regulatory submission metadata - describes structure, definitions, and transformations of clinical trial datasets",
+            "sampleFile": "define_dataset_metadata.xml",
+            "converter": "excel_to_define_xml"
+          }
+        ]
+      },
+
+      {
+        "// Standards_Education_Geo": "Mathematics, AI/ML, geography, genealogy, standards",
+        
+        "id": "standards_education_geo",
+        "name": "W3C / IEEE / ISO Standards / Education / Genealogy / 3D Geopositioning",
+        "specs": [
+          {
+            "name": "W3C MathML",
+            "fullName": "Mathematical Markup Language",
+            "version": "4.0",
+            "url": "https://www.w3.org/Math/",
+            "purpose": "Represent mathematical notation and formulas (structure and content)",
+            "sampleFile": "mathml_equation.xml",
+            "converter": "latex_to_mathml"
+          },
+          {
+            "name": "IEEE 2941",
+            "fullName": "Standard for AI and Machine Learning Model Representation",
+            "version": "2024",
+            "url": "https://sagroups.ieee.org/2941/",
+            "purpose": "AI/ML model metadata, configurations, and packaging standards",
+            "sampleFile": "ieee2941_ml_model.xml",
+            "converter": "json_schema_to_ieee2941"
+          },
+          {
+            "name": "GML",
+            "fullName": "Geography Markup Language",
+            "version": "3.2.2",
+            "url": "https://www.ogc.org/standards/gml/",
+            "purpose": "Geographic and spatial feature representation, transport, and storage",
+            "sampleFile": "gml_geographic_feature.xml",
+            "converter": "geojson_to_gml"
+          },
+          {
+            "name": "CityGML",
+            "fullName": "3D Urban City Model Standard",
+            "version": "3.0",
+            "url": "https://www.citygml.org/",
+            "purpose": "Standardized 3D models of urban environments, cities, and landscapes",
+            "sampleFile": "citygml_building.xml",
+            "converter": "3dtiles_to_citygml"
+          },
+          {
+            "name": "GEDCOM",
+            "fullName": "Genealogical Data Communication",
+            "version": "7.0",
+            "url": "https://gedcom.io/",
+            "purpose": "Family tree and genealogical data exchange between genealogy software",
+            "sampleFile": "gedcom_family_tree.xml",
+            "converter": "gedcom_to_xml"
+          }
+        ]
+      },
+
+      {
+        "// Media_Publishing_CAD": "News, publishing, video, architecture, engineering",
+        
+        "id": "media_publishing",
+        "name": "News / Publishing / Audio / Film / Media / CAD / CAM / Advertising",
+        "specs": [
+          {
+            "name": "NITF",
+            "fullName": "News Industry Text Format",
+            "version": "3.6",
+            "url": "https://iptc.org/standards/nitf/",
+            "purpose": "Structured news articles with authorship, copyright, and publishing metadata",
+            "sampleFile": "nitf_news_article.xml",
+            "converter": "html_to_nitf"
+          },
+          {
+            "name": "NewsML-G2",
+            "fullName": "News and Media Exchange Format",
+            "version": "2.30",
+            "url": "https://iptc.org/standards/newsml-g2/",
+            "purpose": "Multimedia asset packaging and exchange (text, graphics, video, audio)",
+            "sampleFile": "newsml_video_package.xml",
+            "converter": "media_metadata_to_newsml"
+          },
+          {
+            "name": "ifcXML",
+            "fullName": "Industry Foundation Classes XML",
+            "version": "IFC 4.4",
+            "url": "https://www.buildingsmart.org/",
+            "purpose": "Architectural and engineering building data for CAD/BIM interoperability",
+            "sampleFile": "ifcxml_building_model.xml",
+            "converter": "ifc_to_ifcxml"
+          },
+          {
+            "name": "SVG",
+            "fullName": "Scalable Vector Graphics",
+            "version": "2.0",
+            "url": "https://www.w3.org/TR/SVG2/",
+            "purpose": "2D vector graphics and animations (W3C standard)",
+            "sampleFile": "svg_diagram.xml",
+            "converter": "pdf_to_svg"
+          }
+        ]
+      },
+
+      {
+        "// AI_ML_Robotics": "Predictive models, automation, business rules, AI systems",
+        
+        "id": "ai_ml_robotics",
+        "name": "Informatics / AI / ML / Robotics",
+        "specs": [
+          {
+            "name": "PMML",
+            "fullName": "Predictive Model Markup Language",
+            "version": "4.4",
+            "url": "https://dmg.org/pmml/v4-4-1/GeneralStructure.html",
+            "purpose": "Machine learning and statistical model representation and exchange",
+            "sampleFile": "pmml_decision_tree.xml",
+            "converter": "sklearn_to_pmml"
+          },
+          {
+            "name": "AutomationML",
+            "fullName": "Automation and Robotics Data Exchange Format",
+            "version": "2.3",
+            "url": "https://www.automationml.org/",
+            "purpose": "Industrial automation, robotics, and plant topology",
+            "sampleFile": "automationml_plant_model.xml",
+            "converter": "plcopen_to_automationml"
+          },
+          {
+            "name": "RuleML",
+            "fullName": "Rule Markup Language",
+            "version": "1.0",
+            "url": "https://www.ruleml.org/",
+            "purpose": "Inference rules and knowledge base representation for semantic systems",
+            "sampleFile": "ruleml_business_rules.xml",
+            "converter": "json_rules_to_ruleml"
+          }
+        ]
+      },
+
+      {
+        "// Supply_Chain": "Orders, invoices, shipping, EDI, procurement",
+        
+        "id": "supply_chain",
+        "name": "Manufacturing / Wholesale / Logistics / Supply Chain",
+        "specs": [
+          {
+            "name": "UBL",
+            "fullName": "Universal Business Language",
+            "version": "2.3",
+            "url": "https://ubl.oasis-open.org/",
+            "purpose": "Standard XML business documents (orders, invoices, shipments, receipts) for supply chains",
+            "documents": ["Order", "Invoice", "Shipment", "Receipt", "DeliveryNote", "CreditNote"],
+            "sampleFile": "ubl_purchase_order.xml",
+            "converter": "edi_to_ubl"
+          },
+          {
+            "name": "cXML",
+            "fullName": "Commerce eXtensible Markup Language",
+            "version": "1.2.3",
+            "url": "https://www.ariba.com/",
+            "purpose": "B2B e-procurement - catalogs, purchase orders, invoicing, and automated workflows",
+            "sampleFile": "cxml_purchase_order.xml",
+            "converter": "json_to_cxml"
+          },
+          {
+            "name": "ebXML",
+            "fullName": "Electronic Business using XML",
+            "version": "3.0",
+            "url": "https://www.oasis-open.org/committees/ebxml-core/",
+            "purpose": "Secure business-to-business transactions and messaging",
+            "sampleFile": "ebxml_business_document.xml",
+            "converter": "edi_to_ebxml"
+          }
+        ]
+      },
+
+      {
+        "// Sales_Marketing_HR": "Learning, training, recruitment, benefits, HR",
+        
+        "id": "sales_marketing_hr",
+        "name": "Sales / Marketing / Leadership / Soft Skills / HR",
+        "specs": [
+          {
+            "name": "xAPI",
+            "fullName": "Experience API (Tin Can Protocol)",
+            "version": "2.0",
+            "url": "https://xapi.com/",
+            "purpose": "Track learning experiences, behavioral data, and soft-skill micro-training (online and offline)",
+            "sampleFile": "xapi_learning_record.xml",
+            "converter": "lms_data_to_xapi"
+          },
+          {
+            "name": "SCORM",
+            "fullName": "Sharable Content Object Reference Model",
+            "version": "2004",
+            "url": "https://www.adlnet.gov/projects/scorm/",
+            "purpose": "E-learning content packaging and LMS communication",
+            "sampleFile": "scorm_course_manifest.xml",
+            "converter": "course_data_to_scorm"
+          },
+          {
+            "name": "HR-XML",
+            "fullName": "Human Resources XML",
+            "version": "3.2",
+            "url": "https://www.hropenstandards.org/",
+            "purpose": "HR workflows - resumes, benefits enrollment, recruitment, competencies",
+            "sampleFile": "hrxml_resume.xml",
+            "converter": "resume_to_hrxml"
+          }
+        ]
+      },
+
+      {
+        "// NonProfit_Sovereign": "Aid transparency, government data exchange, compliance",
+        
+        "id": "nonprofit_sovereign",
+        "name": "Non-Profit and Sovereign",
+        "specs": [
+          {
+            "name": "IATI",
+            "fullName": "International Aid Transparency Initiative",
+            "version": "2.03",
+            "url": "https://iatistandard.org/",
+            "purpose": "Humanitarian aid spending transparency - NGOs and international organizations report funding and activities",
+            "sampleFile": "iati_activity_report.xml",
+            "converter": "csv_to_iati"
+          },
+          {
+            "name": "NIEM",
+            "fullName": "National Information Exchange Model",
+            "version": "5.2",
+            "url": "https://www.niem.gov/",
+            "purpose": "Government information sharing - standardized cross-agency and jurisdictional data exchange",
+            "sampleFile": "niem_incident_report.xml",
+            "converter": "json_to_niem"
+          }
+        ]
+      }
+    ]
+  },
+
+  "userInteraction": {
+    "// userInteraction_overview": "Track and analyze how users interact with the 121XML platform",
+    
+    "tracking": {
+      "enabled": true,
+      "// tracking_enabled_doc": "Enable user interaction logging: true or false",
+      
+      "location": "/var/www/121xml/data/interactions",
+      "// tracking_location_doc": "Path where interaction logs are stored",
+      
+      "retention_days": 365,
+      "// retention_days_doc": "Keep interaction logs for N days (365 = 1 year)",
+      
+      "fields": [
+        "user_id",
+        "timestamp",
+        "action",
+        "object_type",
+        "object_id",
+        "ai_engine_used",
+        "model_used",
+        "tokens_used",
+        "compression_ratio",
+        "result_address"
+      ],
+      "// fields_doc": "Data points captured for each user interaction"
+    },
+
+    "analytics": {
+      "enabled": true,
+      "// analytics_enabled_doc": "Enable analytics dashboard: true or false",
+      
+      "aggregationInterval": "hourly",
+      "// aggregationInterval_doc": "Analytics aggregation frequency: 'realtime', 'hourly', 'daily'",
+      
+      "dashboardLocation": "/analytics",
+      "// dashboardLocation_doc": "URL path where analytics dashboard is accessible"
+    }
+  },
+
+  "userWorkspace": {
+    "// userWorkspace_overview": "Configuration for user projects, conversations, memories, and objects",
+
+    "projects": {
+      "// projects_doc": "Grouped work units and initiatives",
+      
+      "location": "/var/www/121xml/data/user-projects",
+      "// projects_location_doc": "REQUIRED: Path where user project folders stored",
+      
+      "defaultQuotaMB": 5000,
+      "// defaultQuotaMB_doc": "Max project size per user in MB (5000 = 5 GB)",
+      
+      "structure": {
+        "name": "project_name",
+        "created": "ISO8601_timestamp",
+        "lastModified": "ISO8601_timestamp",
+        "objects": "array_of_object_ids",
+        "conversations": "array_of_conversation_ids",
+        "metadata": "custom_object"
+      }
+    },
+
+    "conversations": {
+      "// conversations_doc": "Chat history and AI interactions per project",
+      
+      "location": "/var/www/121xml/data/conversations",
+      "// conversations_location_doc": "REQUIRED: Path where conversation records stored",
+      
+      "structure": {
+        "id": "unique_conversation_id",
+        "projectId": "parent_project_id",
+        "messages": "array_of_message_objects",
+        "contentAddresses": "array_of_SHA256_hashes",
+        "aiEngine": "engine_id_used",
+        "model": "model_name_used",
+        "createdAt": "ISO8601",
+        "archivedAt": "ISO8601_or_null"
+      }
+    },
+
+    "memories": {
+      "// memories_doc": "Context, preferences, knowledge base per user/project",
+      
+      "location": "/var/www/121xml/data/memories",
+      "// memories_location_doc": "REQUIRED: Path where memory files stored",
+      
+      "types": [
+        "context_notes",
+        "// context_notes": "User notes, project context, background info",
+        "project_history",
+        "// project_history": "Timeline of project activities and decisions",
+        "preferences",
+        "// preferences": "User UI preferences, export formats, favorite engines",
+        "shortcuts",
+        "// shortcuts": "Custom conversion shortcuts, templates, saved workflows",
+        "knowledge_base"
+        "// knowledge_base": "Domain-specific knowledge and expertise"
+      ]
+    },
+
+    "objects": {
+      "// objects_doc": "Uploaded files and generated objects",
+      
+      "location": "/var/www/121xml/data/objects",
+      "// objects_location_doc": "REQUIRED: Primary path for user-uploaded objects",
+      
+      "indexing": true,
+      "// indexing_doc": "Enable full-text search: true or false",
+      
+      "searchable": true,
+      "// searchable_doc": "Make objects queryable via API: true or false",
+      
+      "versionControl": true,
+      "// versionControl_doc": "Track object versions: true or false. true = keep change history"
+    }
+  },
+
+  "security": {
+    "// security_overview": "Encryption, authentication, and audit settings",
+
+    "encryption": {
+      "atRest": "AES-256",
+      "// atRest_doc": "Encryption for stored data: 'AES-256' (recommended), 'AES-128', 'ChaCha20'",
+      
+      "inTransit": "TLS 1.3",
+      "// inTransit_doc": "Encryption for network traffic: 'TLS 1.3' (recommended), 'TLS 1.2'",
+      
+      "keyManagement": "environment_variables",
+      "// keyManagement_doc": "Where encryption keys stored: 'environment_variables', 'vault', 'k8s-secret', 'aws-kms'"
+    },
+
+    "authentication": {
+      "method": "api_key",
+      "// auth_method_doc": "Authentication type: 'api_key', 'jwt', 'oauth2', 'ldap'",
+      
+      "tokenExpiration": "24hours",
+      "// token_expiration_doc": "API token lifetime: '1hour', '24hours', '7days', '30days'",
+      
+      "refreshTokenExpiration": "30days",
+      "// refresh_token_doc": "Refresh token lifetime for token renewal"
+    },
+
+    "audit": {
+      "enabled": true,
+      "// audit_enabled_doc": "Enable security audit logging: true or false",
+      
+      "location": "/var/www/121xml/data/audit",
+      "// audit_location_doc": "Path where audit logs stored",
+      
+      "fields": ["user", "action", "timestamp", "resource", "result"],
+      "// audit_fields_doc": "Data captured in audit log for compliance"
+    }
+  },
+
+  "dataProtection": {
+    "// dataProtection_overview": "121XML lossless compression, archival, and recovery guarantees",
+
+    "contentAddressing": {
+      "enabled": true,
+      "// contentAddressing_enabled_doc": "Enable SHA256 content addressing: true or false (HIGHLY RECOMMENDED)",
+      
+      "algorithm": "SHA256",
+      "// algorithm_doc": "Hashing algorithm: 'SHA256' (recommended), 'SHA384', 'SHA512'",
+      
+      "immutable": true,
+      "// immutable_doc": "Make objects immutable after creation: true or false (RECOMMENDED)",
+      
+      "format": "data://sha256:HASH:TYPE",
+      "// format_doc": "Content address format: data://sha256:abcd1234:object_type"
+    },
+
+    "compression": {
+      "enabled": true,
+      "// compression_enabled_doc": "Enable 121XML compression: true or false (RECOMMENDED)",
+      
+      "algorithm": "sparse_reference_encoding",
+      "// algorithm_doc": "Compression method: 'sparse_reference_encoding' (121XML proprietary)",
+      
+      "ratio": 0.94,
+      "// compression_ratio_doc": "Expected compression rate: 94% means 6% of original size remains",
+      
+      "dataLoss": 0.0,
+      "// dataLoss_doc": "Data loss percentage: 0.0 = LOSSLESS (100% recovery guaranteed)"
+    },
+
+    "archival": {
+      "enabled": true,
+      "// archival_enabled_doc": "Enable immutable archival: true or false",
+      
+      "location": "/var/www/121xml/data/archive",
+      "// archival_location_doc": "REQUIRED: Path for immutable archive storage",
+      
+      "retention": "permanent",
+      "// retention_doc": "Archive retention: 'permanent', '1year', '7years', 'custom:years'",
+      
+      "recovery": "guaranteed",
+      "// recovery_doc": "Recovery guarantee: 'guaranteed', 'best-effort', 'on-demand'"
+    }
+  },
+
+  "api": {
+    "// api_overview": "Backend API configuration and endpoints",
+
+    "baseUrl": "https://121xml.com/api",
+    "// baseUrl_doc": "REQUIRED: Base URL for API calls. Update for your domain: https://yourdomain.com/api",
+    
+    "version": "v1",
+    "// version_doc": "Current API version: v1",
+    
+    "endpoints": {
+      "convert": "/convert",
+      "// convert_endpoint": "POST /api/convert - Transform between formats (SWIFT→ISO20022, JSON→XML, etc.)",
+      
+      "compress": "/compress",
+      "// compress_endpoint": "POST /api/compress - Apply 121XML compression (94% savings, 0% loss)",
+      
+      "address": "/address",
+      "// address_endpoint": "POST /api/address - Generate SHA256 content addresses",
+      
+      "validate": "/validate",
+      "// validate_endpoint": "POST /api/validate - Validate object against schema",
+      
+      "archive": "/archive",
+      "// archive_endpoint": "POST /api/archive - Archive object immutably with recovery guarantee",
+      
+      "metrics": "/metrics",
+      "// metrics_endpoint": "GET /api/metrics - Retrieve platform usage metrics",
+      
+      "health": "/health",
+      "// health_endpoint": "GET /api/health - Check API and backend service status"
+    },
+
+    "rateLimit": {
+      "requestsPerMinute": 100,
+      "// rateLimit_requests_doc": "Maximum requests per minute per user/key",
+      
+      "tokensPerDay": 1000000,
+      "// rateLimit_tokens_doc": "Maximum AI tokens per day per user/key"
+    }
+  },
+
+  "notifications": {
+    "// notifications_overview": "Alert configuration for important events",
+
+    "enabled": true,
+    "// notifications_enabled_doc": "Enable notifications: true or false",
+    
+    "types": ["deployment", "error", "completion", "milestone"],
+    "// notification_types_doc": "Types of events to notify: deployment start/finish, errors, job completion, milestones",
+    
+    "channels": ["email", "dashboard", "webhook"],
+    "// notification_channels_doc": "Where to send: 'email', 'dashboard', 'webhook', 'slack', 'sms'"
+  },
+
+  "// ============================================================================": "END OF CONFIGURATION",
+  "// Instructions": [
+    "1. BACKUP THIS FILE - version control this configuration",
+    "2. REPLACE PLACEHOLDERS - update all paths, URLs, and API keys for your environment",
+    "3. SET ENVIRONMENT VARIABLES - export all API keys before deployment",
+    "4. VALIDATE JSON - use jsonlint or similar to validate syntax",
+    "5. DEPLOY CONFIG - scp 121xml_site_config.json to /var/www/121xml/",
+    "6. RESTART BACKEND - restart backend_api_server.py to load configuration",
+    "7. VERIFY - test /api/config endpoint returns valid configuration",
+    "8. MONITOR - track initialization logs for configuration load errors"
+  ]
+}

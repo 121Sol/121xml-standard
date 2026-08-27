@@ -1,0 +1,19 @@
+﻿node_modules/
+__pycache__/
+.env
+.env.local
+*.pyc
+.DS_Store
+.vscode/
+.idea/
+
+# Large binaries / exports — kept on disk, not tracked in git (repo bloat + not text-diffable)
+*.pdf
+*.rtf
+*.pptx
+*.docx
+*.zip
+~$*
+
+# Contains internal server path references
+ssh info*.txt

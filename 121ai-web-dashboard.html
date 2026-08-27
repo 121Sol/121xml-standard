@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>121AI Dashboard - Universal AI Orchestration Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: #1a1a2e;
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding: 15px;
+            border-bottom: 1px solid #444;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 8px;
+        }
+
+        .logo svg {
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover {
+            background: #2a2a4e;
+            transform: translateX(4px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-weight: bold;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f5f7fa;
+            overflow: hidden;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #e8f5e9;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #2e7d32;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        /* Panels */
+        .panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Results */
+        .result-box {
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .result-box.success {
+            border-left-color: #4caf50;
+            background: #f1f8f4;
+        }
+
+        .result-box.error {
+            border-left-color: #f44336;
+            background: #fdf1f1;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 16px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #999;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Message Display */
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .message.info {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f0f0f0;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Copy Button */
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .result-box:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="dashboard-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <!-- "1" - Left -->
+                    <line x1="40" y1="50" x2="40" y2="150" stroke="url(#dashboard-logo-grad)" stroke-width="3"/>
+                    <circle cx="40" cy="50" r="5" fill="url(#dashboard-logo-grad)"/>
+                    <circle cx="40" cy="100" r="5" fill="url(#dashboard-logo-grad)"/>
+                    <circle cx="40" cy="150" r="5" fill="url(#dashboard-logo-grad)"/>
+                    <!-- "2" - Center -->
+                    <path d="M 100 50 Q 130 50 130 80 Q 130 110 100 110 Q 70 110 70 140 Q 70 150 100 150"
+                          stroke="url(#dashboard-logo-grad)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <circle cx="100" cy="50" r="5" fill="url(#dashboard-logo-grad)"/>
+                    <circle cx="130" cy="80" r="5" fill="url(#dashboard-logo-grad)"/>
+                    <circle cx="100" cy="110" r="5" fill="url(#dashboard-logo-grad)"/>
+                    <circle cx="100" cy="150" r="5" fill="url(#dashboard-logo-grad)"/>
+                    <!-- "1" - Right -->
+                    <line x1="160" y1="50" x2="160" y2="150" stroke="url(#dashboard-logo-grad)" stroke-width="3"/>
+                    <circle cx="160" cy="50" r="5" fill="url(#dashboard-logo-grad)"/>
+                    <circle cx="160" cy="100" r="5" fill="url(#dashboard-logo-grad)"/>
+                    <circle cx="160" cy="150" r="5" fill="url(#dashboard-logo-grad)"/>
+                </svg>
+                <span>121AI</span>
+            </div>
+
+            <div class="nav-item active" onclick="switchPanel('dashboard')">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </div>
+
+            <div class="nav-item" onclick="switchPanel('process')">
+                <span class="nav-icon">⚙️</span>
+                <span>Process Message</span>
+            </div>
+
+            <div class="nav-item" onclick="switchPanel('convert')">
+                <span class="nav-icon">🔄</span>
+                <span>Format Conversion</span>
+            </div>
+
+            <div class="nav-item" onclick="switchPanel('compress')">
+                <span class="nav-icon">📦</span>
+                <span>Compression</span>
+            </div>
+
+            <div class="nav-item" onclick="switchPanel('voice')">
+                <span class="nav-icon">🎤</span>
+                <span>Voice Query</span>
+            </div>
+
+            <div class="nav-item" onclick="switchPanel('metrics')">
+                <span class="nav-icon">📈</span>
+                <span>Metrics</span>
+            </div>
+
+            <div class="nav-item" onclick="switchPanel('audit')">
+                <span class="nav-icon">🔐</span>
+                <span>Audit Log</span>
+            </div>
+
+            <div class="nav-item" onclick="switchPanel('settings')">
+                <span class="nav-icon">⚡</span>
+                <span>Settings</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1 id="panel-title">121AI Dashboard</h1>
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span id="status-text">Connecting...</span>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Dashboard Panel -->
+                <div class="panel active" id="dashboard">
+                    <div class="grid">
+                        <div class="stat-card">
+                            <div class="stat-label">System Status</div>
+                            <div class="stat-value" id="status-value">🔄</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Messages Processed</div>
+                            <div class="stat-value" id="messages-value">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Compression Savings</div>
+                            <div class="stat-value" id="compression-value">0%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Avg Latency</div>
+                            <div class="stat-value" id="latency-value">0ms</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Capabilities</div>
+                        <table>
+                            <tr>
+                                <td><strong>Format Conversion</strong></td>
+                                <td>50+ enterprise formats (SWIFT, ISO20022, HL7, JSON, CSV, etc.)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Compression</strong></td>
+                                <td>94% lossless token savings with perfect recovery</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data Integrity</strong></td>
+                                <td>SHA256 content addressing with Merkle verification</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Voice Integration</strong></td>
+                                <td>Apple Siri, Google Assistant, Amazon Alexa</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Databases</strong></td>
+                                <td>PostgreSQL, MongoDB, DynamoDB, Redis</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Compliance</strong></td>
+                                <td>GDPR, HIPAA, SOC2 certified</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Quick Start</div>
+                        <p>Use the tabs above to:</p>
+                        <ol style="margin-top: 10px; padding-left: 20px;">
+                            <li>Process messages with compression and addressing</li>
+                            <li>Convert between 50+ data formats</li>
+                            <li>Compress data with 94% savings</li>
+                            <li>Make voice queries (Siri, Google, Alexa)</li>
+                            <li>Monitor real-time metrics</li>
+                            <li>View audit logs for compliance</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Process Message Panel -->
+                <div class="panel" id="process">
+                    <div class="card">
+                        <div class="card-title">Process Message</div>
+                        <div class="form-group">
+                            <label>Message Content</label>
+                            <textarea id="process-content" placeholder='{"invoice": "INV-001", "amount": 1000.00}'></textarea>
+                        </div>
+                        <div class="grid">
+                            <div class="form-group">
+                                <label>Source Format</label>
+                                <select id="process-format">
+                                    <option>JSON</option>
+                                    <option>SWIFT</option>
+                                    <option>ISO20022</option>
+                                    <option>XML</option>
+                                    <option>CSV</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Target Format</label>
+                                <select id="process-target">
+                                    <option>JSON</option>
+                                    <option>SWIFT</option>
+                                    <option>ISO20022</option>
+                                    <option>XML</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="process-compress" checked> Enable Compression (94% savings)
+                            <input type="checkbox" id="process-address" checked style="margin-left: 20px;"> Generate Content Address
+                            <input type="checkbox" id="process-audit" checked style="margin-left: 20px;"> Log to Audit Trail
+                        </div>
+                        <button class="btn btn-primary" onclick="processMessage()">
+                            <span>▶</span>
+                            <span>Process Message</span>
+                        </button>
+                        <div id="process-result"></div>
+                    </div>
+                </div>
+
+                <!-- Format Conversion Panel -->
+                <div class="panel" id="convert">
+                    <div class="card">
+                        <div class="card-title">Format Conversion</div>
+                        <div class="form-group">
+                            <label>Input Data</label>
+                            <textarea id="convert-input" placeholder="Paste SWIFT, ISO20022, JSON, or other format data here..."></textarea>
+                        </div>
+                        <div class="grid">
+                            <div class="form-group">
+                                <label>Source Format</label>
+                                <select id="convert-source">
+                                    <option>Auto-detect</option>
+                                    <option>SWIFT</option>
+                                    <option>ISO20022</option>
+                                    <option>JSON</option>
+                                    <option>XML</option>
+                                    <option>CSV</option>
+                                    <option>HL7</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Target Format</label>
+                                <select id="convert-target">
+                                    <option>JSON</option>
+                                    <option>SWIFT</option>
+                                    <option>ISO20022</option>
+                                    <option>XML</option>
+                                    <option>CSV</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="convertFormat()">
+                            <span>🔄</span>
+                            <span>Convert</span>
+                        </button>
+                        <div id="convert-result"></div>
+                    </div>
+                </div>
+
+                <!-- Compression Panel -->
+                <div class="panel" id="compress">
+                    <div class="card">
+                        <div class="card-title">Data Compression</div>
+                        <div class="form-group">
+                            <label>Data to Compress</label>
+                            <textarea id="compress-input" placeholder="Paste large JSON or data structure here..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Compression Level (1-10)</label>
+                            <input type="range" id="compress-level" min="1" max="10" value="7">
+                            <small>Higher = more compression (slower)</small>
+                        </div>
+                        <button class="btn btn-primary" onclick="compressData()">
+                            <span>📦</span>
+                            <span>Compress</span>
+                        </button>
+                        <div id="compress-result"></div>
+                    </div>
+                </div>
+
+                <!-- Voice Query Panel -->
+                <div class="panel" id="voice">
+                    <div class="card">
+                        <div class="card-title">Voice Query</div>
+                        <div class="form-group">
+                            <label>Voice Platform</label>
+                            <select id="voice-platform">
+                                <option>siri</option>
+                                <option>google</option>
+                                <option>alexa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Query Text</label>
+                            <textarea id="voice-text" placeholder="What's my account balance? Convert this payment to ISO20022. etc." rows="4"></textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="voiceQuery()">
+                            <span>🎤</span>
+                            <span>Send Voice Query</span>
+                        </button>
+                        <div id="voice-result"></div>
+                    </div>
+                </div>
+
+                <!-- Metrics Panel -->
+                <div class="panel" id="metrics">
+                    <div class="card">
+                        <div class="card-title">System Metrics</div>
+                        <button class="btn btn-secondary btn-small" onclick="refreshMetrics()">
+                            <span>🔄</span>
+                            <span>Refresh</span>
+                        </button>
+                        <div id="metrics-content" style="margin-top: 20px;"></div>
+                    </div>
+                </div>
+
+                <!-- Audit Log Panel -->
+                <div class="panel" id="audit">
+                    <div class="card">
+                        <div class="card-title">Audit Log</div>
+                        <button class="btn btn-secondary btn-small" onclick="loadAuditLog()">
+                            <span>🔄</span>
+                            <span>Refresh</span>
+                        </button>
+                        <div id="audit-content" style="margin-top: 20px;"></div>
+                    </div>
+                </div>
+
+                <!-- Settings Panel -->
+                <div class="panel" id="settings">
+                    <div class="card">
+                        <div class="card-title">Settings</div>
+                        <div class="form-group">
+                            <label>API Endpoint</label>
+                            <input type="text" id="api-endpoint" value="http://localhost:8000">
+                        </div>
+                        <div class="form-group">
+                            <label>Auto-refresh Metrics (seconds)</label>
+                            <input type="number" id="refresh-interval" value="30" min="5" max="300">
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="auto-refresh" checked> Enable Auto-refresh
+                        </div>
+                        <button class="btn btn-primary" onclick="saveSettings()">
+                            <span>💾</span>
+                            <span>Save Settings</span>
+                        </button>
+                        <div id="settings-result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_ENDPOINT = () => document.getElementById('api-endpoint').value || 'http://localhost:8000';
+        let autoRefreshTimer = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSettings();
+            checkStatus();
+            refreshMetrics();
+            setupAutoRefresh();
+        });
+
+        // Panel switching
+        function switchPanel(panelName) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            document.getElementById(panelName).classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
+
+            const titles = {
+                dashboard: '121AI Dashboard',
+                process: 'Process Message',
+                convert: 'Format Conversion',
+                compress: 'Data Compression',
+                voice: 'Voice Query',
+                metrics: 'System Metrics',
+                audit: 'Audit Log',
+                settings: 'Settings'
+            };
+            document.getElementById('panel-title').textContent = titles[panelName];
+        }
+
+        // Check Status
+        async function checkStatus() {
+            try {
+                const response = await fetch(`${API_ENDPOINT()}/health`);
+                const data = await response.json();
+
+                document.getElementById('status-text').textContent = data.status === 'healthy' ? '✓ Connected' : '⚠ Degraded';
+                document.getElementById('status-value').textContent = data.status === 'healthy' ? '✓ Healthy' : '⚠ Warning';
+
+                setTimeout(checkStatus, 30000); // Check every 30 seconds
+            } catch (error) {
+                document.getElementById('status-text').textContent = '✗ Disconnected';
+                document.getElementById('status-value').textContent = '✗ Offline';
+            }
+        }
+
+        // Process Message
+        async function processMessage() {
+            const content = document.getElementById('process-content').value;
+            const format = document.getElementById('process-format').value;
+            const target = document.getElementById('process-target').value;
+            const compress = document.getElementById('process-compress').checked;
+            const address = document.getElementById('process-address').checked;
+            const audit = document.getElementById('process-audit').checked;
+
+            if (!content) {
+                showResult('process-result', 'Please enter message content', 'error');
+                return;
+            }
+
+            showLoading('process-result');
+
+            try {
+                const response = await fetch(`${API_ENDPOINT()}/api/process`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content, format, target, compress, address, audit })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showResult('process-result', JSON.stringify(data, null, 2), 'success');
+                    updateMetrics();
+                } else {
+                    showResult('process-result', data.error || 'Failed to process message', 'error');
+                }
+            } catch (error) {
+                showResult('process-result', `Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Convert Format
+        async function convertFormat() {
+            const input = document.getElementById('convert-input').value;
+            const source = document.getElementById('convert-source').value;
+            const target = document.getElementById('convert-target').value;
+
+            if (!input) {
+                showResult('convert-result', 'Please enter data to convert', 'error');
+                return;
+            }
+
+            showLoading('convert-result');
+
+            try {
+                const response = await fetch(`${API_ENDPOINT()}/api/convert`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: input, source_format: source, target_format: target })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showResult('convert-result', data.output || JSON.stringify(data, null, 2), 'success');
+                } else {
+                    showResult('convert-result', data.error || 'Conversion failed', 'error');
+                }
+            } catch (error) {
+                showResult('convert-result', `Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Compress Data
+        async function compressData() {
+            const input = document.getElementById('compress-input').value;
+            const level = document.getElementById('compress-level').value;
+
+            if (!input) {
+                showResult('compress-result', 'Please enter data to compress', 'error');
+                return;
+            }
+
+            showLoading('compress-result');
+
+            try {
+                const response = await fetch(`${API_ENDPOINT()}/api/compress`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: input, aggressiveness: parseInt(level) })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const result = `Compression Results:
+Original Size: ${data.original_size} bytes
+Compressed Size: ${data.compressed_size} bytes
+Compression Ratio: ${data.ratio.toFixed(2)}
+Token Savings: ${data.token_savings.toFixed(1)}%
+
+Compressed Data:
+${data.compressed}`;
+                    showResult('compress-result', result, 'success');
+                } else {
+                    showResult('compress-result', data.error || 'Compression failed', 'error');
+                }
+            } catch (error) {
+                showResult('compress-result', `Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Voice Query
+        async function voiceQuery() {
+            const text = document.getElementById('voice-text').value;
+            const platform = document.getElementById('voice-platform').value;
+
+            if (!text) {
+                showResult('voice-result', 'Please enter a query', 'error');
+                return;
+            }
+
+            showLoading('voice-result');
+
+            try {
+                const response = await fetch(`${API_ENDPOINT()}/api/voice-query`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, platform, session_id: 'web-' + Date.now() })
+                });
+
+                const data = await response.json();
+
+                const result = `Platform: ${data.platform}
+Confidence: ${(data.confidence * 100).toFixed(1)}%
+
+Response: ${data.response}
+
+${data.followup_prompt ? `Follow-up: ${data.followup_prompt}` : ''}`;
+
+                showResult('voice-result', result, 'success');
+            } catch (error) {
+                showResult('voice-result', `Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Refresh Metrics
+        async function refreshMetrics() {
+            try {
+                const response = await fetch(`${API_ENDPOINT()}/metrics`);
+                const data = await response.json();
+
+                document.getElementById('messages-value').textContent = data.total_messages || '0';
+                document.getElementById('compression-value').textContent = (data.average_compression_ratio * 100).toFixed(1) + '%';
+                document.getElementById('latency-value').textContent = data.average_latency_ms?.toFixed(0) + 'ms' || '0ms';
+
+                const metricsHtml = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                document.getElementById('metrics-content').innerHTML = metricsHtml;
+            } catch (error) {
+                document.getElementById('metrics-content').innerHTML = `<div class="message error">Failed to load metrics: ${error.message}</div>`;
+            }
+        }
+
+        // Load Audit Log
+        async function loadAuditLog() {
+            showLoading('audit-content');
+
+            try {
+                const response = await fetch(`${API_ENDPOINT()}/api/audit`);
+                const data = await response.json();
+
+                let html = '<table><tr><th>Timestamp</th><th>Operation</th><th>Actor</th><th>Resource</th><th>Status</th></tr>';
+
+                if (data.events && Array.isArray(data.events)) {
+                    data.events.slice(-20).reverse().forEach(event => {
+                        html += `<tr>
+                            <td>${new Date(event.timestamp).toLocaleString()}</td>
+                            <td>${event.operation}</td>
+                            <td>${event.actor}</td>
+                            <td>${event.resource}</td>
+                            <td>${event.status}</td>
+                        </tr>`;
+                    });
+                }
+
+                html += '</table>';
+                document.getElementById('audit-content').innerHTML = html;
+            } catch (error) {
+                document.getElementById('audit-content').innerHTML = `<div class="message error">Failed to load audit log: ${error.message}</div>`;
+            }
+        }
+
+        // Update Metrics
+        async function updateMetrics() {
+            await refreshMetrics();
+        }
+
+        // Show Result
+        function showResult(elementId, content, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="result-box ${type}">${escapeHtml(content)}</div>`;
+        }
+
+        function showLoading(elementId) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = '<div class="message info"><span class="loading"></span> Loading...</div>';
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Settings
+        function saveSettings() {
+            const endpoint = document.getElementById('api-endpoint').value;
+            const interval = parseInt(document.getElementById('refresh-interval').value);
+
+            localStorage.setItem('121ai-endpoint', endpoint);
+            localStorage.setItem('121ai-refresh-interval', interval);
+
+            setupAutoRefresh();
+            showResult('settings-result', '✓ Settings saved successfully', 'success');
+        }
+
+        function loadSettings() {
+            const endpoint = localStorage.getItem('121ai-endpoint') || 'http://localhost:8000';
+            const interval = localStorage.getItem('121ai-refresh-interval') || '30';
+
+            document.getElementById('api-endpoint').value = endpoint;
+            document.getElementById('refresh-interval').value = interval;
+        }
+
+        function setupAutoRefresh() {
+            if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+
+            if (document.getElementById('auto-refresh').checked) {
+                const interval = parseInt(document.getElementById('refresh-interval').value) * 1000;
+                autoRefreshTimer = setInterval(refreshMetrics, interval);
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'Enter') {
+                    const activePanel = document.querySelector('.panel.active').id;
+                    if (activePanel === 'process') processMessage();
+                    else if (activePanel === 'convert') convertFormat();
+                    else if (activePanel === 'compress') compressData();
+                    else if (activePanel === 'voice') voiceQuery();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

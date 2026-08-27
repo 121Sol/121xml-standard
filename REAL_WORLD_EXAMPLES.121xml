@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<real_world_examples>
+  <schema_version>121xml/1.0</schema_version>
+  <document_type>practical_conversion_examples</document_type>
+  <created>2026-08-06T22:40:00Z</created>
+  <title>121XML Real-World Conversion Examples with Actual Data</title>
+
+  <!-- EXAMPLE 1: MEDICAL PRESCRIPTION -->
+  <example>
+    <id>medical_prescription</id>
+    <name>Medical Prescription Conversion</name>
+    <industry>Healthcare</industry>
+    <description>Convert prescription from HL7 v2 standard format to 121XML for portability across systems</description>
+    
+    <input_format>
+      <name>HL7 v2.5 Prescription Message</name>
+      <standard>HL7 (Health Level 7)</standard>
+      <content>
+MSH|^~\&|PHARMACY|HOSPITAL|CLAIMS|INSURER|20260806141530||RXE^RXE^RXE|MSG123456|P|2.5|||USA|ASCII
+PID|1||12345678^^^MRN||DOE^JOHN^A||19750315|M|||123 MAIN ST^^ANYTOWN^CA^90210^USA|||||||
+ORC|NW|RX123456||||||||||||||||||
+RXE|1|METFORMIN|500^MG||||PO|BID|30|TABLET||||||||||
+RXR|P|SWALLOW|||||
+RXD|1|METFORMIN|500^MG|30|TABLET|20260806|Dr. Smith|
+      </content>
+    </input_format>
+
+    <output_format>
+      <name>121XML Medical Prescription</name>
+      <content>
+&lt;prescription&gt;
+  &lt;profile_uri&gt;urn:121xml:medical-prescription/1.0&lt;/profile_uri&gt;
+  &lt;prescription_id&gt;RX123456&lt;/prescription_id&gt;
+  &lt;timestamp&gt;2026-08-06T14:15:30Z&lt;/timestamp&gt;
+  
+  &lt;patient&gt;
+    &lt;mrn&gt;12345678&lt;/mrn&gt;
+    &lt;name&gt;DOE, JOHN A&lt;/name&gt;
+    &lt;dob&gt;1975-03-15&lt;/dob&gt;
+    &lt;gender&gt;M&lt;/gender&gt;
+    &lt;address&gt;123 MAIN ST, ANYTOWN, CA 90210, USA&lt;/address&gt;
+  &lt;/patient&gt;
+  
+  &lt;medication&gt;
+    &lt;name&gt;METFORMIN&lt;/name&gt;
+    &lt;strength&gt;500&lt;/strength&gt;
+    &lt;unit&gt;MG&lt;/unit&gt;
+    &lt;form&gt;TABLET&lt;/form&gt;
+  &lt;/medication&gt;
+  
+  &lt;dosage&gt;
+    &lt;route&gt;ORAL&lt;/route&gt;
+    &lt;frequency&gt;TWICE_DAILY&lt;/frequency&gt;
+    &lt;quantity&gt;30&lt;/quantity&gt;
+    &lt;unit&gt;TABLET&lt;/unit&gt;
+  &lt;/dosage&gt;
+  
+  &lt;prescriber&gt;
+    &lt;name&gt;Dr. Smith&lt;/name&gt;
+    &lt;date&gt;2026-08-06&lt;/date&gt;
+  &lt;/prescriber&gt;
+  
+  &lt;content_address&gt;data://sha256:abc123def456:medical-prescription&lt;/content_address&gt;
+&lt;/prescription&gt;
+      </content>
+    </output_format>
+
+    <benefit>
+      <item>HL7 message → 121XML → Can be consumed by any system (clinic, pharmacy, insurance)</item>
+      <item>Patient data portable and queryable</item>
+      <item>Prescription referenced by immutable content address</item>
+      <item>Zero data loss during conversion</item>
+    </benefit>
+  </example>
+
+  <!-- EXAMPLE 2: FINANCIAL TRANSACTION -->
+  <example>
+    <id>crypto_transaction</id>
+    <name>Cryptocurrency Purchase Transaction</name>
+    <industry>Finance</industry>
+    <description>Convert financial transaction from ISO 20022 (PACS.008) to 121XML for cross-system settlement</description>
+    
+    <input_format>
+      <name>ISO 20022 PACS.008 Payment Message</name>
+      <standard>ISO 20022 (Payment Initiation)</standard>
+      <content>
+&lt;?xml version="1.0"?&gt;
+&lt;Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08"&gt;
+  &lt;CstmrCdtTrfInitn&gt;
+    &lt;GrpHdr&gt;
+      &lt;MsgId&gt;CRYPTO20260806001&lt;/MsgId&gt;
+      &lt;CreDtTm&gt;2026-08-06T14:30:00Z&lt;/CreDtTm&gt;
+      &lt;NbOfTxns&gt;1&lt;/NbOfTxns&gt;
+      &lt;CtrlSum&gt;2500.00&lt;/CtrlSum&gt;
+    &lt;/GrpHdr&gt;
+    &lt;PmtInf&gt;
+      &lt;PmtInfId&gt;PYMT20260806001&lt;/PmtInfId&gt;
+      &lt;PmtMtd&gt;CRDT&lt;/PmtMtd&gt;
+      &lt;Debtor&gt;
+        &lt;Nm&gt;John Smith&lt;/Nm&gt;
+        &lt;Id&gt;
+          &lt;OrgId&gt;
+            &lt;Othr&gt;
+              &lt;Id&gt;SMITH123&lt;/Id&gt;
+            &lt;/Othr&gt;
+          &lt;/OrgId&gt;
+        &lt;/Id&gt;
+      &lt;/Debtor&gt;
+      &lt;CdtTrfTxInf&gt;
+        &lt;PmtId&gt;
+          &lt;InstrId&gt;TXN001&lt;/InstrId&gt;
+          &lt;EndToEndId&gt;E2EBUY001&lt;/EndToEndId&gt;
+        &lt;/PmtId&gt;
+        &lt;Amt&gt;
+          &lt;InstdAmt Ccy="USD"&gt;2500.00&lt;/InstdAmt&gt;
+        &lt;/Amt&gt;
+        &lt;Purp&gt;
+          &lt;Cd&gt;TRAD&lt;/Cd&gt;
+          &lt;Prtry&gt;BUY_BITCOIN&lt;/Prtry&gt;
+        &lt;/Purp&gt;
+        &lt;Creditor&gt;
+          &lt;Nm&gt;CryptoExchange Inc&lt;/Nm&gt;
+          &lt;Id&gt;
+            &lt;OrgId&gt;
+              &lt;Othr&gt;
+                &lt;Id&gt;EXCHANGE456&lt;/Id&gt;
+              &lt;/Othr&gt;
+            &lt;/OrgId&gt;
+          &lt;/Id&gt;
+        &lt;/Creditor&gt;
+      &lt;/CdtTrfTxInf&gt;
+    &lt;/PmtInf&gt;
+  &lt;/CstmrCdtTrfInitn&gt;
+&lt;/Document&gt;
+      </content>
+    </input_format>
+
+    <output_format>
+      <name>121XML Financial Transaction</name>
+      <content>
+&lt;financial_transaction&gt;
+  &lt;profile_uri&gt;urn:121xml:financial-transaction/1.0&lt;/profile_uri&gt;
+  &lt;transaction_id&gt;E2EBUY001&lt;/transaction_id&gt;
+  &lt;timestamp&gt;2026-08-06T14:30:00Z&lt;/timestamp&gt;
+  &lt;transaction_type&gt;CRYPTOCURRENCY_PURCHASE&lt;/transaction_type&gt;
+  
+  &lt;source&gt;
+    &lt;account_holder&gt;John Smith&lt;/account_holder&gt;
+    &lt;account_id&gt;SMITH123&lt;/account_id&gt;
+    &lt;account_type&gt;PERSONAL_CHECKING&lt;/account_type&gt;
+  &lt;/source&gt;
+  
+  &lt;destination&gt;
+    &lt;exchange_name&gt;CryptoExchange Inc&lt;/exchange_name&gt;
+    &lt;exchange_id&gt;EXCHANGE456&lt;/exchange_id&gt;
+    &lt;wallet_address&gt;[derived from smart contract]&lt;/wallet_address&gt;
+  &lt;/destination&gt;
+  
+  &lt;amount&gt;
+    &lt;fiat_currency&gt;USD&lt;/fiat_currency&gt;
+    &lt;fiat_amount&gt;2500.00&lt;/fiat_amount&gt;
+    &lt;crypto_asset&gt;BITCOIN&lt;/crypto_asset&gt;
+    &lt;crypto_amount&gt;0.0625&lt;/crypto_amount&gt;
+    &lt;exchange_rate&gt;40000.00&lt;/exchange_rate&gt;
+  &lt;/amount&gt;
+  
+  &lt;smart_contract&gt;
+    &lt;contract_address&gt;0xabcdef123456789&lt;/contract_address&gt;
+    &lt;contract_type&gt;ATOMIC_SWAP&lt;/contract_type&gt;
+    &lt;status&gt;EXECUTED&lt;/status&gt;
+    &lt;gas_fee&gt;0.002&lt;/gas_fee&gt;
+  &lt;/smart_contract&gt;
+  
+  &lt;compliance&gt;
+    &lt;kyc_verified&gt;true&lt;/kyc_verified&gt;
+    &lt;aml_passed&gt;true&lt;/aml_passed&gt;
+    &lt;regulatory_approval&gt;APPROVED&lt;/regulatory_approval&gt;
+  &lt;/compliance&gt;
+  
+  &lt;content_address&gt;data://sha256:def789abc123:financial-transaction&lt;/content_address&gt;
+&lt;/financial_transaction&gt;
+      </content>
+    </output_format>
+
+    <benefit>
+      <item>ISO 20022 → 121XML enables crypto compliance with traditional finance</item>
+      <item>Smart contract data immutably recorded</item>
+      <item>Cross-chain settlement becomes standardized</item>
+      <item>Audit trail perfect for regulatory compliance</item>
+    </benefit>
+  </example>
+
+  <!-- EXAMPLE 3: CODE CONVERSION -->
+  <example>
+    <id>code_conversion</id>
+    <name>Program Code Format Conversion</name>
+    <industry>Software Development</industry>
+    <description>Convert Python program to Java/PHP via 121XML intermediate representation</description>
+    
+    <input_format>
+      <name>Python Program</name>
+      <language>Python 3</language>
+      <content>
+class BankAccount:
+    def __init__(self, account_id, balance):
+        self.account_id = account_id
+        self.balance = balance
+    
+    def deposit(self, amount):
+        if amount > 0:
+            self.balance += amount
+            return True
+        return False
+    
+    def withdraw(self, amount):
+        if 0 < amount <= self.balance:
+            self.balance -= amount
+            return True
+        return False
+    
+    def get_balance(self):
+        return self.balance
+
+# Usage
+account = BankAccount("ACC001", 1000.00)
+account.deposit(500)
+print(f"Balance: {account.get_balance()}")
+      </content>
+    </input_format>
+
+    <output_format>
+      <name>121XML Code Structure</name>
+      <content>
+&lt;program&gt;
+  &lt;profile_uri&gt;urn:121xml:program-structure/1.0&lt;/profile_uri&gt;
+  &lt;source_language&gt;PYTHON&lt;/source_language&gt;
+  &lt;program_name&gt;BankAccount&lt;/program_name&gt;
+  
+  &lt;classes&gt;
+    &lt;class&gt;
+      &lt;name&gt;BankAccount&lt;/name&gt;
+      &lt;type&gt;CLASS&lt;/type&gt;
+      
+      &lt;properties&gt;
+        &lt;property&gt;
+          &lt;name&gt;account_id&lt;/name&gt;
+          &lt;type&gt;STRING&lt;/type&gt;
+          &lt;visibility&gt;PRIVATE&lt;/visibility&gt;
+        &lt;/property&gt;
+        &lt;property&gt;
+          &lt;name&gt;balance&lt;/name&gt;
+          &lt;type&gt;FLOAT&lt;/type&gt;
+          &lt;visibility&gt;PRIVATE&lt;/visibility&gt;
+        &lt;/property&gt;
+      &lt;/properties&gt;
+      
+      &lt;methods&gt;
+        &lt;method&gt;
+          &lt;name&gt;__init__&lt;/name&gt;
+          &lt;type&gt;CONSTRUCTOR&lt;/type&gt;
+          &lt;parameters&gt;
+            &lt;param&gt;&lt;name&gt;account_id&lt;/name&gt;&lt;type&gt;STRING&lt;/type&gt;&lt;/param&gt;
+            &lt;param&gt;&lt;name&gt;balance&lt;/name&gt;&lt;type&gt;FLOAT&lt;/type&gt;&lt;/param&gt;
+          &lt;/parameters&gt;
+          &lt;logic&gt;
+            &lt;statement&gt;this.account_id = account_id&lt;/statement&gt;
+            &lt;statement&gt;this.balance = balance&lt;/statement&gt;
+          &lt;/logic&gt;
+        &lt;/method&gt;
+        
+        &lt;method&gt;
+          &lt;name&gt;deposit&lt;/name&gt;
+          &lt;type&gt;PUBLIC&lt;/type&gt;
+          &lt;return_type&gt;BOOLEAN&lt;/return_type&gt;
+          &lt;parameters&gt;
+            &lt;param&gt;&lt;name&gt;amount&lt;/name&gt;&lt;type&gt;FLOAT&lt;/type&gt;&lt;/param&gt;
+          &lt;/parameters&gt;
+          &lt;logic&gt;
+            &lt;conditional&gt;
+              &lt;condition&gt;amount > 0&lt;/condition&gt;
+              &lt;then&gt;
+                &lt;statement&gt;this.balance += amount&lt;/statement&gt;
+                &lt;return&gt;true&lt;/return&gt;
+              &lt;/then&gt;
+              &lt;else&gt;
+                &lt;return&gt;false&lt;/return&gt;
+              &lt;/else&gt;
+            &lt;/conditional&gt;
+          &lt;/logic&gt;
+        &lt;/method&gt;
+        
+        &lt;method&gt;
+          &lt;name&gt;withdraw&lt;/name&gt;
+          &lt;type&gt;PUBLIC&lt;/type&gt;
+          &lt;return_type&gt;BOOLEAN&lt;/return_type&gt;
+          &lt;parameters&gt;
+            &lt;param&gt;&lt;name&gt;amount&lt;/name&gt;&lt;type&gt;FLOAT&lt;/type&gt;&lt;/param&gt;
+          &lt;/parameters&gt;
+          &lt;logic&gt;
+            &lt;conditional&gt;
+              &lt;condition&gt;amount > 0 AND amount <= this.balance&lt;/condition&gt;
+              &lt;then&gt;
+                &lt;statement&gt;this.balance -= amount&lt;/statement&gt;
+                &lt;return&gt;true&lt;/return&gt;
+              &lt;/then&gt;
+              &lt;else&gt;
+                &lt;return&gt;false&lt;/return&gt;
+              &lt;/else&gt;
+            &lt;/conditional&gt;
+          &lt;/logic&gt;
+        &lt;/method&gt;
+        
+        &lt;method&gt;
+          &lt;name&gt;get_balance&lt;/name&gt;
+          &lt;type&gt;PUBLIC&lt;/type&gt;
+          &lt;return_type&gt;FLOAT&lt;/return_type&gt;
+          &lt;logic&gt;
+            &lt;return&gt;this.balance&lt;/return&gt;
+          &lt;/logic&gt;
+        &lt;/method&gt;
+      &lt;/methods&gt;
+    &lt;/class&gt;
+  &lt;/classes&gt;
+  
+  &lt;content_address&gt;data://sha256:ghi012jkl345:program-structure&lt;/content_address&gt;
+&lt;/program&gt;
+      </content>
+    </output_format>
+
+    <target_output>
+      <name>Java Generated Code</name>
+      <language>Java</language>
+      <content>
+public class BankAccount {
+    private String accountId;
+    private float balance;
+    
+    public BankAccount(String accountId, float balance) {
+        this.accountId = accountId;
+        this.balance = balance;
+    }
+    
+    public boolean deposit(float amount) {
+        if (amount > 0) {
+            this.balance += amount;
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean withdraw(float amount) {
+        if (amount > 0 && amount <= this.balance) {
+            this.balance -= amount;
+            return true;
+        }
+        return false;
+    }
+    
+    public float getBalance() {
+        return this.balance;
+    }
+}
+      </content>
+    </target_output>
+
+    <benefit>
+      <item>Python → 121XML → Java conversion is automatic</item>
+      <item>Same code logic, different language implementation</item>
+      <item>Type system is explicit and verified</item>
+      <item>One source of truth for all language variants</item>
+    </benefit>
+  </example>
+
+  <!-- EXAMPLE 4: TELECOMMUNICATIONS PROTOCOL -->
+  <example>
+    <id>telecom_protocol</id>
+    <name>Telecommunications Protocol Conversion</name>
+    <industry>Telecommunications</industry>
+    <description>Convert ITU-T SS7 protocol message to 121XML for modern VoIP integration</description>
+    
+    <input_format>
+      <name>SS7 (Signaling System 7) Protocol Message</name>
+      <standard>ITU-T SS7</standard>
+      <content>
+SS7 Message: ISUP (ISDN User Part)
+Route: Point Code 1-1-1 → Point Code 2-2-2
+Message Type: IAM (Initial Address Message)
+
+CIC: 0x0150 (Circuit ID Code)
+Called Party: +1-555-0123
+Calling Party: +1-555-0456
+Nature of Address: National
+Bearer Capability: Speech (64 kbps)
+Transmission Medium: Digital
+User Service Information: Teleservice - Telephony
+Forward Call Indicators: International call, subscriber number routing
+      </content>
+    </input_format>
+
+    <output_format>
+      <name>121XML Telecom Message</name>
+      <content>
+&lt;telecom_message&gt;
+  &lt;profile_uri&gt;urn:121xml:telecom-signal/1.0&lt;/profile_uri&gt;
+  &lt;protocol&gt;SS7_ISUP&lt;/protocol&gt;
+  &lt;message_type&gt;INITIAL_ADDRESS_MESSAGE&lt;/message_type&gt;
+  &lt;timestamp&gt;2026-08-06T14:35:00Z&lt;/timestamp&gt;
+  
+  &lt;routing&gt;
+    &lt;source_point_code&gt;1-1-1&lt;/source_point_code&gt;
+    &lt;destination_point_code&gt;2-2-2&lt;/destination_point_code&gt;
+    &lt;circuit_id&gt;0x0150&lt;/circuit_id&gt;
+  &lt;/routing&gt;
+  
+  &lt;calling_party&gt;
+    &lt;phone_number&gt;+1-555-0456&lt;/phone_number&gt;
+    &lt;number_type&gt;NATIONAL&lt;/number_type&gt;
+    &lt;numbering_plan&gt;ISDN&lt;/numbering_plan&gt;
+  &lt;/calling_party&gt;
+  
+  &lt;called_party&gt;
+    &lt;phone_number&gt;+1-555-0123&lt;/phone_number&gt;
+    &lt;number_type&gt;NATIONAL&lt;/number_type&gt;
+    &lt;numbering_plan&gt;ISDN&lt;/numbering_plan&gt;
+  &lt;/called_party&gt;
+  
+  &lt;bearer_service&gt;
+    &lt;capability&gt;SPEECH&lt;/capability&gt;
+    &lt;bandwidth_kbps&gt;64&lt;/bandwidth_kbps&gt;
+    &lt;transmission_medium&gt;DIGITAL&lt;/transmission_medium&gt;
+  &lt;/bearer_service&gt;
+  
+  &lt;call_characteristics&gt;
+    &lt;is_international&gt;true&lt;/is_international&gt;
+    &lt;routing_method&gt;SUBSCRIBER_NUMBER&lt;/routing_method&gt;
+  &lt;/call_characteristics&gt;
+  
+  &lt;content_address&gt;data://sha256:mno345pqr678:telecom-signal&lt;/content_address&gt;
+&lt;/telecom_message&gt;
+      </content>
+    </output_format>
+
+    <benefit>
+      <item>Legacy SS7 → 121XML enables integration with modern VoIP (SIP)</item>
+      <item>Protocol independent call signaling</item>
+      <item>Call records are portable and queryable</item>
+      <item>Enables 5G network interoperability</item>
+    </benefit>
+  </example>
+
+</real_world_examples>

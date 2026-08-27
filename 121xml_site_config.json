@@ -1,0 +1,564 @@
+{
+  "site": {
+    "name": "121XML AI OS",
+    "version": "1.0",
+    "environment": "production",
+    "created": "2026-08-07",
+    "description": "Unified 121XML platform with multi-engine AI support and XML specification knowledge base"
+  },
+
+  "objectStore": {
+    "default": {
+      "location": "/var/www/121xml/data/objects",
+      "format": "121xml",
+      "compression": true,
+      "contentAddressing": true,
+      "immutable": true,
+      "archiveRetention": "permanent"
+    },
+    "backup": {
+      "enabled": true,
+      "location": "/var/www/121xml/data/backups",
+      "frequency": "daily",
+      "retention_days": 90
+    },
+    "userProjects": {
+      "location": "/var/www/121xml/data/user-projects",
+      "maxSizeMB": 5000,
+      "quota_enforcement": true
+    }
+  },
+
+  "aiEngines": {
+    "available": [
+      {
+        "id": "claude",
+        "name": "Claude (Anthropic)",
+        "provider": "Anthropic",
+        "models": ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4.5"],
+        "apiEndpoint": "https://api.anthropic.com/v1",
+        "requiresKey": true,
+        "keyName": "ANTHROPIC_API_KEY",
+        "defaultModel": "claude-opus-5",
+        "costPer1kTokens": 0.015,
+        "description": "Advanced reasoning, code generation, analysis",
+        "recommended": true,
+        "features": ["reasoning", "code", "analysis", "xml", "banking", "healthcare"]
+      },
+      {
+        "id": "openai",
+        "name": "OpenAI (GPT)",
+        "provider": "OpenAI",
+        "models": ["gpt-4-turbo", "gpt-4o", "gpt-3.5-turbo"],
+        "apiEndpoint": "https://api.openai.com/v1",
+        "requiresKey": true,
+        "keyName": "OPENAI_API_KEY",
+        "defaultModel": "gpt-4-turbo",
+        "costPer1kTokens": 0.01,
+        "description": "General purpose language model",
+        "recommended": false,
+        "features": ["chat", "generation", "analysis"]
+      },
+      {
+        "id": "google",
+        "name": "Google Gemini",
+        "provider": "Google",
+        "models": ["gemini-2.0-pro", "gemini-1.5-pro", "gemini-1.5-flash"],
+        "apiEndpoint": "https://generativelanguage.googleapis.com/v1beta",
+        "requiresKey": true,
+        "keyName": "GOOGLE_API_KEY",
+        "defaultModel": "gemini-2.0-pro",
+        "costPer1kTokens": 0.0075,
+        "description": "Multimodal reasoning and analysis",
+        "recommended": false,
+        "features": ["reasoning", "multimodal", "analysis"]
+      },
+      {
+        "id": "together",
+        "name": "Together AI",
+        "provider": "Together Computer",
+        "models": ["meta-llama/Llama-3-70b-chat-hf", "mistralai/Mixtral-8x7B-Instruct-v0.1"],
+        "apiEndpoint": "https://api.together.xyz/v1",
+        "requiresKey": true,
+        "keyName": "TOGETHER_API_KEY",
+        "defaultModel": "meta-llama/Llama-3-70b-chat-hf",
+        "costPer1kTokens": 0.001,
+        "description": "Open-source models at scale",
+        "recommended": false,
+        "features": ["open-source", "cost-effective", "customizable"]
+      },
+      {
+        "id": "cohere",
+        "name": "Cohere",
+        "provider": "Cohere",
+        "models": ["command-r-plus", "command-r", "command-light"],
+        "apiEndpoint": "https://api.cohere.com/v1",
+        "requiresKey": true,
+        "keyName": "COHERE_API_KEY",
+        "defaultModel": "command-r-plus",
+        "costPer1kTokens": 0.003,
+        "description": "Semantic search and generation",
+        "recommended": false,
+        "features": ["semantic-search", "retrieval", "generation"]
+      },
+      {
+        "id": "mistral",
+        "name": "Mistral AI",
+        "provider": "Mistral",
+        "models": ["mistral-large", "mistral-medium", "mistral-small"],
+        "apiEndpoint": "https://api.mistral.ai/v1",
+        "requiresKey": true,
+        "keyName": "MISTRAL_API_KEY",
+        "defaultModel": "mistral-large",
+        "costPer1kTokens": 0.007,
+        "description": "Fast and efficient language models",
+        "recommended": false,
+        "features": ["speed", "efficiency", "reasoning"]
+      },
+      {
+        "id": "azure",
+        "name": "Azure OpenAI",
+        "provider": "Microsoft",
+        "models": ["gpt-4-deployment", "gpt-4-turbo-deployment"],
+        "apiEndpoint": "https://{resource}.openai.azure.com/",
+        "requiresKey": true,
+        "keyName": "AZURE_OPENAI_KEY",
+        "defaultModel": "gpt-4-deployment",
+        "costPer1kTokens": 0.015,
+        "description": "Enterprise OpenAI models on Azure",
+        "recommended": false,
+        "features": ["enterprise", "azure-integration", "compliance"]
+      }
+    ],
+    "selectedEngine": "claude",
+    "fallbackEngine": "openai",
+    "apiKeyManagement": {
+      "storage": "environment",
+      "encryption": true,
+      "rotation": "90days",
+      "auditLog": true
+    }
+  },
+
+  "xmlSpecifications": {
+    "sectors": [
+      {
+        "id": "finance_banking_insurance",
+        "name": "Finance / Banking / Insurance",
+        "specs": [
+          {
+            "name": "FpML",
+            "fullName": "Financial products Markup Language",
+            "version": "5.13",
+            "url": "https://www.fpml.org/",
+            "purpose": "Electronic dealing and processing of privately negotiated derivatives",
+            "sampleFile": "fpml_swap_example.xml",
+            "converter": "swift_to_fpml"
+          },
+          {
+            "name": "XBRL",
+            "fullName": "eXtensible Business Reporting Language",
+            "version": "2.1",
+            "url": "https://www.xbrl.org/",
+            "purpose": "Digital reporting of corporate financial data, performance, and compliance",
+            "sampleFile": "xbrl_financial_report.xml",
+            "converter": "json_to_xbrl"
+          },
+          {
+            "name": "ISO 20022",
+            "fullName": "Universal Financial Industry Message Scheme",
+            "version": "2024",
+            "url": "https://www.iso20022.org/",
+            "purpose": "Standardized XML structures for financial transactions",
+            "schemas": ["pain.001", "pacs.008", "pacs.002"],
+            "sampleFile": "iso20022_payment.xml",
+            "converter": "swift_to_iso20022"
+          }
+        ]
+      },
+      {
+        "id": "healthcare_pharma",
+        "name": "Healthcare / Pharma / Medical Research",
+        "specs": [
+          {
+            "name": "HL7 FHIR",
+            "fullName": "Fast Healthcare Interoperability Resources",
+            "version": "R4B",
+            "url": "https://www.hl7.org/fhir/",
+            "purpose": "Exchange of clinical, administrative, and diagnostic health data",
+            "resources": ["Patient", "Practitioner", "Observation", "Medication"],
+            "sampleFile": "fhir_patient_record.xml",
+            "converter": "hl7_to_fhir"
+          },
+          {
+            "name": "CDISC ODM",
+            "fullName": "Operational Data Model",
+            "version": "2.1",
+            "url": "https://www.cdisc.org/standards/foundational/odm",
+            "purpose": "Clinical trial metadata and case report forms",
+            "sampleFile": "odm_clinical_trial.xml",
+            "converter": "csv_to_odm"
+          },
+          {
+            "name": "CDISC Define-XML",
+            "fullName": "Dataset Metadata",
+            "version": "2.1",
+            "url": "https://www.cdisc.org/standards/foundational/define-xml",
+            "purpose": "Regulatory submission metadata and variable definitions",
+            "sampleFile": "define_dataset_metadata.xml",
+            "converter": "excel_to_define_xml"
+          }
+        ]
+      },
+      {
+        "id": "standards_education_geo",
+        "name": "W3C / IEEE / ISO Standards / Education / Genealogy / 3D Geopositioning",
+        "specs": [
+          {
+            "name": "W3C MathML",
+            "fullName": "Mathematical Markup Language",
+            "version": "4.0",
+            "url": "https://www.w3.org/Math/",
+            "purpose": "Mathematical notation and structure",
+            "sampleFile": "mathml_equation.xml",
+            "converter": "latex_to_mathml"
+          },
+          {
+            "name": "IEEE 2941",
+            "fullName": "Standard for Machine Learning Model Representation",
+            "version": "2024",
+            "url": "https://sagroups.ieee.org/2941/",
+            "purpose": "AI/ML model metadata and configurations",
+            "sampleFile": "ieee2941_ml_model.xml",
+            "converter": "json_schema_to_ieee2941"
+          },
+          {
+            "name": "GML",
+            "fullName": "Geography Markup Language",
+            "version": "3.2.2",
+            "url": "https://www.ogc.org/standards/gml/",
+            "purpose": "Geographic and spatial feature representation",
+            "sampleFile": "gml_geographic_feature.xml",
+            "converter": "geojson_to_gml"
+          },
+          {
+            "name": "CityGML",
+            "fullName": "3D Urban Model Standard",
+            "version": "3.0",
+            "url": "https://www.citygml.org/",
+            "purpose": "3D city and urban environment modeling",
+            "sampleFile": "citygml_building.xml",
+            "converter": "3dtiles_to_citygml"
+          },
+          {
+            "name": "GEDCOM",
+            "fullName": "Genealogical Data Communication",
+            "version": "7.0",
+            "url": "https://gedcom.io/",
+            "purpose": "Family tree and genealogical data exchange",
+            "sampleFile": "gedcom_family_tree.xml",
+            "converter": "gedcom_to_xml"
+          }
+        ]
+      },
+      {
+        "id": "media_publishing",
+        "name": "News / Publishing / Audio / Film / Media / CAD / CAM / Advertising",
+        "specs": [
+          {
+            "name": "NITF",
+            "fullName": "News Industry Text Format",
+            "version": "3.6",
+            "url": "https://iptc.org/standards/nitf/",
+            "purpose": "Structured news articles with metadata",
+            "sampleFile": "nitf_news_article.xml",
+            "converter": "html_to_nitf"
+          },
+          {
+            "name": "NewsML-G2",
+            "fullName": "News and Media Exchange Format",
+            "version": "2.30",
+            "url": "https://iptc.org/standards/newsml-g2/",
+            "purpose": "Multimedia asset packaging and exchange",
+            "sampleFile": "newsml_video_package.xml",
+            "converter": "media_metadata_to_newsml"
+          },
+          {
+            "name": "ifcXML",
+            "fullName": "Industry Foundation Classes XML",
+            "version": "IFC 4.4",
+            "url": "https://www.buildingsmart.org/",
+            "purpose": "Architectural and engineering building data",
+            "sampleFile": "ifcxml_building_model.xml",
+            "converter": "ifc_to_ifcxml"
+          },
+          {
+            "name": "SVG",
+            "fullName": "Scalable Vector Graphics",
+            "version": "2.0",
+            "url": "https://www.w3.org/TR/SVG2/",
+            "purpose": "2D vector graphics and animations",
+            "sampleFile": "svg_diagram.xml",
+            "converter": "pdf_to_svg"
+          }
+        ]
+      },
+      {
+        "id": "ai_ml_robotics",
+        "name": "Informatics / AI / ML / Robotics",
+        "specs": [
+          {
+            "name": "PMML",
+            "fullName": "Predictive Model Markup Language",
+            "version": "4.4",
+            "url": "https://dmg.org/pmml/v4-4-1/GeneralStructure.html",
+            "purpose": "Machine learning and statistical model representation",
+            "sampleFile": "pmml_decision_tree.xml",
+            "converter": "sklearn_to_pmml"
+          },
+          {
+            "name": "AutomationML",
+            "fullName": "Automation and Robotics Data Exchange",
+            "version": "2.3",
+            "url": "https://www.automationml.org/",
+            "purpose": "Industrial automation and plant topology",
+            "sampleFile": "automationml_plant_model.xml",
+            "converter": "plcopen_to_automationml"
+          },
+          {
+            "name": "RuleML",
+            "fullName": "Rule Markup Language",
+            "version": "1.0",
+            "url": "https://www.ruleml.org/",
+            "purpose": "Inference rules and knowledge base representation",
+            "sampleFile": "ruleml_business_rules.xml",
+            "converter": "json_rules_to_ruleml"
+          }
+        ]
+      },
+      {
+        "id": "supply_chain",
+        "name": "Manufacturing / Wholesale / Logistics / Supply Chain",
+        "specs": [
+          {
+            "name": "UBL",
+            "fullName": "Universal Business Language",
+            "version": "2.3",
+            "url": "https://ubl.oasis-open.org/",
+            "purpose": "Standard XML business documents",
+            "documents": ["Order", "Invoice", "Shipment", "Receipt"],
+            "sampleFile": "ubl_purchase_order.xml",
+            "converter": "edi_to_ubl"
+          },
+          {
+            "name": "cXML",
+            "fullName": "Commerce eXtensible Markup Language",
+            "version": "1.2.3",
+            "url": "https://www.ariba.com/",
+            "purpose": "B2B e-procurement and catalog management",
+            "sampleFile": "cxml_purchase_order.xml",
+            "converter": "json_to_cxml"
+          },
+          {
+            "name": "ebXML",
+            "fullName": "Electronic Business using XML",
+            "version": "3.0",
+            "url": "https://www.oasis-open.org/committees/ebxml-core/",
+            "purpose": "Secure business-to-business transactions",
+            "sampleFile": "ebxml_business_document.xml",
+            "converter": "edi_to_ebxml"
+          }
+        ]
+      },
+      {
+        "id": "sales_marketing_hr",
+        "name": "Sales / Marketing / Leadership / Soft Skills / HR",
+        "specs": [
+          {
+            "name": "xAPI",
+            "fullName": "Experience API (Tin Can)",
+            "version": "2.0",
+            "url": "https://xapi.com/",
+            "purpose": "Learning experiences and behavioral tracking",
+            "sampleFile": "xapi_learning_record.xml",
+            "converter": "lms_data_to_xapi"
+          },
+          {
+            "name": "SCORM",
+            "fullName": "Sharable Content Object Reference Model",
+            "version": "2004",
+            "url": "https://www.adlnet.gov/projects/scorm/",
+            "purpose": "E-learning content packaging",
+            "sampleFile": "scorm_course_manifest.xml",
+            "converter": "course_data_to_scorm"
+          },
+          {
+            "name": "HR-XML",
+            "fullName": "Human Resources XML",
+            "version": "3.2",
+            "url": "https://www.hropenstandards.org/",
+            "purpose": "HR, recruitment, and benefits data",
+            "sampleFile": "hrxml_resume.xml",
+            "converter": "resume_to_hrxml"
+          }
+        ]
+      },
+      {
+        "id": "nonprofit_sovereign",
+        "name": "Non-Profit and Sovereign",
+        "specs": [
+          {
+            "name": "IATI",
+            "fullName": "International Aid Transparency Initiative",
+            "version": "2.03",
+            "url": "https://iatistandard.org/",
+            "purpose": "Humanitarian aid spending transparency",
+            "sampleFile": "iati_activity_report.xml",
+            "converter": "csv_to_iati"
+          },
+          {
+            "name": "NIEM",
+            "fullName": "National Information Exchange Model",
+            "version": "5.2",
+            "url": "https://www.niem.gov/",
+            "purpose": "Government information sharing",
+            "sampleFile": "niem_incident_report.xml",
+            "converter": "json_to_niem"
+          }
+        ]
+      }
+    ]
+  },
+
+  "userInteraction": {
+    "tracking": {
+      "enabled": true,
+      "location": "/var/www/121xml/data/interactions",
+      "retention_days": 365,
+      "fields": [
+        "user_id",
+        "timestamp",
+        "action",
+        "object_type",
+        "object_id",
+        "ai_engine_used",
+        "model_used",
+        "tokens_used",
+        "compression_ratio",
+        "result_address"
+      ]
+    },
+    "analytics": {
+      "enabled": true,
+      "aggregationInterval": "hourly",
+      "dashboardLocation": "/analytics"
+    }
+  },
+
+  "userWorkspace": {
+    "projects": {
+      "location": "/var/www/121xml/data/user-projects",
+      "defaultQuotaMB": 5000,
+      "structure": {
+        "name": "project_name",
+        "created": "ISO8601",
+        "lastModified": "ISO8601",
+        "objects": "array of object IDs",
+        "conversations": "array of conversation IDs",
+        "metadata": "object"
+      }
+    },
+    "conversations": {
+      "location": "/var/www/121xml/data/conversations",
+      "structure": {
+        "id": "unique_id",
+        "projectId": "parent_project",
+        "messages": "array",
+        "contentAddresses": "array of SHA256 hashes",
+        "aiEngine": "engine_used",
+        "model": "model_used",
+        "createdAt": "ISO8601",
+        "archivedAt": "ISO8601 or null"
+      }
+    },
+    "memories": {
+      "location": "/var/www/121xml/data/memories",
+      "types": [
+        "context_notes",
+        "project_history",
+        "preferences",
+        "shortcuts",
+        "knowledge_base"
+      ]
+    },
+    "objects": {
+      "location": "/var/www/121xml/data/objects",
+      "indexing": true,
+      "searchable": true,
+      "versionControl": true
+    }
+  },
+
+  "security": {
+    "encryption": {
+      "atRest": "AES-256",
+      "inTransit": "TLS 1.3",
+      "keyManagement": "environment_variables"
+    },
+    "authentication": {
+      "method": "api_key",
+      "tokenExpiration": "24hours",
+      "refreshTokenExpiration": "30days"
+    },
+    "audit": {
+      "enabled": true,
+      "location": "/var/www/121xml/data/audit",
+      "fields": ["user", "action", "timestamp", "resource", "result"]
+    }
+  },
+
+  "dataProtection": {
+    "contentAddressing": {
+      "enabled": true,
+      "algorithm": "SHA256",
+      "immutable": true,
+      "format": "data://sha256:HASH:TYPE"
+    },
+    "compression": {
+      "enabled": true,
+      "algorithm": "sparse_reference_encoding",
+      "ratio": 0.94,
+      "dataLoss": 0.0
+    },
+    "archival": {
+      "enabled": true,
+      "location": "/var/www/121xml/data/archive",
+      "retention": "permanent",
+      "recovery": "guaranteed"
+    }
+  },
+
+  "api": {
+    "baseUrl": "https://121xml.com/api",
+    "version": "v1",
+    "endpoints": {
+      "convert": "/convert",
+      "compress": "/compress",
+      "address": "/address",
+      "validate": "/validate",
+      "archive": "/archive",
+      "metrics": "/metrics",
+      "health": "/health"
+    },
+    "rateLimit": {
+      "requestsPerMinute": 100,
+      "tokensPerDay": 1000000
+    }
+  },
+
+  "notifications": {
+    "enabled": true,
+    "types": ["deployment", "error", "completion", "milestone"],
+    "channels": ["email", "dashboard", "webhook"]
+  }
+}

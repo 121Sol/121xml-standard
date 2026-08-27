@@ -1,0 +1,74 @@
+# 121XML Agentic Operating System - Dependencies
+# ==============================================
+
+# Core Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Protocol Support
+grpcio==1.59.2
+grpcio-tools==1.59.2
+websockets==12.0
+
+# Data & Schema
+protobuf==4.25.1
+graphene==3.3
+marshmallow==3.20.1
+jsonschema==4.20.0
+
+# Database & Storage
+sqlalchemy==2.0.23
+alembic==1.12.1
+pydantic-extra-types==2.3.0
+
+# Authentication & Security
+python-jose==3.3.0
+passlib==1.7.4
+cryptography==41.0.7
+pyjwt==2.8.0
+
+# Async & Concurrency
+asyncio-contextmanager==1.0.0
+aiomultiprocess==2.0.1
+
+# Logging & Monitoring
+python-logging-loki==0.3.2
+prometheus-client==0.19.0
+opentelemetry-api==1.21.0
+opentelemetry-sdk==1.21.0
+opentelemetry-exporter-jaeger==1.21.0
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+httpx==0.25.2
+
+# Development
+black==23.12.1
+pylint==3.0.3
+mypy==1.7.1
+flake8==6.1.0
+
+# Utils
+python-dateutil==2.8.2
+pytz==2023.3
+requests==2.31.0
+aiohttp==3.9.1
+tenacity==8.2.3
+
+# Optional: Cloud Deployment
+boto3==1.29.7  # AWS
+azure-storage-blob==12.18.3  # Azure
+google-cloud-storage==2.14.0  # GCP
+
+# Optional: Additional Adapters
+pika==1.3.2  # RabbitMQ
+pymongo==4.6.0  # MongoDB
+redis==5.0.1  # Redis
+
+# Documentation
+sphinx==7.2.6
+sphinx-rtd-theme==2.0.0

@@ -1,0 +1,259 @@
+<title>121XML · 121XQ Explainer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --ink:#eef1f6; --muted:#93a0b6; --bg0:#080a10; --bg1:#0f1420; --line:#232c3d;
+    --jade:#37bd9d; --gold:#e0a94e; --violet:#9a7ff0; --blue:#5aa2e6;
+    --mono:"Cascadia Code","SF Mono","JetBrains Mono",Consolas,monospace;
+    --sans:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg0);color:var(--ink);font-family:var(--sans);
+    display:flex;flex-direction:column;align-items:center;min-height:100vh;justify-content:center;padding:18px}
+  .frame{width:min(960px,100%)}
+  .stage{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;
+    background:radial-gradient(120% 120% at 50% 0%,var(--bg1),var(--bg0));border:1px solid var(--line)}
+  .scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;padding:5% 7%;text-align:center}
+  .scene.active{opacity:1;pointer-events:auto}
+  .cap{font-size:clamp(15px,2.6vw,26px);font-weight:640;letter-spacing:-.01em;margin:0;text-wrap:balance;opacity:0}
+  .sub{font-family:var(--mono);font-size:clamp(11px,1.6vw,14px);color:var(--muted);margin:10px 0 0;opacity:0}
+  .scene.active .cap{animation:up .7s .1s both}
+  .scene.active .sub{animation:up .7s .35s both}
+  @keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  /* progress + controls */
+  .bar{height:3px;background:var(--line);border-radius:3px;margin:14px 0 10px;overflow:hidden}
+  .bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--jade),var(--gold));transition:width .25s linear}
+  .ctrls{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .ctrls button{font:inherit;color:var(--ink);background:var(--bg1);border:1px solid var(--line);
+    border-radius:8px;padding:7px 14px;cursor:pointer}
+  .ctrls button:hover{border-color:var(--jade)}
+  .dots{display:flex;gap:6px;margin-left:auto}
+  .dots i{width:8px;height:8px;border-radius:50%;background:var(--line);cursor:pointer}
+  .dots i.on{background:var(--gold)}
+  .hint{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:10px;text-align:center}
+  /* objects */
+  .core{width:96px;height:96px;border-radius:20px;border:2px solid var(--gold);display:flex;align-items:center;
+    justify-content:center;font-family:var(--mono);font-weight:700;font-size:15px;color:var(--gold);
+    background:rgba(224,169,78,.06);position:relative}
+  .ring{position:relative;width:min(70%,420px);height:min(46%,240px);margin-bottom:8px}
+  .ringwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .facet{position:absolute;font-family:var(--mono);font-size:12px;padding:6px 11px;border-radius:9px;
+    background:var(--bg1);border:1px solid var(--jade);color:var(--jade);white-space:nowrap;opacity:0}
+  .scene.active .facet{animation:fly .8s both}
+  @keyframes fly{from{opacity:0;transform:translate(var(--fx),var(--fy)) scale(.6)}
+    to{opacity:1;transform:translate(0,0) scale(1)}}
+  .lock{position:absolute;inset:-8px;border-radius:24px;border:2px solid transparent;opacity:0}
+  .scene.active .lock{animation:lock 1s 1.1s both}
+  @keyframes lock{0%{opacity:0;transform:scale(1.15);border-color:transparent}
+    60%{opacity:1;border-color:var(--gold);box-shadow:0 0 0 0 rgba(224,169,78,.5)}
+    100%{opacity:1;border-color:var(--gold);box-shadow:0 0 34px 4px rgba(224,169,78,.25)}}
+  .cid{font-family:var(--mono);font-size:12px;color:var(--gold);margin-top:14px;opacity:0}
+  .scene.active .cid{animation:up .6s 1.7s both}
+  /* packet travel */
+  .lane{position:relative;width:min(86%,560px);height:120px;display:flex;align-items:center;justify-content:space-between}
+  .endpoint{width:74px;height:74px;border-radius:14px;border:1px solid var(--line);display:flex;align-items:center;
+    justify-content:center;font-size:26px;background:var(--bg1)}
+  .pkt{position:absolute;left:70px;top:38px;width:44px;height:44px;border-radius:10px;border:2px solid var(--jade);
+    background:rgba(55,189,157,.08);display:flex;align-items:center;justify-content:center;font-size:12px;
+    font-family:var(--mono);color:var(--jade);opacity:0}
+  .scene.active .pkt{animation:travel 2.4s .3s both}
+  @keyframes travel{0%{opacity:0;left:70px}12%{opacity:1}80%{opacity:1}100%{opacity:1;left:calc(100% - 116px)}}
+  .check{position:absolute;right:6px;top:2px;font-size:22px;color:var(--jade);opacity:0}
+  .scene.active .check{animation:pop .5s 2.5s both}
+  @keyframes pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+  /* flow row */
+  .flow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center}
+  .badge{font-family:var(--mono);font-size:12px;padding:8px 12px;border-radius:9px;background:var(--bg1);
+    border:1px solid var(--line);opacity:0}
+  .scene.active .badge{animation:up .6s both}
+  .gw{padding:14px 16px;border-radius:12px;border:1px solid var(--violet);color:var(--violet);
+    font-family:var(--mono);font-size:12px;opacity:0}
+  .scene.active .gw{animation:up .6s .5s both}
+  .arrowr{color:var(--muted);opacity:0}.scene.active .arrowr{animation:up .5s .3s both}
+  /* engines orbit */
+  .orbit{position:relative;width:min(60%,340px);height:min(46%,240px);display:flex;align-items:center;justify-content:center}
+  .engine{position:absolute;font-size:13px;font-family:var(--mono);padding:7px 11px;border-radius:9px;
+    background:var(--bg1);border:1px solid var(--line);opacity:0}
+  .scene.active .engine{animation:up .6s both}
+  .engine.swap{animation:swap 3s .8s both !important}
+  @keyframes swap{0%,100%{border-color:var(--line);color:var(--muted)}
+    30%{border-color:var(--jade);color:var(--jade)}65%{border-color:var(--blue);color:var(--blue)}}
+  .sysrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+  .syschip{font-family:var(--mono);font-size:12px;padding:7px 11px;border-radius:20px;border:1px solid var(--gold);
+    color:var(--gold);opacity:0}
+  .scene.active .syschip{animation:up .6s both}
+  /* objectmap mini */
+  .gnode{position:absolute;width:38px;height:38px;border-radius:50%;border:2px solid var(--jade);background:var(--bg1);
+    display:flex;align-items:center;justify-content:center;font-size:15px;opacity:0}
+  .scene.active .gnode{animation:pop .5s both}
+  .gline{position:absolute;height:2px;background:var(--muted);opacity:.4;transform-origin:left center;opacity:0}
+  .scene.active .gline{animation:grow .5s both}
+  @keyframes grow{from{opacity:0;transform:scaleX(0)}to{opacity:.4;transform:scaleX(1)}}
+  /* outro */
+  .out{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;align-items:stretch}
+  .outcard{padding:18px 22px;border-radius:14px;border:1px solid var(--line);min-width:180px;opacity:0}
+  .scene.active .outcard{animation:up .7s both}
+  .outcard b{font-family:var(--mono);font-size:20px;display:block;margin-bottom:4px}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important}}
+</style>
+
+<div class="frame">
+  <div class="stage" id="stage">
+    <!-- 0 intro -->
+    <div class="scene" data-dur="4200">
+      <div class="ring"><div class="ringwrap">
+        <span class="facet" style="--fx:-140px;--fy:-40px;left:20%;top:20%">name</span>
+        <span class="facet" style="--fx:150px;--fy:-30px;left:56%;top:22%;border-color:var(--gold);color:var(--gold)">value</span>
+        <span class="facet" style="--fx:-120px;--fy:50px;left:24%;top:62%">key</span>
+        <span class="facet" style="--fx:130px;--fy:60px;left:54%;top:64%;border-color:var(--gold);color:var(--gold)">data</span>
+      </div></div>
+      <p class="cap">Everything is a pair.</p>
+      <p class="sub">a person · a payment · an atom · a file — all name → value</p>
+    </div>
+    <!-- 1 assemble -->
+    <div class="scene" data-dur="5200">
+      <div class="ring"><div class="ringwrap">
+        <div class="core">121<br>OBJECT<div class="lock"></div></div>
+        <span class="facet" style="--fx:-160px;--fy:-90px;left:8%;top:6%">payload</span>
+        <span class="facet" style="--fx:160px;--fy:-90px;left:66%;top:6%">shape</span>
+        <span class="facet" style="--fx:-190px;--fy:0px;left:2%;top:44%">context</span>
+        <span class="facet" style="--fx:190px;--fy:0px;left:74%;top:44%">rules</span>
+        <span class="facet" style="--fx:-150px;--fy:90px;left:10%;top:82%">relations</span>
+        <span class="facet" style="--fx:150px;--fy:90px;left:60%;top:82%">provenance</span>
+        <span class="facet" style="--fx:0px;--fy:120px;left:40%;top:96%;border-color:var(--gold);color:var(--gold)">space · 4D</span>
+      </div></div>
+      <p class="cap">Facets assemble — then it's signed.</p>
+      <p class="cid">cid:bafy…9f2 · signed ✓ · tamper-evident</p>
+    </div>
+    <!-- 2 self-contained -->
+    <div class="scene" data-dur="4600">
+      <div class="lane">
+        <div class="endpoint">🖥️</div>
+        <div class="pkt">{ }<span class="check">✓</span></div>
+        <div class="endpoint">📡</div>
+      </div>
+      <p class="cap">Self-contained. It travels with its own meaning.</p>
+      <p class="sub">receiver decodes structure + semantics — no shared schema, no namespace lookup</p>
+    </div>
+    <!-- 3 wrap formats -->
+    <div class="scene" data-dur="4600">
+      <div class="flow">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span class="badge">SWIFT / ISO20022</span>
+          <span class="badge" style="animation-delay:.15s">HL7 / FHIR</span>
+          <span class="badge" style="animation-delay:.3s">JSON · EDI</span>
+        </div>
+        <span class="arrowr">→</span>
+        <span class="gw">gateway<br>shape + context + mapping</span>
+        <span class="arrowr" style="animation-delay:.7s">→</span>
+        <div class="core" style="width:78px;height:78px;font-size:12px">121<br>OBJECT</div>
+      </div>
+      <p class="cap">Wrap any format — don't replace it.</p>
+      <p class="sub">FHIR stays FHIR · it gains addressing, provenance & AI-portability</p>
+    </div>
+    <!-- 4 one OS -->
+    <div class="scene" data-dur="5200">
+      <div class="orbit">
+        <div class="core" style="width:86px;height:86px;font-size:12px">121XQ<br>OS</div>
+        <span class="engine swap" style="left:0;top:6%">Claude</span>
+        <span class="engine swap" style="right:0;top:6%;animation-delay:1s">GPT</span>
+        <span class="engine swap" style="left:2%;bottom:6%;animation-delay:1.6s">Gemini</span>
+        <span class="engine" style="right:4%;bottom:8%">…7 engines</span>
+      </div>
+      <div class="sysrow">
+        <span class="syschip">121DevTeam</span>
+        <span class="syschip" style="animation-delay:.15s">121Healthcare</span>
+        <span class="syschip" style="animation-delay:.3s">121FinTech</span>
+        <span class="syschip" style="animation-delay:.45s">121Solutions</span>
+      </div>
+      <p class="cap">One OS above every AI. Swap engines, keep the data.</p>
+    </div>
+    <!-- 5 objectmap -->
+    <div class="scene" data-dur="4800">
+      <div class="ring" style="height:min(50%,250px)">
+        <div class="gnode" style="left:44%;top:6%;border-color:var(--gold)">🏢</div>
+        <div class="gline" style="left:47%;top:20%;width:70px;transform:rotate(52deg)"></div>
+        <div class="gline" style="left:40%;top:20%;width:70px;transform:rotate(128deg);animation-delay:.15s"></div>
+        <div class="gnode" style="left:24%;top:40%;animation-delay:.3s">📊</div>
+        <div class="gnode" style="left:64%;top:40%;animation-delay:.3s;border-color:var(--blue)">🎯</div>
+        <div class="gline" style="left:30%;top:56%;width:60px;transform:rotate(60deg);animation-delay:.4s"></div>
+        <div class="gnode" style="left:40%;top:74%;animation-delay:.6s;border-color:var(--violet)">👤</div>
+      </div>
+      <p class="cap">See it all — 121ObjectMap. Tab 2 in every app.</p>
+      <p class="sub">click a node · drill Org → Dept → Role → Person → attributes</p>
+    </div>
+    <!-- 6 outro -->
+    <div class="scene" data-dur="5000">
+      <div class="out">
+        <div class="outcard" style="border-color:var(--jade)"><b style="color:var(--jade)">121XML</b>the standard</div>
+        <div class="outcard" style="border-color:var(--gold);animation-delay:.25s"><b style="color:var(--gold)">121XQ</b>the AI OS</div>
+      </div>
+      <p class="cap" style="margin-top:22px">Local control. Any protocol to any protocol. Verifiable by design.</p>
+      <p class="sub">121xml.com · 121xq.com — a 121 Solutions project</p>
+    </div>
+  </div>
+
+  <div class="bar"><i id="prog"></i></div>
+  <div class="ctrls">
+    <button id="play">⏸ Pause</button>
+    <button id="replay">↺ Replay</button>
+    <span id="scenelbl">Scene 1 / 7</span>
+    <span class="dots" id="dots"></span>
+  </div>
+  <p class="hint">Autoplaying explainer · moving objects · screen-record this stage to export an MP4/GIF.</p>
+</div>
+
+<script>
+(function(){
+  var scenes=[].slice.call(document.querySelectorAll('.scene'));
+  var dotsWrap=document.getElementById('dots');
+  var prog=document.getElementById('prog');
+  var lbl=document.getElementById('scenelbl');
+  var playBtn=document.getElementById('play');
+  var i=0, timer=null, rafId=null, paused=false, sceneStart=0, sceneDur=0, elapsedBefore=0;
+
+  scenes.forEach(function(_,k){var d=document.createElement('i');if(!k)d.className='on';
+    d.addEventListener('click',function(){go(k);});dotsWrap.appendChild(d);});
+  var dots=[].slice.call(dotsWrap.children);
+
+  function setProgress(){
+    if(paused){rafId=requestAnimationFrame(setProgress);return;}
+    var now=performance.now();
+    var frac=Math.min(1,(elapsedBefore+(now-sceneStart))/sceneDur);
+    prog.style.width=(frac*100)+'%';
+    rafId=requestAnimationFrame(setProgress);
+  }
+  function go(k){
+    clearTimeout(timer); if(rafId)cancelAnimationFrame(rafId);
+    scenes[i].classList.remove('active'); dots[i].classList.remove('on');
+    i=k%scenes.length;
+    var s=scenes[i];
+    // restart css animations
+    s.classList.remove('active'); void s.offsetWidth; s.classList.add('active');
+    dots[i].classList.add('on');
+    lbl.textContent='Scene '+(i+1)+' / '+scenes.length;
+    sceneDur=parseInt(s.dataset.dur,10)||4500; sceneStart=performance.now(); elapsedBefore=0; prog.style.width='0%';
+    rafId=requestAnimationFrame(setProgress);
+    if(!paused) timer=setTimeout(function(){go(i+1);}, sceneDur);
+  }
+  playBtn.addEventListener('click',function(){
+    paused=!paused;
+    if(paused){
+      clearTimeout(timer);
+      elapsedBefore += performance.now()-sceneStart;
+      scenes.forEach(function(s){[].slice.call(s.querySelectorAll('*')).forEach(function(el){el.style.animationPlayState='paused';});});
+      scenes[i].style.animationPlayState='paused';
+      playBtn.textContent='▶ Play';
+    } else {
+      scenes.forEach(function(s){[].slice.call(s.querySelectorAll('*')).forEach(function(el){el.style.animationPlayState='';});});
+      sceneStart=performance.now();
+      var remain=Math.max(200, sceneDur-elapsedBefore);
+      timer=setTimeout(function(){go(i+1);}, remain);
+      playBtn.textContent='⏸ Pause';
+    }
+  });
+  document.getElementById('replay').addEventListener('click',function(){paused=false;playBtn.textContent='⏸ Pause';go(0);});
+  go(0);
+})();
+</script>

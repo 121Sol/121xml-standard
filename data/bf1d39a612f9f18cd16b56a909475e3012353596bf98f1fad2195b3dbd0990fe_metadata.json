@@ -1,0 +1,28 @@
+{
+  "file": "public_technical_architecture.html",
+  "hash": "bf1d39a612f9f18cd16b56a909475e3012353596bf98f1fad2195b3dbd0990fe",
+  "type": "html",
+  "size": 98304,
+  "lines": 2294,
+  "phase": "A",
+  "title": "121XML AI OS - Technical Architecture Specification",
+  "timestamp": "2026-08-07T22:15:00Z",
+  "components": {
+    "sections": 11,
+    "adapters": 6,
+    "api_endpoints": 7,
+    "collapsible_sections": 48
+  },
+  "features": [
+    "Interactive HTML5",
+    "Dark mode support",
+    "Full-text search",
+    "Print-friendly CSS",
+    "Mobile responsive",
+    "Collapsible sections",
+    "Copy-able code examples",
+    "Performance <2s load time"
+  ],
+  "qa_status": "PASSED",
+  "content_address": "data://sha256:bf1d39a612f9f18cd16b56a909475e3012353596bf98f1fad2195b3dbd0990fe:technical_architecture_html"
+}

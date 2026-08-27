@@ -1,0 +1,203 @@
+<svg width="1400" height="1050" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-size: 18px; font-weight: bold; fill: #1E2761; }
+      .section { font-size: 12px; font-weight: bold; fill: #FFFFFF; }
+      .label { font-size: 11px; fill: #1A1A1A; }
+      .small { font-size: 10px; fill: #5C6673; }
+      .tiny { font-size: 9px; fill: #5C6673; font-family: monospace; }
+      .arrow { stroke: #1E2761; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .lang-arrow { stroke: #1E2761; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-small); }
+      .box-input { fill: #E8EDF5; stroke: #1E2761; }
+      .box-codegen { fill: #FEF6F1; stroke: #B8791C; }
+      .box-output { fill: #F1F7F1; stroke: #2C5F2D; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#1E2761"/>
+    </marker>
+    <marker id="arrowhead-small" markerWidth="8" markerHeight="8" refX="7" refY="2.5" orient="auto">
+      <polygon points="0 0, 8 2.5, 0 5" fill="#1E2761"/>
+    </marker>
+  </defs>
+
+  <text x="700" y="30" text-anchor="middle" class="title">121XML Code Generation: One Profile → Six Languages</text>
+
+  <!-- INPUT: 121XML Profile -->
+  <rect x="450" y="60" width="500" height="50" fill="#1E2761" rx="3"/>
+  <text x="700" y="90" text-anchor="middle" class="section">INPUT: 121XML Profile + Sample Record</text>
+
+  <line x1="700" y1="110" x2="700" y2="140" class="arrow"/>
+
+  <!-- Profile box -->
+  <rect x="450" y="140" width="500" height="100" class="box-input" rx="3" stroke-width="2"/>
+  <text x="700" y="165" text-anchor="middle" class="label" font-weight="bold">121XML Profile (Schema)</text>
+  <text x="465" y="185" class="tiny">&lt;map profile="...121xml/1.1" version="1.1"&gt;</text>
+  <text x="465" y="198" class="tiny">  &lt;str name="email"&gt;alice@ex.com&lt;/str&gt;</text>
+  <text x="465" y="211" class="tiny">  &lt;int name="phone"&gt;5551234567&lt;/int&gt;</text>
+  <text x="465" y="224" class="tiny">  &lt;seq name="tags" of="str"&gt;...&lt;/seq&gt;</text>
+
+  <line x1="700" y1="240" x2="700" y2="270" class="arrow"/>
+
+  <!-- CODEGEN ENGINE -->
+  <rect x="450" y="270" width="500" height="80" class="box-codegen" rx="3" stroke-width="2"/>
+  <text x="700" y="295" text-anchor="middle" class="label" font-weight="bold">Universal Code Generator</text>
+  <text x="465" y="315" class="tiny">• Parse profile: extract fields, types, nesting</text>
+  <text x="465" y="328" class="tiny">• Enforce A1–A3 (no inheritance, explicit tags, homogeneous)</text>
+  <text x="465" y="341" class="tiny">• Generate serialiser, deserialiser, hashing logic for each language</text>
+
+  <!-- Six language outputs -->
+  <line x1="600" y1="350" x2="150" y2="400" class="lang-arrow"/>
+  <line x1="650" y1="350" x2="350" y2="400" class="lang-arrow"/>
+  <line x1="700" y1="350" x2="700" y2="400" class="lang-arrow"/>
+  <line x1="750" y1="350" x2="1050" y2="400" class="lang-arrow"/>
+  <line x1="800" y1="350" x2="1250" y2="400" class="lang-arrow"/>
+  <line x1="850" y1="350" x2="1330" y2="400" class="lang-arrow"/>
+
+  <!-- PYTHON -->
+  <rect x="30" y="400" width="240" height="280" class="box-output" rx="3" stroke-width="2"/>
+  <text x="150" y="425" text-anchor="middle" class="label" font-weight="bold">Python</text>
+  <rect x="40" y="440" width="220" height="230" fill="#FFFFFF" stroke="#DFE4EC" stroke-width="1" rx="2"/>
+  <text x="50" y="455" class="tiny" font-family="monospace">class Contact:</text>
+  <text x="50" y="467" class="tiny" font-family="monospace">  def __init__(self):</text>
+  <text x="50" y="479" class="tiny" font-family="monospace">    self.email: str</text>
+  <text x="50" y="491" class="tiny" font-family="monospace">    self.phone: int</text>
+  <text x="50" y="503" class="tiny" font-family="monospace">    self.tags: list[str]</text>
+  <text x="50" y="520" class="tiny" font-family="monospace">def serialize(obj):</text>
+  <text x="50" y="532" class="tiny" font-family="monospace">  fields = []</text>
+  <text x="50" y="544" class="tiny" font-family="monospace">  # A2: Add type tags</text>
+  <text x="50" y="556" class="tiny" font-family="monospace">  # R4: Sort keys</text>
+  <text x="50" y="568" class="tiny" font-family="monospace">  # R7: SHA-256 hash</text>
+  <text x="50" y="585" class="tiny" font-family="monospace">def deserialize(xml):</text>
+  <text x="50" y="597" class="tiny" font-family="monospace">  # Read type tags</text>
+  <text x="50" y="609" class="tiny" font-family="monospace">  # Allocate memory</text>
+  <text x="50" y="621" class="tiny" font-family="monospace">  # Verify hash (R7)</text>
+
+  <!-- RUST -->
+  <rect x="310" y="400" width="240" height="280" class="box-output" rx="3" stroke-width="2"/>
+  <text x="430" y="425" text-anchor="middle" class="label" font-weight="bold">Rust</text>
+  <rect x="320" y="440" width="220" height="230" fill="#FFFFFF" stroke="#DFE4EC" stroke-width="1" rx="2"/>
+  <text x="330" y="455" class="tiny" font-family="monospace">#[derive(Debug)]</text>
+  <text x="330" y="467" class="tiny" font-family="monospace">pub struct Contact {</text>
+  <text x="330" y="479" class="tiny" font-family="monospace">  email: String,</text>
+  <text x="330" y="491" class="tiny" font-family="monospace">  phone: i64,</text>
+  <text x="330" y="503" class="tiny" font-family="monospace">  tags: Vec&lt;String&gt;,</text>
+  <text x="330" y="515" class="tiny" font-family="monospace">}</text>
+  <text x="330" y="532" class="tiny" font-family="monospace">fn serialize(obj) -&gt;</text>
+  <text x="330" y="544" class="tiny" font-family="monospace">  String { ... }</text>
+  <text x="330" y="556" class="tiny" font-family="monospace"></text>
+  <text x="330" y="568" class="tiny" font-family="monospace">fn deserialize(s)</text>
+  <text x="330" y="580" class="tiny" font-family="monospace">  -&gt; Result&lt;Contact, Err&gt;</text>
+  <text x="330" y="592" class="tiny" font-family="monospace">{ ... }</text>
+  <text x="330" y="609" class="tiny" font-family="monospace">// No unsafe code</text>
+  <text x="330" y="621" class="tiny" font-family="monospace">// Memory-safe throughout</text>
+
+  <!-- JAVA -->
+  <rect x="590" y="400" width="220" height="280" class="box-output" rx="3" stroke-width="2"/>
+  <text x="700" y="425" text-anchor="middle" class="label" font-weight="bold">Java</text>
+  <rect x="600" y="440" width="200" height="230" fill="#FFFFFF" stroke="#DFE4EC" stroke-width="1" rx="2"/>
+  <text x="610" y="455" class="tiny" font-family="monospace">public class Contact {</text>
+  <text x="610" y="467" class="tiny" font-family="monospace">  private String email;</text>
+  <text x="610" y="479" class="tiny" font-family="monospace">  private long phone;</text>
+  <text x="610" y="491" class="tiny" font-family="monospace">  private List&lt;String&gt;</text>
+  <text x="610" y="503" class="tiny" font-family="monospace">    tags;</text>
+  <text x="610" y="520" class="tiny" font-family="monospace">  public static Contact</text>
+  <text x="610" y="532" class="tiny" font-family="monospace">  deserialize(String s)</text>
+  <text x="610" y="544" class="tiny" font-family="monospace">  throws ParseException</text>
+  <text x="610" y="556" class="tiny" font-family="monospace">  { ... }</text>
+  <text x="610" y="573" class="tiny" font-family="monospace">  public String</text>
+  <text x="610" y="585" class="tiny" font-family="monospace">  serialize() { ... }</text>
+  <text x="610" y="602" class="tiny" font-family="monospace">  public boolean</text>
+  <text x="610" y="614" class="tiny" font-family="monospace">  verifyHash() { ... }</text>
+
+  <!-- C++ -->
+  <rect x="870" y="400" width="240" height="280" class="box-output" rx="3" stroke-width="2"/>
+  <text x="990" y="425" text-anchor="middle" class="label" font-weight="bold">C++</text>
+  <rect x="880" y="440" width="220" height="230" fill="#FFFFFF" stroke="#DFE4EC" stroke-width="1" rx="2"/>
+  <text x="890" y="455" class="tiny" font-family="monospace">struct Contact {</text>
+  <text x="890" y="467" class="tiny" font-family="monospace">  std::string email;</text>
+  <text x="890" y="479" class="tiny" font-family="monospace">  int64_t phone;</text>
+  <text x="890" y="491" class="tiny" font-family="monospace">  std::vector&lt;std::</text>
+  <text x="890" y="503" class="tiny" font-family="monospace">    string&gt; tags;</text>
+  <text x="890" y="520" class="tiny" font-family="monospace">std::string</text>
+  <text x="890" y="532" class="tiny" font-family="monospace">serialize(</text>
+  <text x="890" y="544" class="tiny" font-family="monospace">  const Contact&amp;);</text>
+  <text x="890" y="556" class="tiny" font-family="monospace"></text>
+  <text x="890" y="568" class="tiny" font-family="monospace">Contact deserialize(</text>
+  <text x="890" y="580" class="tiny" font-family="monospace">  std::string_view);</text>
+  <text x="890" y="597" class="tiny" font-family="monospace">bool verify_hash(</text>
+  <text x="890" y="609" class="tiny" font-family="monospace">  const Contact&amp;);</text>
+
+  <!-- R -->
+  <rect x="1150" y="400" width="200" height="280" class="box-output" rx="3" stroke-width="2"/>
+  <text x="1250" y="425" text-anchor="middle" class="label" font-weight="bold">R</text>
+  <rect x="1160" y="440" width="180" height="230" fill="#FFFFFF" stroke="#DFE4EC" stroke-width="1" rx="2"/>
+  <text x="1170" y="455" class="tiny" font-family="monospace">setClass(</text>
+  <text x="1170" y="467" class="tiny" font-family="monospace">  "Contact",</text>
+  <text x="1170" y="479" class="tiny" font-family="monospace">  slots = list(</text>
+  <text x="1170" y="491" class="tiny" font-family="monospace">    email="character",</text>
+  <text x="1170" y="503" class="tiny" font-family="monospace">    phone="numeric",</text>
+  <text x="1170" y="515" class="tiny" font-family="monospace">    tags="character"</text>
+  <text x="1170" y="527" class="tiny" font-family="monospace">  )</text>
+  <text x="1170" y="544" class="tiny" font-family="monospace">serialize &lt;- function(</text>
+  <text x="1170" y="556" class="tiny" font-family="monospace">  obj) { ... }</text>
+  <text x="1170" y="573" class="tiny" font-family="monospace">deserialize &lt;-</text>
+  <text x="1170" y="585" class="tiny" font-family="monospace">  function(s) { ... }</text>
+  <text x="1170" y="602" class="tiny" font-family="monospace">verify_hash &lt;-</text>
+  <text x="1170" y="614" class="tiny" font-family="monospace">  function(obj) { ... }</text>
+
+  <!-- JAVASCRIPT/TYPESCRIPT -->
+  <rect x="1330" y="400" width="240" height="280" class="box-output" rx="3" stroke-width="2"/>
+  <text x="1450" y="425" text-anchor="middle" class="label" font-weight="bold">JavaScript/TS</text>
+  <rect x="1340" y="440" width="220" height="230" fill="#FFFFFF" stroke="#DFE4EC" stroke-width="1" rx="2"/>
+  <text x="1350" y="455" class="tiny" font-family="monospace">interface Contact {</text>
+  <text x="1350" y="467" class="tiny" font-family="monospace">  email: string;</text>
+  <text x="1350" y="479" class="tiny" font-family="monospace">  phone: BigInt;</text>
+  <text x="1350" y="491" class="tiny" font-family="monospace">  tags: string[];</text>
+  <text x="1350" y="503" class="tiny" font-family="monospace">}</text>
+  <text x="1350" y="520" class="tiny" font-family="monospace">function serialize(</text>
+  <text x="1350" y="532" class="tiny" font-family="monospace">  obj: Contact</text>
+  <text x="1350" y="544" class="tiny" font-family="monospace">): string { ... }</text>
+  <text x="1350" y="561" class="tiny" font-family="monospace">function deserialize(</text>
+  <text x="1350" y="573" class="tiny" font-family="monospace">  s: string</text>
+  <text x="1350" y="585" class="tiny" font-family="monospace">): Contact { ... }</text>
+  <text x="1350" y="602" class="tiny" font-family="monospace">function verifyHash(</text>
+  <text x="1350" y="614" class="tiny" font-family="monospace">  obj: Contact): bool</text>
+
+  <!-- BOTTOM: WHY THIS WORKS -->
+  <rect x="30" y="720" width="1560" height="310" fill="none" stroke="#DFE4EC" stroke-width="2" rx="3"/>
+
+  <text x="50" y="750" class="label" font-weight="bold">WHY THIS CODE GENERATION IS POSSIBLE</text>
+
+  <rect x="50" y="765" width="750" height="250" fill="#E8EDF5" stroke="#1E2761" stroke-width="1" rx="3"/>
+  <text x="70" y="790" class="label" font-weight="bold">The Three Axioms Enable Universal Codegen</text>
+
+  <text x="70" y="815" class="small" font-weight="bold">A1: Composition Over Inheritance</text>
+  <text x="70" y="830" class="small">Rust has no class inheritance. By forbidding hierarchies everywhere,</text>
+  <text x="70" y="845" class="small">all six languages can generate identical semantic structures: nested objects only.</text>
+  <text x="70" y="860" class="small">→ Generated Rust code compiles without re-architecting</text>
+
+  <text x="70" y="885" class="small" font-weight="bold">A2: Explicit Type Tagging</text>
+  <text x="70" y="900" class="small">Strict compilers (C++, Rust, Java) need memory allocation before parsing.</text>
+  <text x="70" y="915" class="small">Every polymorphic field declares its type before its value.</text>
+  <text x="70" y="930" class="small">→ Deserialiser can allocate buffers once, not speculatively</text>
+
+  <text x="70" y="955" class="small" font-weight="bold">A3: Homogeneous Sequences</text>
+  <text x="70" y="970" class="small">Mixed-type arrays cannot be pre-allocated in strict languages.</text>
+  <text x="70" y="985" class="small">By requiring all array members to share one type, generators can emit:</text>
+  <text x="70" y="1000" class="small">→ Vec&lt;String&gt; in Rust  |  List&lt;String&gt; in Java  |  vector&lt;string&gt; in C++</text>
+
+  <rect x="840" y="765" width="750" height="250" fill="#F1F7F1" stroke="#2C5F2D" stroke-width="1" rx="3"/>
+  <text x="860" y="790" class="label" font-weight="bold">One Profile → Six Implementations, No Manual Porting</text>
+
+  <text x="860" y="815" class="small">Input: Same 121XML profile (Contact.121xml)</text>
+  <text x="860" y="835" class="small">Generator loop:</text>
+  <text x="880" y="855" class="tiny">for lang in [python, rust, java, cpp, r, javascript]:</text>
+  <text x="880" y="870" class="tiny">  generate_serialiser(profile, lang) → works perfectly</text>
+  <text x="880" y="885" class="tiny">  generate_deserialiser(profile, lang) → works perfectly</text>
+  <text x="880" y="900" class="tiny">  generate_hasher(profile, lang) → works perfectly</text>
+
+  <text x="860" y="925" class="small">Each generator is ~500 lines (tiny, because rules are strict)</text>
+  <text x="860" y="945" class="small">Test harness validates round-trip in all six languages simultaneously</text>
+  <text x="860" y="965" class="small">Any field that survives in one language survives in all</text>
+  <text x="860" y="985" class="small">Single conformance scoreboard covers all implementations</text>
+</svg>

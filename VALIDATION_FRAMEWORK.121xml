@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VALIDATION_FRAMEWORK.121xml
+     Prevents architectural drift by checking all proposals against:
+     1. Core definitions from MASTER_DEFINITIONS.121xml
+     2. Critical boundaries (what Claude MUST NOT do)
+     3. Inference rules (how Claude MUST reason)
+
+     This file is used by Claude to validate every architectural proposal
+     BEFORE accepting it or proposing it to the user.
+
+     The framework catches the exact mistakes that just happened:
+     - Proposing centralization (violates boundary_no_centralization)
+     - Proposing data copying (violates boundary_no_data_copying)
+     - Single-vendor optimization (violates boundary_no_single_vendor)
+     - Forgetting core definitions (violates boundary_no_context_loss)
+-->
+
+<map profile="urn:121xml:validation-framework/1.0" version="1.0">
+
+  <!-- VALIDATION FRAMEWORK METADATA -->
+  <map name="framework_metadata">
+    <str name="framework_name">121XML Architectural Decision Validator</str>
+    <str name="framework_version">1.0</str>
+    <str name="purpose">Prevent architectural drift and design errors before proposals</str>
+    <str name="triggered_by">Every architectural decision, diagram, profile, or document proposal</str>
+    <str name="enforcement">MANDATORY - No decision accepted without passing validation</str>
+    <str name="created_date">2026-08-06</str>
+    <str name="created_reason">Claude's repeated architectural mistakes demonstrated that validation must be automatic and immediate</str>
+  </map>
+
+  <!-- VALIDATION WORKFLOW -->
+  <map name="validation_workflow">
+    <str name="phase_1">PROPOSAL RECEIVED - Claude receives request for architectural work</str>
+    <str name="phase_2">BOUNDARY CHECK - Validate against critical_boundaries (immediate rejection if violated)</str>
+    <str name="phase_3">DEFINITION REFERENCE - Ensure proposal references core definitions by address</str>
+    <str name="phase_4">INFERENCE RULES - Validate reasoning follows inference_rules_reminder</str>
+    <str name="phase_5">AUDIT TRAIL - Document all checks and reasoning chain</str>
+    <str name="phase_6">ACCEPTANCE - Proposal accepted only if ALL checks pass</str>
+    <str name="phase_7">IMPLEMENTATION - Create work referencing MASTER_DEFINITIONS.121xml</str>
+  </map>
+
+  <!-- CRITICAL BOUNDARIES (HARD STOPS) -->
+  <map name="critical_boundaries_validation">
+    <str name="instructions">Each boundary is a HARD STOP. If proposal violates any boundary, REJECT immediately and explain violation.</str>
+
+    <map name="boundary_01_no_centralization">
+      <str name="id">boundary_no_centralization</str>
+      <str name="rule">NEVER propose centralized registries, indexes, or repositories</str>
+      <str name="why">121XML is inherently distributed. All access flows through user's local storage + permission grants.</str>
+      <str name="violation_pattern">Phrases like: "central registry", "shared repository", "index of all X", "global lookup"</str>
+      <str name="corrected_approach">Each user controls their own data locally. Systems access via permission grants.</str>
+      <str name="definition_reference">data://sha256:5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d:definition (def_sovereign_architecture)</str>
+      <str name="action_if_violated">STOP. Explain violation. Ask user to clarify user-local approach.</str>
+    </map>
+
+    <map name="boundary_02_no_data_copying">
+      <str name="id">boundary_no_data_copying</str>
+      <str name="rule">NEVER propose copying user data between systems</str>
+      <str name="why">Data sovereignty means user's encrypted data stays local. Only addresses are shared.</str>
+      <str name="violation_pattern">Phrases like: "sync data", "copy to", "transfer data", "move data to cloud", "cache user data"</str>
+      <str name="corrected_approach">Share data addresses (references). Each system requests data via permission grant. User's system returns encrypted data.</str>
+      <str name="definition_reference">data://sha256:5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d:definition (def_sovereign_architecture)</str>
+      <str name="action_if_violated">STOP. Explain violation. Redesign to use data addresses only.</str>
+    </map>
+
+    <map name="boundary_03_no_single_vendor">
+      <str name="id">boundary_no_single_vendor</str>
+      <str name="rule">NEVER optimize for single vendor (Claude, GPT, Gemini, Llama)</str>
+      <str name="why">121XML must work for all vendors simultaneously. Architecture is vendor-neutral by design.</str>
+      <str name="violation_pattern">Phrases like: "Claude-specific", "optimize for Anthropic", "GPT-only", "Gemini feature"</str>
+      <str name="corrected_approach">Test every design against all four vendors. Use A1-A3 and R4-R7 to ensure portability.</str>
+      <str name="definition_reference">data://sha256:3a4f2b5c8e9d1f7a2b4c6e8f0a1b3c5d:definition (def_121xml_core_purpose)</str>
+      <str name="action_if_violated">STOP. Redesign to work across all vendors. Verify with at least two non-Anthropic systems conceptually.</str>
+    </map>
+
+    <map name="boundary_04_no_context_loss">
+      <str name="id">boundary_no_context_loss</str>
+      <str name="rule">NEVER forget core definitions or rework established architectural decisions</str>
+      <str name="why">This is the memory loss problem we're solving. Repeating mistakes demonstrates we haven't learned.</str>
+      <str name="violation_pattern">Proposing same solution twice, reworking decisions, proposing centralization after saying it's distributed</str>
+      <str name="corrected_approach">Always reference MASTER_DEFINITIONS.121xml. If reworking decision, explicitly cite why old decision was wrong.</str>
+      <str name="definition_reference">data://sha256:0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b:definition (def_problem_memory_loss)</str>
+      <str name="action_if_violated">STOP. Review MASTER_DEFINITIONS.121xml. Explain what was forgotten and why.</str>
+    </map>
+
+  </map>
+
+  <!-- DEFINITION REFERENCE REQUIREMENTS -->
+  <map name="definition_reference_validation">
+    <str name="instructions">Every architectural decision MUST reference at least one core definition by immutable address.</str>
+
+    <seq name="required_definitions" of="map">
+
+      <map>
+        <str name="definition_id">def_121xml_core_purpose</str>
+        <str name="address">data://sha256:3a4f2b5c8e9d1f7a2b4c6e8f0a1b3c5d:definition</str>
+        <str name="when_referenced">Any proposal about 121XML's role, vendor neutrality, or schema generation</str>
+        <str name="validation_check">Proposal must explain how it enables vendor-neutral schema discovery (R6)</str>
+      </map>
+
+      <map>
+        <str name="definition_id">def_121xml_axioms</str>
+        <str name="address">data://sha256:7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b:definition</str>
+        <str name="when_referenced">Any proposal about data structure, composition, or code generation</str>
+        <str name="validation_check">Proposal must respect A1 (no inheritance), A2 (explicit types), A3 (homogeneous sequences)</str>
+      </map>
+
+      <map>
+        <str name="definition_id">def_121xml_rules</str>
+        <str name="address">data://sha256:2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f:definition</str>
+        <str name="when_referenced">Any proposal about data integrity, addressing, or conformance</str>
+        <str name="validation_check">Proposal must use R4 (sorted keys), R5 (explicit nulls), R6 (profiles), R7 (SHA256 hashing)</str>
+      </map>
+
+      <map>
+        <str name="definition_id">def_sovereign_architecture</str>
+        <str name="address">data://sha256:5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d:definition</str>
+        <str name="when_referenced">Any proposal about data storage, access control, permissions, or system integration</str>
+        <str name="validation_check">Proposal must show: data local to user, user-held encryption, permission grants, no copying</str>
+      </map>
+
+      <map>
+        <str name="definition_id">def_content_addressed_inference</str>
+        <str name="address">data://sha256:8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f:definition</str>
+        <str name="when_referenced">Any proposal about inference, caching, data references, or multi-agent collaboration</str>
+        <str name="validation_check">Proposal must use content addressing, reference by SHA256, track inference lineage</str>
+      </map>
+
+      <map>
+        <str name="definition_id">def_problem_memory_loss</str>
+        <str name="address">data://sha256:0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b:definition</str>
+        <str name="when_referenced">Any proposal solving token waste, information loss, or context continuity</str>
+        <str name="validation_check">Proposal must show how it reduces compaction waste or improves context preservation</str>
+      </map>
+
+    </seq>
+
+    <str name="validation_rule">Before proposing any work, identify which definitions apply. Reference by address. If unable to reference applicable definition, work is incomplete.</str>
+
+  </map>
+
+  <!-- INFERENCE RULES VALIDATION -->
+  <map name="inference_rules_validation">
+    <str name="instructions">All architectural reasoning MUST follow these inference rules.</str>
+
+    <map name="rule_01_always_reference">
+      <str name="id">rule_always_reference</str>
+      <str name="rule">Every decision must reference back to core definition by immutable address</str>
+      <str name="validation_check">Proposal includes "Reference: data://sha256:XXX:definition" citations</str>
+      <str name="example_pass">Proposing data addressing. Reference: def_content_addressed_inference (data://sha256:8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f:definition)</str>
+      <str name="example_fail">Proposing data addressing. No reference to definitions.</str>
+      <str name="action_if_failed">STOP. Ask: "Which core definition justifies this decision?" Require explicit reference before proceeding.</str>
+    </map>
+
+    <map name="rule_02_check_boundaries">
+      <str name="id">rule_check_boundaries</str>
+      <str name="rule">Check all proposals against critical boundaries BEFORE proposing architecture</str>
+      <str name="validation_check">Proposal explicitly states: "Boundary check: ✓ no_centralization, ✓ no_data_copying, ✓ multi_vendor, ✓ context_continuity"</str>
+      <str name="example_pass">Proposing permission grant layer. Boundary check: ✓ no_centralization (each user owns grants), ✓ no_data_copying (only shares addresses)</str>
+      <str name="example_fail">Proposing permission grant layer without mentioning boundaries.</str>
+      <str name="action_if_failed">STOP. Before proposing, check against all four boundaries. State result explicitly.</str>
+    </map>
+
+    <map name="rule_03_context_continuity">
+      <str name="id">rule_context_continuity</str>
+      <str name="rule">Maintain context continuity. Do not assume fresh start or forget prior decisions</str>
+      <str name="validation_check">Proposal references previous sessions, prior decisions, or SESSION_CONTEXT_TEMPLATE.121xml</str>
+      <str name="example_pass">Continuing from Session 1, we established X. This proposal builds on that by adding Y.</str>
+      <str name="example_fail">Proposing X without mentioning Session 1 established it already.</str>
+      <str name="action_if_failed">STOP. Reference prior work. If uncertain about prior context, read SESSION_CONTEXT_TEMPLATE.121xml and MASTER_DEFINITIONS.121xml first.</str>
+    </map>
+
+    <map name="rule_04_audit_trail">
+      <str name="id">rule_audit_trail</str>
+      <str name="rule">All decisions logged with reasoning chain and references</str>
+      <str name="validation_check">Proposal includes: decision statement, reasoning chain (step 1 → 2 → 3 → conclusion), definition references, boundary checks</str>
+      <str name="example_pass">Decision: Use content addressing. Reasoning: A1 composition + R7 hashing enables immutability. References: def_121xml_axioms, def_121xml_rules. Boundaries: ✓ checks.</str>
+      <str name="example_fail">Decision: Use content addressing. (No reasoning, references, or boundary checks provided.)</str>
+      <str name="action_if_failed">STOP. Provide complete audit trail before accepting proposal.</str>
+    </map>
+
+  </map>
+
+  <!-- VALIDATION DECISION TREE -->
+  <map name="validation_decision_tree">
+    <str name="instructions">Use this tree to validate each proposal in order.</str>
+
+    <str name="checkpoint_1">PROPOSAL RECEIVED
+       ↓
+       Question: Does it violate any critical boundary?
+         ├─ YES → REJECT with explanation. Stop.
+         └─ NO → Continue to checkpoint_2
+
+    </str>
+
+    <str name="checkpoint_2">DEFINITION REFERENCE
+       ↓
+       Question: Does proposal reference at least one core definition by address?
+         ├─ NO → ASK: Which definition justifies this? Require citation before proceeding.
+         └─ YES → Continue to checkpoint_3
+
+    </str>
+
+    <str name="checkpoint_3">INFERENCE RULES
+       ↓
+       Question: Does proposal follow all four inference rules?
+         ├─ PARTIALLY → STOP. Identify missing elements (boundary checks, reasoning chain, etc.)
+         └─ YES → Continue to checkpoint_4
+
+    </str>
+
+    <str name="checkpoint_4">CROSS-VENDOR CHECK
+       ↓
+       Question: Does proposal work for Claude + GPT + Gemini + Llama?
+         ├─ SINGLE_VENDOR → REJECT. Redesign for multi-vendor.
+         └─ MULTI_VENDOR → Continue to checkpoint_5
+
+    </str>
+
+    <str name="checkpoint_5">CONTEXT CONTINUITY
+       ↓
+       Question: Does proposal reference MASTER_DEFINITIONS.121xml and prior sessions?
+         ├─ NO → WARN: Add references to core definitions and prior work.
+         └─ YES → Continue to checkpoint_6
+
+    </str>
+
+    <str name="checkpoint_6">AUDIT TRAIL
+       ↓
+       Question: Does proposal include complete reasoning chain and references?
+         ├─ NO → STOP. Require: decision + reasoning + references + boundary checks.
+         └─ YES → ACCEPT
+
+    </str>
+
+    <str name="checkpoint_7">FINAL ACCEPTANCE
+       ↓
+       All checkpoints passed. Proposal accepted for implementation.
+       Proceed with work, referencing MASTER_DEFINITIONS.121xml throughout.
+
+    </str>
+  </map>
+
+  <!-- VALIDATION CHECKLIST (For Claude to use before proposing) -->
+  <map name="validation_checklist">
+    <str name="instructions">Complete this checklist before proposing ANY architectural work.</str>
+
+    <seq name="checks" of="map">
+
+      <map>
+        <str name="check_id">check_01_centralization</str>
+        <str name="question">Does proposal avoid centralization? (No central registry, index, or repository)</str>
+        <str name="how_to_check">Search proposal for "central", "global", "shared repository", "registry". If found, redesign.</str>
+        <str name="pass">All access is local to user or via permission grants.</str>
+        <str name="fail">STOP. Redesign to be distributed.</str>
+      </map>
+
+      <map>
+        <str name="check_id">check_02_data_copying</str>
+        <str name="question">Does proposal avoid copying user data? (Only addresses shared)</str>
+        <str name="how_to_check">Search for "copy", "sync", "transfer", "cache". If copying data, redesign to use addresses.</str>
+        <str name="pass">Only data addresses (SHA256 hashes) are shared between systems.</str>
+        <str name="fail">STOP. Redesign to use data addresses only.</str>
+      </map>
+
+      <map>
+        <str name="check_id">check_03_multi_vendor</str>
+        <str name="question">Does proposal work for all four vendors? (Claude, GPT, Gemini, Llama)</str>
+        <str name="how_to_check">Ask: "Does this work identically for Claude AND GPT AND Gemini AND Llama?" If no, redesign.</str>
+        <str name="pass">Architecture works for all vendors. No vendor-specific assumptions.</str>
+        <str name="fail">STOP. Redesign for multi-vendor compatibility.</str>
+      </map>
+
+      <map>
+        <str name="check_id">check_04_definition_references</str>
+        <str name="question">Does proposal reference at least one core definition by address?</str>
+        <str name="how_to_check">Count citation lines. Each should look like: "Reference: def_XXX (data://sha256:...)"</str>
+        <str name="pass">At least one core definition cited by immutable address.</str>
+        <str name="fail">STOP. Ask: "Which definition justifies this?" Require citations before proceeding.</str>
+      </map>
+
+      <map>
+        <str name="check_id">check_05_boundary_checks</str>
+        <str name="question">Did I check all four critical boundaries?</str>
+        <str name="how_to_check">Proposal should explicitly state: "Boundary check: ✓ no_centralization, ✓ no_data_copying, ✓ multi_vendor, ✓ context_continuity"</str>
+        <str name="pass">All four boundaries checked and passed.</str>
+        <str name="fail">STOP. Check each boundary explicitly before proceeding.</str>
+      </map>
+
+      <map>
+        <str name="check_id">check_06_reasoning_chain</str>
+        <str name="question">Did I provide reasoning chain? (Step 1 → Step 2 → ... → Conclusion)</str>
+        <str name="how_to_check">Read proposal. Does it explain WHY the decision, not just WHAT the decision is?</str>
+        <str name="pass">Proposal includes reasoning chain showing logical progression.</str>
+        <str name="fail">STOP. Add reasoning chain explaining logical progression.</str>
+      </map>
+
+      <map>
+        <str name="check_id">check_07_alternatives</str>
+        <str name="question">Did I consider and reject alternatives?</str>
+        <str name="how_to_check">Proposal should mention at least one alternative considered and explain why it was rejected.</str>
+        <str name="pass">Proposal mentions alternatives considered and reasoning for selection.</str>
+        <str name="fail">OPTIONAL. If this is a trivial decision, skip. Otherwise, add alternatives section.</str>
+      </map>
+
+      <map>
+        <str name="check_id">check_08_context_reference</str>
+        <str name="question">Does proposal reference MASTER_DEFINITIONS.121xml?</str>
+        <str name="how_to_check">Proposal should include link to or reference to MASTER_DEFINITIONS.121xml</str>
+        <str name="pass">Proposal explicitly references master definitions file.</str>
+        <str name="fail">WARN. Add reference to MASTER_DEFINITIONS.121xml</str>
+      </map>
+
+    </seq>
+  </map>
+
+  <!-- ERROR RECOVERY -->
+  <map name="error_recovery">
+    <str name="instructions">If validation fails, follow these steps to recover.</str>
+
+    <map name="error_01_centralization_detected">
+      <str name="error">Proposal violates boundary_no_centralization</str>
+      <str name="recovery_step_1">Stop implementation immediately.</str>
+      <str name="recovery_step_2">Identify all centralized components (central registry, global index, etc.)</str>
+      <str name="recovery_step_3">Redesign each component as distributed (per-user local storage + permission grants)</str>
+      <str name="recovery_step_4">Example: "Central user registry" → "Each user maintains their own contact list + shares references via permission"</str>
+      <str name="recovery_step_5">Revalidate against all four boundaries before proceeding.</str>
+    </map>
+
+    <map name="error_02_data_copying_detected">
+      <str name="error">Proposal violates boundary_no_data_copying</str>
+      <str name="recovery_step_1">Stop implementation immediately.</str>
+      <str name="recovery_step_2">Identify all places where data is copied, synced, cached, or transferred.</str>
+      <str name="recovery_step_3">Replace with address-based references. Example: Instead of sending user data, send data address (SHA256 hash)</str>
+      <str name="recovery_step_4">Receiving system requests access via permission grant. User's system returns encrypted data.</str>
+      <str name="recovery_step_5">Revalidate against all boundaries before proceeding.</str>
+    </map>
+
+    <map name="error_03_context_loss_detected">
+      <str name="error">Proposal violates boundary_no_context_loss (forgetting definitions or reworking decisions)</str>
+      <str name="recovery_step_1">Read MASTER_DEFINITIONS.121xml completely.</str>
+      <str name="recovery_step_2">Read SESSION_CONTEXT_TEMPLATE.121xml to understand prior work.</str>
+      <str name="recovery_step_3">Identify what was forgotten. Explain why it was lost.</str>
+      <str name="recovery_step_4">Integrate prior decisions back into current proposal. Reference by definition address.</str>
+      <str name="recovery_step_5">If reworking a prior decision, explain why the old approach was wrong. Reference both old and new by definition address.</str>
+    </map>
+
+    <map name="error_04_single_vendor_detected">
+      <str name="error">Proposal violates boundary_no_single_vendor</str>
+      <str name="recovery_step_1">Identify vendor-specific assumptions (Claude tools, GPT-specific API, etc.)</str>
+      <str name="recovery_step_2">Generalize using 121XML axioms (A1-A3) and rules (R4-R7).</str>
+      <str name="recovery_step_3">Test design conceptually against at least two non-Anthropic systems.</str>
+      <str name="recovery_step_4">Example: Instead of "Claude-specific tool", design "vendor-neutral 121XML profile"</str>
+      <str name="recovery_step_5">Revalidate with multi-vendor compatibility before proceeding.</str>
+    </map>
+
+  </map>
+
+  <!-- VALIDATION AUDIT LOG -->
+  <map name="validation_audit_log">
+    <str name="purpose">Track all validations performed. Used to audit validation process and catch systematic errors.</str>
+    <str name="entries">Each validation check creates an entry with: timestamp, proposal ID, checkpoints passed/failed, outcome</str>
+    <str name="retention">Keep complete history. Do not delete entries.</str>
+    <str name="review_frequency">At end of each session, review log to identify patterns in validation failures</str>
+  </map>
+
+  <!-- MASTER REFERENCE -->
+  <map name="framework_completion">
+    <str name="status">COMPLETE AND ACTIVE</str>
+    <str name="last_updated">2026-08-06</str>
+    <str name="frameworks_integrated">
+      - Critical boundaries (4 hard stops)
+      - Definition references (6 required definitions)
+      - Inference rules (4 validation rules)
+      - Decision tree (7 checkpoints)
+      - Validation checklist (8 checks)
+      - Error recovery (4 error types)
+      - Audit logging (complete history)
+    </str>
+    <str name="ready_for_use">YES</str>
+    <str name="usage_instruction">Before proposing ANY architectural work, run through validation_checklist and validation_decision_tree. Document results in audit trail.</str>
+  </map>
+
+</map>

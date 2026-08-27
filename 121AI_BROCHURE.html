@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>121AI - The Operating System for Enterprise AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0A2463;
+            --secondary: #06D6A0;
+            --accent: #F39C12;
+            --neutral: #F5F7FA;
+            --text: #2C3E50;
+            --light-text: #5D6D7B;
+            --white: #FFFFFF;
+            --shadow: 0 4px 20px rgba(10, 36, 99, 0.1);
+            --shadow-lg: 0 12px 40px rgba(10, 36, 99, 0.15);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: var(--white);
+        }
+
+        /* Header Navigation */
+        header {
+            background: var(--white);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 40%, var(--secondary) 100%);
+            color: var(--white);
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(6, 214, 160, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            margin-bottom: 15px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .hero .tagline {
+            font-size: 18px;
+            margin-bottom: 10px;
+            opacity: 0.95;
+            letter-spacing: 0.5px;
+        }
+
+        .hero p {
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-light {
+            background: var(--white);
+            color: var(--primary);
+            padding: 14px 32px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-light:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--white);
+            padding: 12px 30px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Problems Section */
+        .problems {
+            padding: 80px 20px;
+            background: var(--neutral);
+        }
+
+        .section-title {
+            font-size: 40px;
+            margin-bottom: 50px;
+            text-align: center;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .problem-card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--secondary);
+        }
+
+        .problem-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-top-color: var(--accent);
+        }
+
+        .problem-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .problem-card h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .problem-card p {
+            color: var(--light-text);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* Solution Section */
+        .solution {
+            padding: 80px 20px;
+            background: var(--white);
+        }
+
+        .solution .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .solution-content h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .solution-content p {
+            font-size: 16px;
+            color: var(--light-text);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .architecture-diagram {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 40px;
+            border-radius: 12px;
+            color: var(--white);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .architecture-layer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .architecture-layer h4 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .architecture-layer p {
+            font-size: 13px;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .layer-icons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .layer-icon {
+            width: 28px;
+            height: 28px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        /* Customers Section */
+        .customers {
+            padding: 80px 20px;
+            background: var(--neutral);
+        }
+
+        .customers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .customer-card {
+            background: var(--white);
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .customer-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .customer-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 20px;
+            color: var(--white);
+        }
+
+        .customer-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .customer-card .subtitle {
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .customer-card p {
+            color: var(--light-text);
+            font-size: 14px;
+            margin-bottom: 18px;
+            line-height: 1.6;
+        }
+
+        .customer-roi {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: var(--white);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 80px 20px;
+            background: var(--white);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefit-item {
+            padding: 35px;
+            border-left: 4px solid var(--secondary);
+            background: var(--neutral);
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:nth-child(even) {
+            border-left-color: var(--accent);
+        }
+
+        .benefit-item:hover {
+            background: var(--white);
+            box-shadow: var(--shadow-lg);
+            border-left-width: 6px;
+        }
+
+        .benefit-item h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .benefit-item p {
+            color: var(--light-text);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .benefit-number {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        /* USP Section */
+        .usp {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, rgba(10, 36, 99, 0.8) 100%);
+            color: var(--white);
+        }
+
+        .usp .section-title {
+            color: var(--white);
+        }
+
+        .comparison-table {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 200px 1fr 1fr;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 0;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row.header {
+            background: rgba(255,255,255,0.1);
+            font-weight: 700;
+        }
+
+        .table-cell {
+            padding: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .table-row.header .table-cell {
+            text-align: center;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .table-cell:first-child {
+            border-right: 1px solid rgba(255,255,255,0.1);
+            font-weight: 600;
+        }
+
+        .usp-check {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* Metrics Section */
+        .metrics {
+            padding: 80px 20px;
+            background: var(--neutral);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .metric-box {
+            text-align: center;
+            padding: 30px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .metric-box:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--light-text);
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .cta p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            opacity: 0.95;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 40px 20px 20px;
+        }
+
+        footer .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-column h4 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .footer-column a {
+            display: block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--secondary);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-link {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        /* Print Styles */
+        @media print {
+            header, .nav-buttons {
+                position: static;
+            }
+            .btn-secondary {
+                display: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .solution .container {
+                grid-template-columns: 1fr;
+            }
+
+            .table-row {
+                grid-template-columns: 1fr;
+            }
+
+            .table-cell:first-child {
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+
+            .cta h2 {
+                font-size: 32px;
+            }
+
+            .hero-buttons, .cta-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <a href="#" class="logo">
+                <div class="logo-icon">1</div>
+                121AI
+            </a>
+            <div class="nav-buttons">
+                <a href="#benefits" class="btn btn-secondary">Learn More</a>
+                <button class="btn btn-primary">Get Started</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-logo">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.9" />
+                            <stop offset="100%" style="stop-color:#F5F7FA;stop-opacity:0.9" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="100" r="12" fill="rgba(255,255,255,0.8)"/>
+                    <circle cx="100" cy="100" r="16" fill="url(#logoGradient)"/>
+                    <circle cx="150" cy="100" r="12" fill="rgba(255,255,255,0.8)"/>
+                    <path d="M 62 100 Q 75 85 88 100" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" fill="none"/>
+                    <path d="M 112 100 Q 125 115 138 100" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" fill="none"/>
+                </svg>
+            </div>
+            <h1>121AI</h1>
+            <p class="tagline">The Operating System for Enterprise AI</p>
+            <p>Universal orchestration for any AI system, any data format, any platform—with zero vendor lock-in and perfect data integrity.</p>
+            <div class="hero-buttons">
+                <button class="btn-light">Start Free Trial</button>
+                <button class="btn-outline">Schedule Demo</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problems Section -->
+    <section class="problems">
+        <div class="container">
+            <h2 class="section-title">Enterprise AI's Biggest Challenges</h2>
+            <div class="problems-grid">
+                <div class="problem-card">
+                    <div class="problem-icon">🔒</div>
+                    <h3>Vendor Lock-In</h3>
+                    <p>Organizations stuck with a single AI vendor, unable to switch without catastrophic cost and complexity.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🗂️</div>
+                    <h3>Data Silos</h3>
+                    <p>Incompatible formats (SWIFT, HL7, JSON) create islands of data that can't communicate with each other.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🧠</div>
+                    <h3>Context Loss</h3>
+                    <p>AI systems forget context, lose details, and change behavior unpredictably between interactions.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">⚠️</div>
+                    <h3>Compliance Risk</h3>
+                    <p>No perfect audit trails, impossible to prove data integrity or demonstrate regulatory compliance.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">💰</div>
+                    <h3>Cost Waste</h3>
+                    <p>Forced to use expensive top-tier models for simple tasks, leading to 3-5x higher costs than necessary.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🚫</div>
+                    <h3>Integration Burden</h3>
+                    <p>Each new system or format requires months of custom development and ongoing maintenance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="solution">
+        <div class="container">
+            <div class="solution-content">
+                <h2>121AI Solves Every Challenge</h2>
+                <p><strong>Universal Translation.</strong> Convert between 50+ formats (SWIFT, ISO20022, JSON, HL7, GraphQL, Protobuf, CSV, ACH, SOAP, REST) automatically.</p>
+                <p><strong>Intelligent Orchestration.</strong> Route work to optimal AI systems—expensive Claude for complex reasoning, fast Haiku for simple tasks, Gemini for vision.</p>
+                <p><strong>Complete Control.</strong> Deploy on-premises, air-gapped, hybrid, or cloud. User-controlled encryption keys. Zero escrow. No backdoors.</p>
+                <p><strong>Perfect Integrity.</strong> Zero data loss guaranteed. SHA256 content addressing. Deterministic behavior. Replay any interaction and get identical results.</p>
+            </div>
+            <div class="architecture-diagram">
+                <div class="architecture-layer">
+                    <h4>Existing Systems</h4>
+                    <p>Databases • Banking • ERP • CRM • Healthcare</p>
+                    <div class="layer-icons">
+                        <div class="layer-icon">💾</div>
+                        <div class="layer-icon">🏦</div>
+                        <div class="layer-icon">📊</div>
+                        <div class="layer-icon">🏥</div>
+                    </div>
+                </div>
+                <div class="architecture-layer" style="background: rgba(6,214,160,0.2); border: 2px solid rgba(6,214,160,0.5);">
+                    <h4 style="color: var(--accent);">🚀 121AI Universal Orchestration</h4>
+                    <p>Format Translation • Model Routing • Compression • Archival</p>
+                    <div class="layer-icons">
+                        <div class="layer-icon">⚡</div>
+                        <div class="layer-icon">🧠</div>
+                        <div class="layer-icon">📦</div>
+                        <div class="layer-icon">🔐</div>
+                    </div>
+                </div>
+                <div class="architecture-layer">
+                    <h4>Any AI System</h4>
+                    <p>Claude • GPT • Gemini • Qwen • DeepSeek • Hunyuan</p>
+                    <div class="layer-icons">
+                        <div class="layer-icon">🤖</div>
+                        <div class="layer-icon">🧠</div>
+                        <div class="layer-icon">💬</div>
+                        <div class="layer-icon">⚙️</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customers Section -->
+    <section class="customers">
+        <div class="container">
+            <h2 class="section-title">Built for Every Organization</h2>
+            <div class="customers-grid">
+                <div class="customer-card">
+                    <div class="customer-icon">🏢</div>
+                    <h3>Enterprise</h3>
+                    <span class="subtitle">1,000+ Employees</span>
+                    <p>Multi-system consolidation, complex compliance requirements, mission-critical data integrity.</p>
+                    <div class="customer-roi">60% Faster Integration<br>40% Cost Reduction</div>
+                </div>
+                <div class="customer-card">
+                    <div class="customer-icon">🌐</div>
+                    <h3>Mid-Market</h3>
+                    <span class="subtitle">100-1,000 Employees</span>
+                    <p>System fragmentation, rapid growth, need for fast deployment and flexibility.</p>
+                    <div class="customer-roi">Eliminate Custom Bridges<br>6-Week Faster Deploy</div>
+                </div>
+                <div class="customer-card">
+                    <div class="customer-icon">🚀</div>
+                    <h3>Developers</h3>
+                    <span class="subtitle">Startups & Builders</span>
+                    <p>Format boilerplate, vendor lock-in, rapid prototyping needs, cost constraints.</p>
+                    <div class="customer-roi">Zero Setup Time<br>Rapid Prototyping</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="benefits">
+        <div class="container">
+            <h2 class="section-title">Why Choose 121AI?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <span class="benefit-number">1</span>
+                    <h3>Zero Vendor Lock-In</h3>
+                    <p>Switch AI systems anytime (Claude → GPT → Gemini) without data loss. Data portability guaranteed. Export everything anytime. No escrow, no backdoors.</p>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-number">2</span>
+                    <h3>Perfect Data Integrity</h3>
+                    <p>0% data loss (lossless conversion proven mathematically). Perfect audit trails with SHA256 content addressing. Deterministic behavior—replay any interaction, get identical result.</p>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-number">3</span>
+                    <h3>Cost Optimization</h3>
+                    <p>Automatic model selection routes expensive Claude to complex tasks, cheap Haiku to simple ones. 94% compression = fewer tokens = lower costs. Real-time cost tracking.</p>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-number">4</span>
+                    <h3>Complete Sovereignty</h3>
+                    <p>Deploy on-premises, air-gapped, or hybrid. User-controlled encryption keys (never escrow). GDPR/HIPAA/SOC2 compliant by design. Zero vendor dependency.</p>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-number">5</span>
+                    <h3>Rapid Deployment</h3>
+                    <p>2-hour installation (Docker/Kubernetes). 50+ format profiles pre-built. Polyglot support (Python, Rust, Go, Node, Ruby). Zero custom development required.</p>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-number">6</span>
+                    <h3>Unlimited Memory</h3>
+                    <p>Compress conversations 94% while keeping full context forever. Perfect recall—search 90 days of history instantly. Zero context truncation. Every detail preserved.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- USP Comparison Section -->
+    <section class="usp">
+        <div class="container">
+            <h2 class="section-title">How 121AI is Different</h2>
+            <div class="comparison-table">
+                <div class="table-row header">
+                    <div class="table-cell">Challenge</div>
+                    <div class="table-cell">Traditional Platforms</div>
+                    <div class="table-cell">121AI</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">Vendor Lock-In</div>
+                    <div class="table-cell">Locked to OpenAI / Anthropic / Google</div>
+                    <div class="table-cell"><span class="usp-check">✓ Switch Anytime</span> Zero Lock-In</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">Data Loss</div>
+                    <div class="table-cell">30-50% data loss in conversions (standard)</div>
+                    <div class="table-cell"><span class="usp-check">✓ 0% Guaranteed</span> Lossless</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">Audit Trail</div>
+                    <div class="table-cell">Partial logs, not immutable, not auditable</div>
+                    <div class="table-cell"><span class="usp-check">✓ Perfect SHA256</span> Audit Trail</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">Format Support</div>
+                    <div class="table-cell">2-3 formats with months of custom code</div>
+                    <div class="table-cell"><span class="usp-check">✓ 50+ Formats</span> Auto-Detection</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">Deployment</div>
+                    <div class="table-cell">Cloud-only, vendor-hosted, no control</div>
+                    <div class="table-cell"><span class="usp-check">✓ On-Prem / Hybrid</span> Air-Gapped</div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">Key Management</div>
+                    <div class="table-cell">Platform holds your keys (backdoor risk)</div>
+                    <div class="table-cell"><span class="usp-check">✓ User-Controlled</span> Zero Escrow</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Metrics Section -->
+    <section class="metrics">
+        <div class="container">
+            <h2 class="section-title">121AI by the Numbers</h2>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-value">0%</div>
+                    <div class="metric-label">Data Loss Guarantee</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">94%</div>
+                    <div class="metric-label">Token Compression</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">&lt;2h</div>
+                    <div class="metric-label">Deployment Time</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">50+</div>
+                    <div class="metric-label">Format Profiles</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">5</div>
+                    <div class="metric-label">Language Implementations</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">99.95%</div>
+                    <div class="metric-label">Uptime SLA</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Transform Your AI Infrastructure?</h2>
+            <p>Join enterprises and startups using 121AI to eliminate vendor lock-in, reduce costs 40%, and deploy faster than ever before.</p>
+            <div class="cta-buttons">
+                <button class="btn-light">Start Free Trial</button>
+                <button class="btn-outline">Schedule a Demo</button>
+                <button class="btn-outline">Read Documentation</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-column">
+                <h4>Product</h4>
+                <a href="#">Features</a>
+                <a href="#">Pricing</a>
+                <a href="#">Security</a>
+                <a href="#">Documentation</a>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <a href="#">About</a>
+                <a href="#">Blog</a>
+                <a href="#">Careers</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <a href="#">GitHub</a>
+                <a href="#">API Reference</a>
+                <a href="#">Community</a>
+                <a href="#">Support</a>
+            </div>
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Security Policy</a>
+                <a href="#">Compliance</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 121AI. All rights reserved. The Operating System for Enterprise AI.</p>
+            <div class="social-links">
+                <a href="#" class="social-link">𝕏</a>
+                <a href="#" class="social-link">in</a>
+                <a href="#" class="social-link">gh</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

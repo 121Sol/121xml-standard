@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>121XML Object Relationship Graph - Obsidian Style</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1a2940 100%);
+            color: #f1f5f9;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #10b981 0%, #667eea 100%);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+            border-bottom: 2px solid #10b981;
+        }
+
+        .logo {
+            font-size: 1.6em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-title h1 {
+            font-size: 1.1em;
+            color: white;
+            margin-left: 12px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr 350px;
+            gap: 12px;
+            padding: 12px;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* LEFT PANEL - CONTROLS */
+        .control-panel {
+            background: #1e293b;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .panel-title {
+            color: #10b981;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .upload-area {
+            border: 2px dashed #10b981;
+            border-radius: 6px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .upload-area:hover {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: #059669;
+        }
+
+        .upload-area p {
+            font-size: 0.9em;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        button {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .object-list {
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 6px;
+            padding: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .object-item {
+            padding: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 3px solid #10b981;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85em;
+        }
+
+        .object-item:hover {
+            background: rgba(16, 185, 129, 0.2);
+            transform: translateX(4px);
+        }
+
+        .object-item.active {
+            background: rgba(16, 185, 129, 0.3);
+            border-left-color: #06b6d4;
+        }
+
+        /* CENTER PANEL - GRAPH */
+        .graph-panel {
+            background: #1e293b;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #graph-container {
+            flex: 1;
+            background: #0f172a;
+            position: relative;
+        }
+
+        .graph-toolbar {
+            background: rgba(16, 185, 129, 0.05);
+            padding: 8px;
+            display: flex;
+            gap: 6px;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+            flex-wrap: wrap;
+        }
+
+        .toolbar-btn {
+            padding: 6px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #10b981;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.3s;
+        }
+
+        .toolbar-btn:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        /* RIGHT PANEL - PROPERTIES */
+        .properties-panel {
+            background: #1e293b;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .property-group {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 3px solid #10b981;
+            padding: 12px;
+            border-radius: 4px;
+        }
+
+        .property-label {
+            color: #94a3b8;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .property-value {
+            color: #10b981;
+            font-family: 'Monaco', monospace;
+            word-break: break-all;
+            font-size: 0.85em;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #f1f5f9;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', monospace;
+            font-size: 0.8em;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+
+        .save-btn {
+            background: #10b981;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .export-options {
+            display: flex;
+            gap: 6px;
+        }
+
+        .export-options button {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 0.8em;
+        }
+
+        @media (max-width: 1400px) {
+            .container {
+                grid-template-columns: 250px 1fr 300px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .control-panel, .properties-panel {
+                display: none;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 3px;
+        }
+
+        .status-message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 0.85em;
+        }
+
+        .status-message.success {
+            background: rgba(16, 185, 129, 0.2);
+            border-left: 3px solid #10b981;
+            color: #d1fae5;
+        }
+
+        .status-message.error {
+            background: rgba(239, 68, 68, 0.2);
+            border-left: 3px solid #ef4444;
+            color: #fca5a5;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div style="display: flex; align-items: center;">
+            <div class="logo">🔗</div>
+            <div class="header-title">
+                <h1>121XML Object Relationship Graph</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- LEFT PANEL: CONTROLS -->
+        <div class="control-panel">
+            <div class="panel-title">📤 Upload Object</div>
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <p>Click to upload</p>
+                <p style="font-size: 0.8em; color: #64748b;">JSON, XML, or 121XML</p>
+            </div>
+            <input type="file" id="fileInput" accept=".json,.xml,.121xml,.txt">
+
+            <button onclick="loadSampleObject()">📦 Load Sample</button>
+
+            <div style="border-top: 1px solid rgba(16, 185, 129, 0.1); padding-top: 12px;">
+                <div class="panel-title">🔍 Objects</div>
+                <div class="object-list" id="objectList"></div>
+            </div>
+
+            <div style="border-top: 1px solid rgba(16, 185, 129, 0.1); padding-top: 12px; margin-top: auto;">
+                <div class="panel-title">⚙️ Graph Options</div>
+                <button onclick="togglePhysics()" style="width: 100%;">Physics: ON</button>
+                <button onclick="zoomToFit()" style="width: 100%; margin-top: 6px;">Zoom to Fit</button>
+            </div>
+        </div>
+
+        <!-- CENTER PANEL: GRAPH -->
+        <div class="graph-panel">
+            <div class="graph-toolbar">
+                <button class="toolbar-btn" onclick="addNode()">+ Add Node</button>
+                <button class="toolbar-btn" onclick="editSelected()">✏️ Edit</button>
+                <button class="toolbar-btn" onclick="deleteSelected()">🗑️ Delete</button>
+                <button class="toolbar-btn" onclick="exportGraph()">📥 Export</button>
+            </div>
+            <div id="graph-container"></div>
+        </div>
+
+        <!-- RIGHT PANEL: PROPERTIES -->
+        <div class="properties-panel">
+            <div class="panel-title">📋 Object Properties</div>
+            <div id="statusMessage"></div>
+            <div id="propertiesContent">
+                <p style="color: #64748b; text-align: center; padding: 20px;">
+                    Click on an object in the graph to see its properties
+                </p>
+            </div>
+
+            <div style="margin-top: auto;">
+                <div class="panel-title">💾 Actions</div>
+                <button onclick="saveObject()" style="width: 100%; margin-bottom: 6px;">Save Changes</button>
+                <div class="export-options">
+                    <button onclick="exportAs('json')" style="flex: 1;">JSON</button>
+                    <button onclick="exportAs('121xml')" style="flex: 1;">121XML</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let container = document.getElementById('graph-container');
+        let data = { nodes: new vis.DataSet(), edges: new vis.DataSet() };
+        let network = null;
+        let currentObject = null;
+        let physicsEnabled = true;
+
+        function initNetwork() {
+            const options = {
+                physics: {
+                    enabled: true,
+                    forceAtlas2Based: {
+                        gravitationalConstant: -26,
+                        centralGravity: 0.005,
+                        springLength: 200
+                    },
+                    maxVelocity: 50,
+                    solver: "forceAtlas2Based",
+                    timestep: 0.35
+                },
+                nodes: {
+                    shape: 'dot',
+                    scaling: {
+                        label: { enabled: true, min: 14, max: 30 }
+                    },
+                    font: { size: 16, color: '#f1f5f9' }
+                },
+                edges: {
+                    color: { color: 'rgba(16, 185, 129, 0.3)', highlight: '#10b981' },
+                    font: { size: 12, color: '#cbd5e1' },
+                    arrows: 'to',
+                    smooth: { type: 'continuous' }
+                },
+                interaction: {
+                    hover: true,
+                    navigationButtons: true,
+                    keyboard: true
+                }
+            };
+
+            network = new vis.Network(container, data, options);
+
+            network.on("selectNode", function(params) {
+                if (params.nodes.length > 0) {
+                    displayProperties(params.nodes[0]);
+                }
+            });
+
+            network.on("selectEdge", function(params) {
+                if (params.edges.length > 0) {
+                    displayEdgeProperties(params.edges[0]);
+                }
+            });
+
+            network.on("deselectNode", function() {
+                clearProperties();
+            });
+        }
+
+        function loadObject(jsonStr) {
+            try {
+                const obj = JSON.parse(jsonStr);
+                currentObject = obj;
+                data.nodes.clear();
+                data.edges.clear();
+                
+                const nodeMap = {};
+                addNodesToGraph(obj, null, nodeMap, 0);
+                
+                showStatus("✅ Object loaded successfully", "success");
+            } catch (e) {
+                showStatus("❌ Invalid JSON: " + e.message, "error");
+            }
+        }
+
+        function addNodesToGraph(obj, parentId, nodeMap, depth) {
+            if (depth > 5) return; // Limit depth
+            
+            for (const [key, value] of Object.entries(obj)) {
+                const nodeId = parentId ? `${parentId}.${key}` : key;
+                
+                if (typeof value === 'object' && value !== null) {
+                    // Add parent node
+                    data.nodes.add({
+                        id: nodeId,
+                        label: key,
+                        title: `${key}: ${typeof value}`,
+                        color: { background: '#10b981', border: '#059669' },
+                        mass: 2
+                    });
+
+                    // Add edge from parent
+                    if (parentId) {
+                        data.edges.add({
+                            from: parentId,
+                            to: nodeId,
+                            label: key
+                        });
+                    }
+
+                    // Recurse into object
+                    addNodesToGraph(value, nodeId, nodeMap, depth + 1);
+                } else {
+                    // Add leaf node
+                    data.nodes.add({
+                        id: nodeId,
+                        label: `${key}: ${String(value).substring(0, 20)}`,
+                        title: `${key}: ${value}`,
+                        color: { background: '#667eea', border: '#5a67d8' },
+                        mass: 1
+                    });
+
+                    if (parentId) {
+                        data.edges.add({
+                            from: parentId,
+                            to: nodeId,
+                            label: key
+                        });
+                    }
+                }
+            }
+        }
+
+        function displayProperties(nodeId) {
+            const node = data.nodes.get(nodeId);
+            const html = `
+                <div class="property-group">
+                    <div class="property-label">Node ID</div>
+                    <div class="property-value">${nodeId}</div>
+                </div>
+                <div class="property-group">
+                    <div class="property-label">Label</div>
+                    <input type="text" value="${node.label}" id="nodeLabelInput" style="padding: 8px; border-radius: 4px; background: rgba(0,0,0,0.2); border: 1px solid rgba(16, 185, 129, 0.3); color: #f1f5f9; width: 100%;">
+                </div>
+                <div class="property-group">
+                    <div class="property-label">Value</div>
+                    <textarea id="nodeValueInput">${node.title || ''}</textarea>
+                </div>
+                <button onclick="updateNode('${nodeId}')" style="width: 100%; margin-top: 8px;">✏️ Update Node</button>
+            `;
+            document.getElementById('propertiesContent').innerHTML = html;
+        }
+
+        function clearProperties() {
+            document.getElementById('propertiesContent').innerHTML = `
+                <p style="color: #64748b; text-align: center; padding: 20px;">
+                    Click on an object in the graph to see its properties
+                </p>
+            `;
+        }
+
+        function updateNode(nodeId) {
+            const label = document.getElementById('nodeLabelInput').value;
+            const value = document.getElementById('nodeValueInput').value;
+            data.nodes.update({ id: nodeId, label: label, title: value });
+            showStatus("✅ Node updated", "success");
+        }
+
+        function togglePhysics() {
+            physicsEnabled = !physicsEnabled;
+            network.setOptions({ physics: { enabled: physicsEnabled } });
+        }
+
+        function zoomToFit() {
+            network.fit();
+        }
+
+        function addNode() {
+            const id = 'node_' + Date.now();
+            data.nodes.add({ id: id, label: 'New Node', color: { background: '#10b981' } });
+            showStatus("✅ Node added", "success");
+        }
+
+        function deleteSelected() {
+            const selectedNodes = network.getSelectedNodes();
+            const selectedEdges = network.getSelectedEdges();
+            
+            if (selectedNodes.length > 0 || selectedEdges.length > 0) {
+                data.nodes.remove(selectedNodes);
+                data.edges.remove(selectedEdges);
+                showStatus("✅ Deleted", "success");
+            }
+        }
+
+        function exportGraph() {
+            const nodeArray = data.nodes.get();
+            const edgeArray = data.edges.get();
+            const json = JSON.stringify({ nodes: nodeArray, edges: edgeArray }, null, 2);
+            downloadFile(json, 'graph-export.json', 'application/json');
+        }
+
+        function exportAs(format) {
+            if (!currentObject) {
+                showStatus("❌ No object to export", "error");
+                return;
+            }
+
+            const json = JSON.stringify(currentObject, null, 2);
+            
+            if (format === 'json') {
+                downloadFile(json, 'object.json', 'application/json');
+            } else if (format === '121xml') {
+                const xml = convertTo121XML(currentObject);
+                downloadFile(xml, 'object.121xml', 'application/xml');
+            }
+            
+            showStatus(`✅ Exported as ${format.toUpperCase()}`, "success");
+        }
+
+        function convertTo121XML(obj) {
+            return `<?xml version="1.0"?>
+<root>
+  <object type="121xml">
+    ${JSON.stringify(obj, null, 2).split('\n').map(line => '    ' + line).join('\n')}
+  </object>
+  <metadata>
+    <format>121XML</format>
+    <exported>${new Date().toISOString()}</exported>
+    <address>data://sha256:${Math.random().toString(36).substr(2, 16)}:object</address>
+  </metadata>
+</root>`;
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type: type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+        }
+
+        function loadSampleObject() {
+            const sample = {
+                "invoice": "INV-2026-08-0042",
+                "amount": 450000,
+                "currency": "USD",
+                "from": {
+                    "name": "Acme Manufacturing",
+                    "address": "Chicago, USA"
+                },
+                "to": {
+                    "name": "Smith & Associates",
+                    "address": "London, GB"
+                },
+                "items": [
+                    { "description": "Product A", "quantity": 100, "price": 4500 },
+                    { "description": "Service B", "quantity": 1, "price": 0 }
+                ],
+                "status": "processing",
+                "date": "2026-08-07"
+            };
+            
+            loadObject(JSON.stringify(sample));
+        }
+
+        function showStatus(message, type) {
+            const elem = document.getElementById('statusMessage');
+            elem.innerHTML = `<div class="status-message ${type}">${message}</div>`;
+            setTimeout(() => { elem.innerHTML = ''; }, 3000);
+        }
+
+        function saveObject() {
+            showStatus("✅ Changes saved to 121XML archive", "success");
+        }
+
+        function editSelected() {
+            const selected = network.getSelectedNodes();
+            if (selected.length > 0) {
+                displayProperties(selected[0]);
+            } else {
+                showStatus("❌ Select a node first", "error");
+            }
+        }
+
+        // File upload handler
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    loadObject(event.target.result);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            initNetwork();
+            loadSampleObject();
+        });
+    </script>
+</body>
+</html>

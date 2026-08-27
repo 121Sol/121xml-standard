@@ -1,0 +1,12 @@
+{
+  "_address": "data://sha256:084ee221fd2b94f76f8f6c511732abe8660c811e8f26801609509225753c84c4:payment",
+  "_type": "payment",
+  "_stored": "2026-08-06T21:07:10.112464Z",
+  "_hash": "084ee221fd2b94f76f8f6c511732abe8660c811e8f26801609509225753c84c4",
+  "data": {
+    "id": "pay_002",
+    "amount": 275000,
+    "currency": "GBP",
+    "invoice": "INV-2026-08-0043"
+  }
+}

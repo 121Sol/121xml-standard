@@ -1,0 +1,391 @@
+<title>121XML</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#f4f6f8; --surface:#ffffff; --panel:#eceff4; --ink:#111722; --muted:#586274;
+    --line:#d8dde5; --accent:#0d7c64; --accent-soft:#0d7c6422; --gold:#a9781a;
+    --mono:"Cascadia Code","SF Mono","JetBrains Mono",Consolas,monospace;
+    --sans:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0a0d13; --surface:#121722; --panel:#19202d; --ink:#e9ecf2; --muted:#96a0b1;
+    --line:#252d3b; --accent:#37bd9d; --accent-soft:#37bd9d22; --gold:#d7a44e;}}
+  :root[data-theme="dark"]{
+    --bg:#0a0d13; --surface:#121722; --panel:#19202d; --ink:#e9ecf2; --muted:#96a0b1;
+    --line:#252d3b; --accent:#37bd9d; --accent-soft:#37bd9d22; --gold:#d7a44e;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none}
+  code,.mono{font-family:var(--mono)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,36px)}
+  /* nav */
+  nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav-in{max-width:1080px;margin:0 auto;padding:12px clamp(16px,4vw,36px);display:flex;
+    align-items:center;gap:20px;flex-wrap:wrap}
+  .brand{font-family:var(--mono);font-weight:700;font-size:18px;letter-spacing:-.01em;margin-right:auto}
+  .brand b{color:var(--accent)}
+  .tabs{display:flex;gap:4px;flex-wrap:wrap}
+  .tab{font:inherit;font-size:14px;color:var(--muted);background:none;border:0;padding:8px 13px;
+    border-radius:8px;cursor:pointer;transition:.15s}
+  .tab:hover{color:var(--ink);background:var(--panel)}
+  .tab[aria-selected="true"]{color:var(--accent);background:var(--accent-soft);font-weight:600}
+  /* panels */
+  .panel{display:none;animation:fade .4s ease both}
+  .panel[data-active]{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  section{padding:clamp(38px,6vw,72px) 0}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 14px}
+  h1{font-size:clamp(34px,7vw,68px);line-height:1.03;letter-spacing:-.03em;margin:0 0 18px;
+    text-wrap:balance;font-weight:700}
+  h2{font-size:clamp(24px,4vw,36px);letter-spacing:-.02em;margin:0 0 14px;text-wrap:balance;font-weight:680}
+  h3{font-size:19px;margin:0 0 8px;font-weight:640}
+  .lede{font-size:clamp(17px,2.4vw,21px);color:var(--muted);max-width:60ch;margin:0 0 26px}
+  p{max-width:64ch}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-block;padding:12px 20px;border-radius:10px;font-weight:600;font-size:15px}
+  .btn.p{background:var(--accent);color:#fff}
+  .btn.s{border:1px solid var(--line);color:var(--ink)}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .card h3{font-family:var(--mono)}
+  .chip{display:inline-block;font-family:var(--mono);font-size:12px;padding:3px 9px;border-radius:20px;
+    background:var(--panel);color:var(--muted);border:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  .tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  tr:last-child td{border-bottom:0}
+  .hero-facets{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .facet-pill{font-family:var(--mono);font-size:13px;padding:7px 13px;border-radius:9px;
+    background:var(--surface);border:1px solid var(--line)}
+  .facet-pill.k{border-color:var(--accent);color:var(--accent)}
+  .note{font-size:13.5px;color:var(--muted);border-left:2px solid var(--accent);padding:4px 0 4px 14px;
+    margin:20px 0;max-width:64ch}
+  footer{border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:14px}
+  /* objectmap */
+  .gf{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:820px){.gf{grid-template-columns:1.6fr 1fr}}
+  .gf-stage{background:var(--surface);border:1px solid var(--line);border-radius:14px;min-height:440px;
+    position:relative;overflow:hidden}
+  .gf-controls{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:3}
+  .gf-controls button{font:inherit;font-size:12.5px;font-family:var(--mono);padding:6px 11px;border-radius:8px;
+    border:1px solid var(--line);background:var(--bg);color:var(--muted);cursor:pointer}
+  .gf-controls button.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .gf-info{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .gf-info h3{font-family:var(--mono)}
+  .gf-info .kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line);
+    font-size:14px}
+  .gf-info .kv b{font-family:var(--mono);font-weight:600}
+  .gf-hint{font-size:13px;color:var(--muted)}
+  .gf-node text{font-family:var(--sans)}
+  .breadcrumb{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-bottom:6px}
+</style>
+
+<nav><div class="nav-in">
+  <div class="brand">1<b>2</b>1XML</div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-t="overview">Overview</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="objectmap">121ObjectMap</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="standard">The Standard</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="related">Related Standards</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="start">Get Started</button>
+  </div>
+</div></nav>
+
+<!-- OVERVIEW -->
+<div class="panel" data-active data-p="overview"><div class="wrap">
+  <section>
+    <p class="eyebrow">The self-describing data standard</p>
+    <h1>Data that carries its own meaning.</h1>
+    <p class="lede">121XML packages any object as a signed, content-addressed bundle of facets — so a
+    receiver decodes structure, semantics, rules, relationships, ownership and position without a
+    shared schema. Built on proven standards, not instead of them.</p>
+    <div class="row">
+      <a class="btn p" data-goto="objectmap">See 121ObjectMap →</a>
+      <a class="btn s" data-goto="standard">Read the standard</a>
+    </div>
+    <div class="hero-facets">
+      <span class="facet-pill k">payload</span><span class="facet-pill">shape</span>
+      <span class="facet-pill">context</span><span class="facet-pill">rules</span>
+      <span class="facet-pill">relations</span><span class="facet-pill">provenance</span>
+      <span class="facet-pill">space·4D</span>
+    </div>
+  </section>
+  <section style="padding-top:0">
+    <div class="grid g3">
+      <div class="card"><h3>Self-describing</h3><p style="margin:0">Every packet inlines — or content-addresses —
+        its own <code>shape</code> and <code>context</code>. No external namespace to pre-share.</p></div>
+      <div class="card"><h3>Verifiable</h3><p style="margin:0">One signature over the root CID. Deterministic
+        bytes (sorted keys) mean the same object always hashes the same. Tamper-evident by construction.</p></div>
+      <div class="card"><h3>Lossless & de-duplicated</h3><p style="margin:0">Explicit null vs. absent for
+        bit-perfect round-trips; shared facets stored once by address — a <em>measured</em> dedup ratio, not a slogan.</p></div>
+    </div>
+  </section>
+  <section style="padding-top:0">
+    <h2>Where 121XML fits</h2>
+    <p class="lede" style="font-size:17px">It is not a better JSON. It is a verifiable semantic
+    envelope that <b>wraps</b> your existing formats.</p>
+    <div class="tblwrap"><table>
+      <tr><th>Concern</th><th>121XML facet</th><th>Stands on</th></tr>
+      <tr><td>Structure + validation</td><td><code>shape</code></td><td>JSON Schema · SHACL</td></tr>
+      <tr><td>Meaning of each field</td><td><code>context</code></td><td>JSON-LD</td></tr>
+      <tr><td>Derivation / inference</td><td><code>rules</code></td><td>Datalog · SHACL-AF</td></tr>
+      <tr><td>Relationships</td><td><code>relations</code></td><td>RDF · property graph</td></tr>
+      <tr><td>Ownership, time, signature</td><td><code>provenance</code></td><td>W3C VC/DID · IETF COSE</td></tr>
+      <tr><td>4-D position (physical)</td><td><code>space</code></td><td>OGC · MISB</td></tr>
+      <tr><td>Encoding + addressing</td><td>envelope</td><td>CBOR · IPLD multiformats</td></tr>
+    </table></div>
+    <p class="note">Honest by design: 121XML delegates each concern to a best-in-class standard and
+    contributes profiles back. The novelty is the verifiable <em>composition</em>, not a rewrite of the web.</p>
+  </section>
+</div></div>
+
+<!-- 121OBJECTMAP -->
+<div class="panel" data-p="objectmap"><div class="wrap">
+  <section>
+    <p class="eyebrow">121ObjectMap · the standard second tab</p>
+    <h2>Every object, as a graph you can drill through.</h2>
+    <p class="lede" style="font-size:17px">Because relationships are a first-class facet, any 121XML object
+    renders as a live relationship map — click a node for detail, drill to the next layer. Same component in
+    every 121 app.</p>
+    <div class="gf">
+      <div class="gf-stage">
+        <div class="gf-controls">
+          <button id="ds-org" class="on">Business Org</button>
+          <button id="ds-fs">Filesystem</button>
+          <button id="ds-reset">Reset</button>
+        </div>
+        <svg id="gf-svg" viewBox="0 0 640 460" role="img" aria-label="Interactive relationship graph. Click a node to see its attributes and drill into its children."></svg>
+      </div>
+      <div class="gf-info" id="gf-info">
+        <div class="breadcrumb" id="gf-crumb">root</div>
+        <h3 id="gf-title">Click any node</h3>
+        <p class="gf-hint" id="gf-sub">Nodes carry sensible icons and colors; edges are labelled lines.
+          Selecting a node reveals its attributes and expands the next layer
+          (Org → Dept → Role → Person → Attributes, or Folder → Subfolder → File).</p>
+        <div id="gf-kvs"></div>
+      </div>
+    </div>
+  </section>
+</div></div>
+
+<!-- STANDARD -->
+<div class="panel" data-p="standard"><div class="wrap">
+  <section>
+    <p class="eyebrow">The standard · v4 self-contained semantic object</p>
+    <h2>Axioms, rules, and the facet model.</h2>
+    <div class="grid g2">
+      <div class="card"><h3 class="mono">Axioms</h3>
+        <p style="margin:0 0 6px"><b>A1</b> Composition over inheritance — flat, predictable.</p>
+        <p style="margin:0 0 6px"><b>A2</b> Explicit type tags — self-describing.</p>
+        <p style="margin:0"><b>A3</b> Homogeneous sequences — type-safe arrays.</p></div>
+      <div class="card"><h3 class="mono">Rules</h3>
+        <p style="margin:0 0 6px"><b>R4</b> Alphabetically sorted keys — deterministic bytes.</p>
+        <p style="margin:0 0 6px"><b>R5</b> Explicit null vs. absent — lossless round-trip.</p>
+        <p style="margin:0 0 6px"><b>R6</b> Profile URI <code>urn:121xml:type/ver</code> — schema discovery.</p>
+        <p style="margin:0"><b>R7</b> Content address <code>cid:…</code> — immutable, tamper-evident.</p></div>
+    </div>
+    <h3 style="margin-top:32px">A 121 Object</h3>
+    <p>A signed Merkle-DAG of content-addressed facets. The root address is the hash over the sorted set of
+    facet CIDs plus provenance; one signature over the root makes the whole object owned and tamper-evident;
+    a <code>prev</code>-CID chain gives git-like immutable history.</p>
+    <div class="tblwrap"><table>
+      <tr><th>Facet</th><th>Carries</th></tr>
+      <tr><td><code>payload</code></td><td>the data values (name/value pairs)</td></tr>
+      <tr><td><code>shape</code></td><td>structure + validation constraints</td></tr>
+      <tr><td><code>context</code></td><td>semantics — what each key means</td></tr>
+      <tr><td><code>rules</code></td><td>inference — how to derive new facts</td></tr>
+      <tr><td><code>relations</code></td><td>typed edges to other object CIDs (drives 121ObjectMap)</td></tr>
+      <tr><td><code>provenance</code></td><td>owner (DID/key), timestamps, prev version, signature</td></tr>
+      <tr><td><code>space</code></td><td>optional 4-D pose: position · orientation · valid-time · uncertainty</td></tr>
+    </table></div>
+    <p class="note">Inline or reference: any facet may be embedded (fully portable) or referenced by CID
+    (compact, resolved local → peer → registry). Both verify to the same root hash.</p>
+  </section>
+</div></div>
+
+<!-- RELATED -->
+<div class="panel" data-p="related"><div class="wrap">
+  <section>
+    <p class="eyebrow">Related standards</p>
+    <h2>Standing on shoulders — and saying so.</h2>
+    <p class="lede" style="font-size:17px">A candid map of what 121XML reuses. We read it to you plainly
+    because a standard you can trust is one that names its lineage.</p>
+    <div class="grid g3">
+      <div class="card"><h3>Canonical bytes</h3><p style="margin:0">JCS (RFC 8785), Canonical CBOR /
+        DAG-CBOR give deterministic serialization. 121XML adopts, doesn't reinvent.</p></div>
+      <div class="card"><h3>Content addressing</h3><p style="margin:0">IPLD, multihash and CIDs are the
+        addressing substrate — interoperable with the whole content-addressed ecosystem.</p></div>
+      <div class="card"><h3>Self-describing</h3><p style="margin:0">CBOR (RFC 8949) tags and Avro's
+        embedded schema pioneered self-description; JSON-LD carries semantic context.</p></div>
+      <div class="card"><h3>Provenance</h3><p style="margin:0">W3C Verifiable Credentials, DID and PROV,
+        plus IETF COSE signatures, express ownership and authenticity.</p></div>
+      <div class="card"><h3>Geospatial 4-D</h3><p style="margin:0">OGC Moving Features and MISB/STANAG 4609
+        (drone motion-imagery metadata) model position in space and time.</p></div>
+      <div class="card"><h3>Vertical formats</h3><p style="margin:0">ISO 20022, HL7 FHIR, EDI, GS1 — wrapped
+        as profiles, contributed back to their bodies, never replaced.</p></div>
+    </div>
+  </section>
+</div></div>
+
+<!-- START -->
+<div class="panel" data-p="start"><div class="wrap">
+  <section>
+    <p class="eyebrow">Get started</p>
+    <h2>Wrap your first object.</h2>
+    <div class="grid g3">
+      <div class="card"><span class="chip">01</span><h3 style="margin-top:12px">Pick a profile</h3>
+        <p style="margin:0">Start from a published profile — <code>urn:121xml:fhir/R4</code> or
+        <code>urn:121xml:iso20022/pain.001</code> — or author your own <code>shape</code> + <code>context</code>.</p></div>
+      <div class="card"><span class="chip">02</span><h3 style="margin-top:12px">Convert</h3>
+        <p style="margin:0">Run source data through the gateway to produce a canonical, signed 121 Object.
+        Same input always yields the same address.</p></div>
+      <div class="card"><span class="chip">03</span><h3 style="margin-top:12px">Explore in 121ObjectMap</h3>
+        <p style="margin:0">Open the object in Tab 2 to see and drill its relationships, then store, transmit,
+        or generate code from it.</p></div>
+    </div>
+    <p class="note">This site is the reference for the 121XML standard. The 121XQ AI OS — the runtime that
+    applies it across industries — lives at 121XQ.com.</p>
+  </section>
+</div></div>
+
+<footer><div class="wrap">
+  <b class="mono">121XML</b> · the self-describing data standard · a 121 Solutions project.
+  Companion runtime: 121XQ AI OS. Draft site — pre-launch.
+</div></footer>
+
+<script>
+(function(){
+  // ---- tabs ----
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  var panels=[].slice.call(document.querySelectorAll('.panel'));
+  function show(name){
+    tabs.forEach(function(t){t.setAttribute('aria-selected', t.dataset.t===name);});
+    panels.forEach(function(p){ if(p.dataset.p===name){p.setAttribute('data-active','');} else {p.removeAttribute('data-active');}});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.t);});});
+  document.querySelectorAll('[data-goto]').forEach(function(a){a.addEventListener('click',function(){show(a.dataset.goto);});});
+
+  // ---- 121ObjectMap ----
+  var SVG='http://www.w3.org/2000/svg';
+  var svg=document.getElementById('gf-svg');
+  var css=getComputedStyle(document.documentElement);
+  function c(v){return css.getPropertyValue(v).trim();}
+  var TYPE={
+    org:{icon:'🏢',color:'#0d7c64'}, dept:{icon:'📊',color:'#2f6db0'}, role:{icon:'🎯',color:'#a9781a'},
+    person:{icon:'👤',color:'#8a4fbf'}, attr:{icon:'🔖',color:'#6b7280'},
+    folder:{icon:'📁',color:'#2f6db0'}, sub:{icon:'📂',color:'#0d7c64'}, file:{icon:'📄',color:'#a9781a'}
+  };
+  var ORG={id:'acme',type:'org',label:'Acme Corp',attrs:{industry:'Manufacturing',employees:'1,240',hq:'Chicago, US'},children:[
+    {id:'fin',type:'dept',label:'Finance',attrs:{headcount:'42',budget:'$8.1M'},children:[
+      {id:'ap',type:'role',label:'AP Lead',attrs:{level:'M3',reports:'6'},children:[
+        {id:'jsmith',type:'person',label:'J. Smith',attrs:{email:'j.smith@acme',tenure:'4y',DID:'did:key:z6Mk…'},children:[
+          {id:'a1',type:'attr',label:'Signing key',attrs:{alg:'Ed25519',status:'active'},children:[]},
+          {id:'a2',type:'attr',label:'Approver of',attrs:{scope:'invoices ≤ $50k'},children:[]}]}]}]},
+    {id:'ops',type:'dept',label:'Operations',attrs:{headcount:'310',sites:'4'},children:[
+      {id:'plant',type:'role',label:'Plant Mgr',attrs:{level:'M4'},children:[
+        {id:'rlee',type:'person',label:'R. Lee',attrs:{email:'r.lee@acme',tenure:'9y'},children:[
+          {id:'a3',type:'attr',label:'Location',attrs:{geo:'41.88,-87.63',alt:'182m',time:'2026-08-19T18:00Z'},children:[]}]}]}]}]};
+  var FS={id:'root',type:'folder',label:'121XML',attrs:{items:'274',size:'455 MB'},children:[
+    {id:'kb',type:'sub',label:'Knowledge_Base',attrs:{files:'2'},children:[
+      {id:'model',type:'file',label:'121_XML_Model.md',attrs:{kb:'6.8',cid:'bafy…9f2'},children:[]}]},
+    {id:'spec',type:'sub',label:'spec',attrs:{files:'8'},children:[
+      {id:'master',type:'file',label:'MASTER_SPEC.md',attrs:{kb:'98',cid:'bafy…3a1'},children:[]},
+      {id:'v4',type:'file',label:'v4_SEMANTIC_OBJECT.md',attrs:{kb:'7.2',cid:'bafy…7c4'},children:[]}]},
+    {id:'graph',type:'sub',label:'objectmap',attrs:{files:'1'},children:[
+      {id:'gv',type:'file',label:'object_graph.html',attrs:{kb:'21.9'},children:[]}]}]};
+
+  var root=ORG, expanded={}, selected=null;
+  function reset(){expanded={}; expanded[root.id]=true; selected=null; draw(); info(root,[root.label]);}
+  function layout(node,depth,slot){ // simple layered radial-ish tree
+    var nodes=[],edges=[];
+    var levels=[];
+    function walk(n,d,parent){
+      levels[d]=levels[d]||[]; var idx=levels[d].length; levels[d].push({n:n,parent:parent,idx:idx});
+      if(expanded[n.id]&&n.children) n.children.forEach(function(ch){walk(ch,d+1,n);});
+    }
+    walk(node,0,null);
+    var W=640,H=460, colW=W/(levels.length+0.4);
+    var pos={};
+    levels.forEach(function(row,d){
+      var gap=H/(row.length+1);
+      row.forEach(function(e,i){ var x=40+colW*d+colW*0.5; var y=gap*(i+1); pos[e.n.id]={x:x,y:y,n:e.n};
+        nodes.push({x:x,y:y,n:e.n});
+        if(e.parent) edges.push({from:pos[e.parent.id],to:{x:x,y:y},n:e.n});
+      });
+    });
+    return {nodes:nodes,edges:edges};
+  }
+  function draw(){
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    var L=layout(root,0,0);
+    L.edges.forEach(function(e){
+      var ln=document.createElementNS(SVG,'path');
+      var mx=(e.from.x+e.to.x)/2;
+      ln.setAttribute('d','M'+e.from.x+' '+e.from.y+' C '+mx+' '+e.from.y+' '+mx+' '+e.to.y+' '+e.to.x+' '+e.to.y);
+      ln.setAttribute('fill','none'); ln.setAttribute('stroke',c('--muted')); ln.setAttribute('stroke-width','1.3');
+      ln.setAttribute('opacity','.5'); svg.appendChild(ln);
+      var t=document.createElementNS(SVG,'text');
+      t.setAttribute('x',mx); t.setAttribute('y',(e.from.y+e.to.y)/2-4); t.setAttribute('font-size','9.5');
+      t.setAttribute('text-anchor','middle'); t.setAttribute('fill',c('--muted')); t.setAttribute('font-family',c('--mono'));
+      t.textContent='has'; svg.appendChild(t);
+    });
+    L.nodes.forEach(function(nd){
+      var g=document.createElementNS(SVG,'g'); g.setAttribute('class','gf-node'); g.style.cursor='pointer';
+      var ty=TYPE[nd.n.type]||{icon:'•',color:c('--accent')};
+      var hasKids=nd.n.children&&nd.n.children.length;
+      var open=expanded[nd.n.id];
+      var r=nd.n===root?26:20;
+      var circ=document.createElementNS(SVG,'circle');
+      circ.setAttribute('cx',nd.x); circ.setAttribute('cy',nd.y); circ.setAttribute('r',r);
+      circ.setAttribute('fill',c('--surface'));
+      circ.setAttribute('stroke', selected===nd.n?c('--accent'):ty.color);
+      circ.setAttribute('stroke-width', selected===nd.n?3:2); g.appendChild(circ);
+      var ic=document.createElementNS(SVG,'text');
+      ic.setAttribute('x',nd.x); ic.setAttribute('y',nd.y+5); ic.setAttribute('text-anchor','middle');
+      ic.setAttribute('font-size','16'); ic.textContent=ty.icon; g.appendChild(ic);
+      var lb=document.createElementNS(SVG,'text');
+      lb.setAttribute('x',nd.x); lb.setAttribute('y',nd.y+r+14); lb.setAttribute('text-anchor','middle');
+      lb.setAttribute('font-size','11.5'); lb.setAttribute('fill',c('--ink')); lb.textContent=nd.n.label; g.appendChild(lb);
+      if(hasKids){
+        var badge=document.createElementNS(SVG,'text');
+        badge.setAttribute('x',nd.x+r-2); badge.setAttribute('y',nd.y-r+6); badge.setAttribute('font-size','12');
+        badge.setAttribute('fill',ty.color); badge.setAttribute('font-family',c('--mono'));
+        badge.textContent=open?'−':'+'; g.appendChild(badge);
+      }
+      g.addEventListener('click',function(){
+        selected=nd.n;
+        if(hasKids) expanded[nd.n.id]=!expanded[nd.n.id];
+        var path=[]; (function find(n,acc){acc.push(n.label); if(n===nd.n){path=acc.slice();return true;}
+          if(n.children) for(var i=0;i<n.children.length;i++){if(find(n.children[i],acc.slice()))return true;} return false;})(root,[]);
+        draw(); info(nd.n,path);
+      });
+      svg.appendChild(g);
+    });
+  }
+  function info(node,path){
+    document.getElementById('gf-crumb').textContent=(path||[node.label]).join('  ›  ');
+    var ty=TYPE[node.type]||{icon:'•'};
+    document.getElementById('gf-title').textContent=ty.icon+'  '+node.label;
+    document.getElementById('gf-sub').textContent=node.type.toUpperCase()+
+      (node.children&&node.children.length? '  ·  '+node.children.length+' child object(s) — click node to '+(expanded[node.id]?'collapse':'expand') : '  ·  leaf');
+    var kv=document.getElementById('gf-kvs'); kv.innerHTML='';
+    var a=node.attrs||{};
+    Object.keys(a).forEach(function(k){
+      var d=document.createElement('div'); d.className='kv';
+      d.innerHTML='<span>'+k+'</span><b>'+a[k]+'</b>'; kv.appendChild(d);
+    });
+    if(!Object.keys(a).length){var d=document.createElement('div');d.className='gf-hint';d.textContent='No attributes on this node.';kv.appendChild(d);}
+  }
+  document.getElementById('ds-org').addEventListener('click',function(){root=ORG;this.classList.add('on');document.getElementById('ds-fs').classList.remove('on');reset();});
+  document.getElementById('ds-fs').addEventListener('click',function(){root=FS;this.classList.add('on');document.getElementById('ds-org').classList.remove('on');reset();});
+  document.getElementById('ds-reset').addEventListener('click',reset);
+  reset();
+})();
+</script>

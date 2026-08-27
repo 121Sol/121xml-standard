@@ -1,0 +1,369 @@
+================================================================================
+                        121XML TECHNICAL REFERENCE
+                     For Architects and Implementation Teams
+================================================================================
+
+QUICK START
+-----------
+
+121XML is a self-describing data interchange format where every packet carries
+its own schema inline. A receiver needs no pre-shared contract, no code 
+generation, and no redeployment to parse a novel payload.
+
+CORE INSIGHT: In-Band Contract (121XML) vs Out-of-Band (Protobuf/JSON)
+
+┌─────────────────────────────────────┐   ┌──────────────────────────────────┐
+│ OUT-OF-BAND (Protobuf, gRPC, etc)   │   │ IN-BAND (121XML)                  │
+├─────────────────────────────────────┤   ├──────────────────────────────────┤
+│                                     │   │                                  │
+│ Sender + .proto schema              │   │ Sender                           │
+│            ↓                        │   │    ↓                             │
+│ Code generation on both sides       │   │ Data + Schema together           │
+│            ↓                        │   │    ↓                             │
+│ Receiver needs the .proto           │   │ Receiver knows schema from data  │
+│                                     │   │                                  │
+│ ⚠ New field = recompile/redeploy   │   │ ✓ New field = no redeploy        │
+│ ⚠ Coupling between endpoints        │   │ ✓ Zero coupling                  │
+│ ⚠ Schema must be pre-shared         │   │ ✓ Schema travels with data       │
+│                                     │   │                                  │
+└─────────────────────────────────────┘   └──────────────────────────────────┘
+
+THE TRADE: More bytes on the wire → Zero schema coupling
+
+
+================================================================================
+                          TYPE SYSTEM (8 Primitives)
+================================================================================
+
+TYPE     EXAMPLE          CONSTRAINT FOR PORTABILITY
+────     ───────          ──────────────────────────
+int      -42              64-bit signed; >2^53 serialise as strings (JS safety)
+dec      3.14             IEEE-754 double; no NaN or infinity on wire
+bool     true             Literal true/false only; never 0, 1, "Y", "yes"
+str      "hello"          UTF-8, NFC-normalised; length in code points
+seq      [1,2,3]          Homogeneous; all members share one type
+map      {a:"x"}          String keys, unique, sorted by code point
+ref      <ref>id:42</ref> Stable identifier to another node
+null     null             Explicit; distinct from omitted key
+
+
+================================================================================
+                      THREE AXIOMS (A1, A2, A3)
+================================================================================
+
+A1: COMPOSITION OVER INHERITANCE
+─────────────────────────────────
+Rule:  No class hierarchies. Flatten all structures to nested composition.
+
+Why:   Rust has no class inheritance. To generate code that works across
+       Python, Java, C++, Rust, you cannot use inheritance.
+
+Example:
+  ❌ BANNED:   class Employee extends Person { ... }
+  ✓ REQUIRED:  Employee { person: { name: "Alice", ... }, dept: "Engineering" }
+
+
+A2: EXPLICIT TYPE TAGGING  
+──────────────────────────
+Rule:  Every polymorphic field declares its type before its value.
+
+Why:   Strict compilers (C++, Rust, Java) need to allocate memory before
+       interpreting the value. An untagged variant leaves them guessing.
+
+Example:
+  ❌ BANNED:   { value: either int or string }
+  ✓ REQUIRED:  { type: "int", value: 42 }
+
+
+A3: HOMOGENEOUS SEQUENCES
+──────────────────────────
+Rule:  All members of a seq must share the same type. No mixed-type arrays.
+
+Why:   Mixed types are a crash risk on the wire. Strict compilers cannot
+       generate fixed-size buffer code for an unknown type mix.
+
+Example:
+  ❌ BANNED:   [1, "two", 3.0, null]
+  ✓ REQUIRED:  [1, 2, 3] or ["a", "b", "c"]
+
+
+================================================================================
+                   FOUR CANONICAL RULES (R4, R5, R6, R7)
+================================================================================
+
+R4: CANONICAL ORDERING
+─────────────────────
+Rule:  Map keys sort by Unicode code point. One byte form per document.
+
+Value: Hash and signature verification. Provenance travels with the data.
+
+Test:
+  {"a":1, "z":2} and {"z":2, "a":1} MUST produce identical SHA-256 hashes.
+
+
+R5: NULL IS NOT ABSENCE
+───────────────────────
+Rule:  Omitted key, null value, empty string are three distinct states.
+
+Value: This is where 95% of silent data corruption happens. A field that
+       was never present is not the same as a field present but empty.
+
+Example:
+  { name: "Alice" }           ← "email" key is absent
+  { name: "Alice", email: null }  ← "email" is present, value is null
+  { name: "Alice", email: "" }    ← "email" is present, value is empty string
+
+
+R6: NAMESPACED VERSIONING
+──────────────────────────
+Rule:  Every document declares its profile URI and version.
+
+Value: Unknown fields are preserved, never dropped. Future compatibility
+       without brittle version negotiation.
+
+Example: 
+  <map profile="https://spec.121.us/121xml/1.1" version="1.1">...</map>
+
+
+R7: LOSSLESS ROUND-TRIP (THE TESTABLE PROMISE)
+───────────────────────────────────────────────
+Rule:  Source → 121XML → Source must be byte-identical.
+
+Value: This is the commercial keystone. Round-trip fidelity is not 
+       nice-to-have; it is what you charge for.
+
+Test:
+  1. Export 100 records from your system
+  2. Convert to 121XML
+  3. Convert back to original format
+  4. Byte-compare original and result
+  5. Name every field that does not survive
+  6. Publish the results (successes AND failures)
+
+
+================================================================================
+                     CONFORMANCE LEVELS (L0–L3)
+================================================================================
+
+LEVEL    NAME                    COST        DISTRIBUTION
+────     ────                    ────        ──────────────────────
+L0       Syntactic               Free        Self-service validator
+         Parses; type tags valid
+
+L1       Structural              Free        CI action in your repo
+         A1–A3 satisfied
+         Codegen works in all 6 languages
+
+L2       Canonical               Paid        Enterprise subscription
+         R4–R6 satisfied
+         Hashes stable & signable
+
+L3       Round-Trip Certified    Paid        Annual audit + re-cert
+         R7 proven for named system
+
+
+================================================================================
+                       EXAMPLE: CONTACT RECORD
+================================================================================
+
+<?xml version="1.0" encoding="UTF-8"?>
+<map profile="https://spec.121.us/121xml/1.1" version="1.1" id="contact:alice">
+  <str name="email">alice@example.com</str>
+  <int name="phone">5551234567</int>
+  <map name="address">
+    <str name="city">Washington</str>
+    <str name="state">DC</str>
+  </map>
+  <seq name="tags" of="str">
+    <str>client</str>
+    <str>active</str>
+  </seq>
+  <null name="notes"/>
+  <str name="__hash">sha256:a7f2e9d1...</str>
+</map>
+
+What a parser sees:
+  • Profile URI tells it which fields to expect (R6)
+  • Each element carries a type tag: <str>, <int>, <seq of="str"> (A2)
+  • Keys are sorted: address, email, notes, phone, tags, __hash (R4)
+  • The hash allows integrity verification (R7)
+  • A receiver that has never seen this schema can still parse it
+
+
+================================================================================
+                      IMPLEMENTATION PATTERNS
+================================================================================
+
+PATTERN 1: GENERATING 121XML (Write Side)
+──────────────────────────────────────────
+
+  1. Traverse your domain object (Contact, Order, Event)
+  2. Emit a <map> or <seq> with explicit type tags
+  3. Enforce A1–A3: no inheritance, all tags, homogeneous arrays
+  4. Sort map keys by Unicode code point (R4)
+  5. Append SHA-256 hash of the sorted bytes (R7)
+
+Pseudocode:
+  
+  function serialize(obj):
+    fields = []
+    for each (key, value) in obj:
+      fields.append((key, getType(value), value))
+    
+    // A2: Add type tags
+    tagged = [(k, t, v) for (k,t,v) in fields]
+    
+    // R4: Sort by key
+    sorted_fields = sort(tagged, by_key=first)
+    
+    // Emit XML
+    emit "<map>"
+    for (key, type, value) in sorted_fields:
+      emit "<" + type + " name='" + key + "'>"
+      emit value
+      emit "</" + type + ">"
+    
+    // R7: Compute hash
+    canonical_bytes = emit_sorted_bytes(sorted_fields)
+    hash = sha256(canonical_bytes)
+    emit "<str name='__hash'>" + hash + "</str>"
+    
+    emit "</map>"
+
+
+PATTERN 2: PARSING 121XML (Read Side—Schema-Free)
+──────────────────────────────────────────────────
+
+  1. Read profile URI from root (R6) — know which fields to expect
+  2. For each element, read type tag before allocating
+  3. <seq of="str"> → allocate fixed-size string array
+  4. <map> with unknown keys → allocate flexible map
+  5. Verify hash at end (R7) — proof nothing changed
+
+Pseudocode:
+  
+  function parse(xml_string):
+    root = parse_xml(xml_string)
+    
+    // R6: Read versioning info
+    profile_uri = root.getAttribute("profile")
+    version = root.getAttribute("version")
+    
+    // A2: Type-directed parsing
+    result = {}
+    for each child in root.children:
+      type_tag = child.tag_name  // <str>, <int>, <seq>, etc
+      field_name = child.getAttribute("name")
+      
+      value = case type_tag of:
+        "str"  → parse_string(child.text)
+        "int"  → parse_int(child.text)
+        "seq"  → parse_homogeneous_seq(child)
+        "map"  → parse_nested_map(child)
+        ...
+      
+      result[field_name] = value
+    
+    // R7: Verify integrity
+    stored_hash = result["__hash"]
+    computed_hash = sha256(canonical_bytes(result))
+    
+    if stored_hash != computed_hash:
+      raise IntegrityError("Hash mismatch — data may be corrupted")
+    
+    return result
+
+
+PATTERN 3: CODE GENERATION
+──────────────────────────
+
+For Python, Rust, Java, C++:
+
+  1. Parse 121XML profile → extract field names, types, nesting
+  2. Generate structs/classes (A1: no inheritance, composition only)
+  3. Generate serialiser: iterate sorted fields, emit tags and values
+  4. Generate deserialiser: read tag, allocate, read value, no guessing
+  5. Generate hash: canonical sort + SHA-256
+
+Generator output size: ~500 lines per language (small, because rules are strict)
+
+
+================================================================================
+                        DECISION TREE
+================================================================================
+
+                    START HERE
+                        ↓
+        Can receiver know schema in advance?
+                     /           \
+                   YES            NO
+                    ↓              ↓
+          Use Protobuf      Continue →
+                            ↓
+                Do schema changes require
+              redeployment of either endpoint?
+                     /           \
+                   YES            NO
+                    ↓              ↓
+             Redesign your      ✓ USE
+             architecture     121XML
+          to predict schema
+
+
+================================================================================
+                    6-WEEK IMPLEMENTATION PLAN
+================================================================================
+
+WEEK 1–2: Learn the Model
+  □ Read axioms A1–A3 and rules R4–R7 aloud to the team
+  □ Walk through the contact example above
+  □ Take one domain object and write it in 121XML notation (10 min)
+  □ Validate: Does it follow A1, A2, A3? Are keys sorted?
+
+WEEK 3–4: Implement the Core Rules
+  □ A1 — Audit code; flatten inheritance to composition
+  □ A2 — Add explicit type tags to polymorphic fields
+  □ A3 — Enforce homogeneous arrays; fail on mixed types
+  □ R4 — Implement canonical sorting (alphabetical by key)
+  □ R7 — Write round-trip harness: Source → 121XML → Source, compare
+
+WEEK 5–6: Prove It Works
+  □ Take 100 real records (contacts, orders, transactions)
+  □ Convert to 121XML and back
+  □ Byte-compare; list every field that does not survive
+  □ Publish results on internal dashboard (successes AND failures)
+  □ This is your L2 conformance scoreboard
+
+
+================================================================================
+                        KEY TAKEAWAYS
+================================================================================
+
+1. 121XML carries the contract inside the packet, not in a separate schema.
+   This is its only real distinction from Protobuf, gRPC, etc.
+
+2. The three axioms (A1–A3) enable cross-language code generation. Without
+   them, Rust and C++ generators fail on the first complex record.
+
+3. The four rules (R4–R7) turn a description into a standard. R7 is where
+   you sell the certification.
+
+4. You win where flexibility binds. You lose where throughput binds.
+   Use Protobuf if you can pre-share the schema and your bandwidth costs matter.
+
+5. The proof is a round-trip scoreboard. Publish your failures as well as
+   your successes — that is what makes the standard trustworthy.
+
+
+================================================================================
+QUESTIONS?
+
+The entire 121XML model fits on this page. If it takes more than a page to
+explain part of it, the rule probably is not tight enough.
+
+For the complete implementation guide, reference:
+  • 121XML_Architecture_Guide.html (10 sections, worked examples, diagrams)
+  • 121XML_Claim_Register_v2.docx (banned language, approved language)
+  • 121XML_Enterprise_Pilot_Proposal_v2.docx (90-day evaluation template)
+
+================================================================================

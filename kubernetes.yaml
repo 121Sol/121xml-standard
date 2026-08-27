@@ -1,0 +1,301 @@
+# 121AI Kubernetes Deployment Configuration
+# Production deployment for Universal AI Orchestration Platform
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: 121ai
+  labels:
+    name: 121ai
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 121ai-config
+  namespace: 121ai
+data:
+  121AI_ENV: "production"
+  121AI_LOG_LEVEL: "INFO"
+  121AI_COMPRESSION_LEVEL: "7"
+  121AI_AUDIT_RETENTION_DAYS: "365"
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: 121ai-secrets
+  namespace: 121ai
+type: Opaque
+stringData:
+  DATABASE_URL: "postgresql://user:password@postgres:5432/121ai"
+  REDIS_URL: "redis://redis:6379/0"
+  ENCRYPTION_KEY: "generate-secure-key-here"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 121ai-engine
+  namespace: 121ai
+  labels:
+    app: 121ai-engine
+    version: "1.0.0"
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: 121ai-engine
+  template:
+    metadata:
+      labels:
+        app: 121ai-engine
+        version: "1.0.0"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: 121ai-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+
+      containers:
+      - name: 121ai-engine
+        image: 121ai:1.0.0
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+        - name: metrics
+          containerPort: 8001
+          protocol: TCP
+
+        env:
+        - name: 121AI_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: 121ai-config
+              key: 121AI_ENV
+        - name: 121AI_PORT
+          value: "8000"
+        - name: 121AI_WORKERS
+          value: "4"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: 121ai-secrets
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: 121ai-secrets
+              key: REDIS_URL
+
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 2000m
+            memory: 2Gi
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: cache
+          mountPath: /app/cache
+
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: cache
+        emptyDir: {}
+
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - 121ai-engine
+              topologyKey: kubernetes.io/hostname
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: 121ai-engine
+  namespace: 121ai
+  labels:
+    app: 121ai-engine
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+  - name: metrics
+    port: 8001
+    targetPort: 8001
+    protocol: TCP
+  selector:
+    app: 121ai-engine
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: 121ai-engine-hpa
+  namespace: 121ai
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: 121ai-engine
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+
+---
+
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: 121ai-engine-pdb
+  namespace: 121ai
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: 121ai-engine
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: 121ai-sa
+  namespace: 121ai
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: 121ai-role
+  namespace: 121ai
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: 121ai-rolebinding
+  namespace: 121ai
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: 121ai-role
+subjects:
+- kind: ServiceAccount
+  name: 121ai-sa
+  namespace: 121ai
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: 121ai-network-policy
+  namespace: 121ai
+spec:
+  podSelector:
+    matchLabels:
+      app: 121ai-engine
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 8000
+  egress:
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 5432  # PostgreSQL
+    - protocol: TCP
+      port: 6379  # Redis
+    - protocol: TCP
+      port: 443   # HTTPS
+    - protocol: UDP
+      port: 53    # DNS

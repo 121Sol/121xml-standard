@@ -1,0 +1,13 @@
+{
+  "_address": "data://sha256:3ff3c20c05ff0106c6faf3bc63a176af1a4921ca452a669c9a077815495302d2:payment",
+  "_type": "payment",
+  "_stored": "2026-08-06T21:08:11.545122Z",
+  "_hash": "3ff3c20c05ff0106c6faf3bc63a176af1a4921ca452a669c9a077815495302d2",
+  "data": {
+    "amount": 450000,
+    "currency": "USD",
+    "sender": "Acme Manufacturing Corp",
+    "receiver": "Smith & Associates Ltd",
+    "invoice": "INV-2026-08-0042"
+  }
+}

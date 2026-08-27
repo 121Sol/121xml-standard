@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>WFWorkflowActions</key>
+	<array>
+		<!-- Ask for Voice Input -->
+		<dict>
+			<key>WFSerializationType</key>
+			<string>WFAppStoreAppContentItem</string>
+			<key>WFInput</key>
+			<dict>
+				<key>Type</key>
+				<string>Ask for [Number] with "Speak Command"</string>
+			</dict>
+		</dict>
+
+		<!-- Route Command to 121AI Backend -->
+		<dict>
+			<key>WFSerializationType</key>
+			<string>WFAppStoreAppContentItem</string>
+			<key>WFWorkflowActionIdentifier</key>
+			<string>is.workflow.actions.url</string>
+			<key>WFInput</key>
+			<dict>
+				<key>string</key>
+				<string>http://localhost:8000/api/process</string>
+				<key>ShowResult</key>
+				<true/>
+			</dict>
+		</dict>
+
+		<!-- Send Voice Command to 121AI -->
+		<dict>
+			<key>WFSerializationType</key>
+			<string>WFAppStoreAppContentItem</string>
+			<key>WFWorkflowActionIdentifier</key>
+			<string>is.workflow.actions.sendhttprequest</string>
+			<key>WFInput</key>
+			<dict>
+				<key>RequestMethod</key>
+				<string>POST</string>
+				<key>ShowResult</key>
+				<true/>
+				<key>Headers</key>
+				<dict>
+					<key>Content-Type</key>
+					<string>application/json</string>
+				</dict>
+				<key>RequestBody</key>
+				<dict>
+					<key>content</key>
+					<string>Provided Input</string>
+					<key>platform</key>
+					<string>siri</string>
+					<key>intent</key>
+					<string>voice-command</string>
+				</dict>
+			</dict>
+		</dict>
+
+		<!-- Parse 121AI Response -->
+		<dict>
+			<key>WFSerializationType</key>
+			<string>WFAppStoreAppContentItem</string>
+			<key>WFWorkflowActionIdentifier</key>
+			<string>is.workflow.actions.getcollectionitem</string>
+		</dict>
+
+		<!-- Check Command Type -->
+		<dict>
+			<key>WFSerializationType</key>
+			<string>WFAppStoreAppContentItem</string>
+			<key>WFWorkflowActionIdentifier</key>
+			<string>is.workflow.actions.conditional</string>
+			<key>WFInput</key>
+			<dict>
+				<key>Logic</key>
+				<string>Contains: calendar</string>
+			</dict>
+		</dict>
+
+		<!-- Route to Calendar Handler -->
+		<dict>
+			<key>WFSerializationType</key>
+			<string>WFAppStoreAppContentItem</string>
+			<key>WFWorkflowActionIdentifier</key>
+			<string>is.workflow.actions.addcalendaritem</string>
+			<key>WFInput</key>
+			<dict>
+				<key>AddToCalendar</key>
+				<true/>
+				<key>Title</key>
+				<string>From Shortcut Variable</string>
+			</dict>
+		</dict>
+
+		<!-- Route to Reminders Handler -->
+		<dict>
+			<key>WFSerializationType</key>
+			<string>WFAppStoreAppContentItem</string>
+			<key>WFWorkflowActionIdentifier</key>
+			<string>is.workflow.actions.addreminder</string>
+			<key>WFInput</key>
+			<dict>
+				<key>AddToReminders</key>
+				<true/>
+			</dict>
+		</dict>
+
+		<!-- Route to Alarms Handler -->
+		<dict>
+			<key>WFSerializationType</key>
+			<string>WFAppStoreAppContentItem</string>
+			<key>WFWorkflowActionIdentifier</key>
+			<string>is.workflow.actions.ask</string>
+			<key>WFInput</key>
+			<dict>
+				<key>RequestType</key>
+				<string>Set Alarm</string>
+			</dict>
+		</dict>
+
+		<!-- Launch App -->
+		<dict>
+			<key>WFSerializationType</key>
+			<string>WFAppStoreAppContentItem</string>
+			<key>WFWorkflowActionIdentifier</key>
+			<string>is.workflow.actions.launchapp</string>
+			<key>WFInput</key>
+			<dict>
+				<key>AppIdentifier</key>
+				<string>From Response</string>
+			</dict>
+		</dict>
+
+		<!-- Speak Response -->
+		<dict>
+			<key>WFSerializationType</key>
+			<string>WFAppStoreAppContentItem</string>
+			<key>WFWorkflowActionIdentifier</key>
+			<string>is.workflow.actions.speaktext</string>
+			<key>WFInput</key>
+			<dict>
+				<key>Text</key>
+				<string>121AI Response</string>
+			</dict>
+		</dict>
+	</array>
+
+	<key>WFWorkflowImportQuestions</key>
+	<array/>
+
+	<key>WFWorkflowInputContentItemUUIDs</key>
+	<array/>
+
+	<key>WFWorkflowMinimumClientRelease</key>
+	<integer>900</integer>
+
+	<key>WFWorkflowMinimumClientVersion</key>
+	<integer>900</integer>
+
+	<key>WFWorkflowOutputContentItemUUIDs</key>
+	<array/>
+
+	<key>WFWorkflowTypes</key>
+	<array>
+		<string>WFWorkflowTypeWatch</string>
+	</array>
+</dict>
+</plist>

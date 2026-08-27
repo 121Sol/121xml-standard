@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html_specification_in_121xml>
+  <schema_version>121xml/1.0</schema_version>
+  <document_type>ui_definition_language</document_type>
+  <created>2026-08-06T21:40:00Z</created>
+  <title>HTML in 121XML: Declarative UI Definition</title>
+
+  <core_concept>
+    <idea>HTML syntax and semantics can be fully represented in 121XML</idea>
+    <benefit>UI is machine-readable and portable</benefit>
+    <benefit>Generate HTML from 121XML for any framework</benefit>
+    <benefit>Generate React/Vue/Angular from 121XML</benefit>
+    <benefit>Generate mobile UI from same 121XML</benefit>
+    <benefit>Cross-platform UI from single source</benefit>
+  </core_concept>
+
+  <html_elements_in_121xml>
+    <example>
+      <html_code>&lt;div class="container"&gt;&lt;h1&gt;Hello&lt;/h1&gt;&lt;/div&gt;</html_code>
+      <121xml_equivalent>
+&lt;html_div&gt;
+  &lt;class_name&gt;container&lt;/class_name&gt;
+  &lt;children&gt;
+    &lt;html_h1&gt;Hello&lt;/html_h1&gt;
+  &lt;/children&gt;
+&lt;/html_div&gt;
+      </121xml_equivalent>
+    </example>
+
+    <example>
+      <html_code>&lt;input type="text" placeholder="Enter name" /&gt;</html_code>
+      <121xml_equivalent>
+&lt;html_input&gt;
+  &lt;type&gt;text&lt;/type&gt;
+  &lt;placeholder&gt;Enter name&lt;/placeholder&gt;
+&lt;/html_input&gt;
+      </121xml_equivalent>
+    </example>
+
+    <example>
+      <html_code>&lt;button onclick="handleClick()"&gt;Click me&lt;/button&gt;</html_code>
+      <121xml_equivalent>
+&lt;html_button&gt;
+  &lt;content&gt;Click me&lt;/content&gt;
+  &lt;event_handler&gt;
+    &lt;event&gt;click&lt;/event&gt;
+    &lt;action&gt;handleClick&lt;/action&gt;
+  &lt;/event_handler&gt;
+&lt;/html_button&gt;
+      </121xml_equivalent>
+    </example>
+  </html_elements_in_121xml>
+
+  <advantages>
+    <advantage>
+      <title>Platform-Independent UI</title>
+      <description>Same UI definition works on web, mobile, desktop</description>
+    </advantage>
+
+    <advantage>
+      <title>Machine-Readable Components</title>
+      <description>Any system can parse and generate UI</description>
+    </advantage>
+
+    <advantage>
+      <title>Automatic Translation</title>
+      <description>121XML UI → React JSX, Vue templates, Angular, etc.</description>
+    </advantage>
+
+    <advantage>
+      <title>Version Control Friendly</title>
+      <description>Diff and merge UI changes easily</description>
+    </advantage>
+
+    <advantage>
+      <title>Accessibility Built-In</title>
+      <description>Define accessibility rules in 121XML</description>
+    </advantage>
+
+    <advantage>
+      <title>Theme Support</title>
+      <description>Single UI definition, multiple themes via 121XML variants</description>
+    </advantage>
+
+    <advantage>
+      <title>Testing</title>
+      <description>Write tests against 121XML UI definition, not framework-specific</description>
+    </advantage>
+  </advantages>
+
+  <121xml_ui_framework_structure>
+    <component>
+      <name>UIComponent</name>
+      <profile_uri>urn:121xml:ui-component/1.0</profile_uri>
+      <fields>
+        <field>component_id</field>
+        <field>element_type (div, input, button, etc.)</field>
+        <field>props (attributes)</field>
+        <field>children (nested components)</field>
+        <field>event_handlers</field>
+        <field>styling</field>
+        <field>accessibility</field>
+      </fields>
+    </component>
+
+    <example_page>
+      <title>121XML Page Definition</title>
+      <structure>
+&lt;page&gt;
+  &lt;name&gt;dashboard&lt;/name&gt;
+  &lt;route&gt;/dashboard&lt;/route&gt;
+  &lt;title&gt;User Dashboard&lt;/title&gt;
+  &lt;components&gt;
+    &lt;component&gt;
+      &lt;type&gt;header&lt;/type&gt;
+      &lt;component_id&gt;main_header&lt;/component_id&gt;
+    &lt;/component&gt;
+    &lt;component&gt;
+      &lt;type&gt;sidebar&lt;/type&gt;
+      &lt;component_id&gt;nav_sidebar&lt;/component_id&gt;
+    &lt;/component&gt;
+    &lt;component&gt;
+      &lt;type&gt;main_content&lt;/type&gt;
+      &lt;component_id&gt;content_area&lt;/component_id&gt;
+    &lt;/component&gt;
+  &lt;/components&gt;
+&lt;/page&gt;
+      </structure>
+      <benefit>Entire page structure in machine-readable 121XML</benefit>
+      <benefit>Can generate React page, Vue page, Angular page from same definition</benefit>
+    </example_page>
+  </121xml_ui_framework_structure>
+
+  <121xml_ui_generators>
+    <generator>
+      <from>121XML UI definition</from>
+      <to>HTML</to>
+      <description>Pure HTML rendering</description>
+    </generator>
+
+    <generator>
+      <from>121XML UI definition</from>
+      <to>React JSX</to>
+      <description>React component generation</description>
+    </generator>
+
+    <generator>
+      <from>121XML UI definition</from>
+      <to>Vue templates</to>
+      <description>Vue component generation</description>
+    </generator>
+
+    <generator>
+      <from>121XML UI definition</from>
+      <to>Angular templates</to>
+      <description>Angular component generation</description>
+    </generator>
+
+    <generator>
+      <from>121XML UI definition</from>
+      <to>React Native</to>
+      <description>Mobile app generation</description>
+    </generator>
+
+    <generator>
+      <from>121XML UI definition</from>
+      <to>Flutter UI</to>
+      <description>Cross-platform mobile</description>
+    </generator>
+
+    <generator>
+      <from>121XML UI definition</from>
+      <to>Desktop (Qt, GTK, WinForms)</to>
+      <description>Native desktop apps</description>
+    </generator>
+  </121xml_ui_generators>
+
+</html_specification_in_121xml>

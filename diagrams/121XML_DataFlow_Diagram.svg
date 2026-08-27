@@ -1,0 +1,179 @@
+<svg width="1400" height="900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-size: 18px; font-weight: bold; fill: #1E2761; }
+      .section-label { font-size: 12px; font-weight: bold; fill: #FFFFFF; }
+      .label { font-size: 11px; fill: #1A1A1A; }
+      .small { font-size: 10px; fill: #5C6673; }
+      .arrow { stroke: #1E2761; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .data-arrow { stroke: #2C5F2D; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead-green); }
+      .error-arrow { stroke: #9E2B25; stroke-width: 2; fill: none; marker-end: url(#arrowhead-red); stroke-dasharray: 3,3; }
+      .box { fill: #F7F9FC; stroke: #DFE4EC; stroke-width: 1; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#1E2761"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#2C5F2D"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#9E2B25"/>
+    </marker>
+  </defs>
+
+  <text x="700" y="30" text-anchor="middle" class="title">121XML Data Flow: Encoding → Transmission → Decoding</text>
+
+  <!-- PHASE 1: ENCODING (LEFT) -->
+  <rect x="30" y="60" width="420" height="40" fill="#1E2761" rx="3"/>
+  <text x="240" y="85" text-anchor="middle" class="section-label">PHASE 1: ENCODING (Sender)</text>
+
+  <!-- Domain object -->
+  <rect x="50" y="120" width="380" height="70" class="box" rx="3" stroke-width="2" stroke="#1E2761"/>
+  <text x="240" y="140" text-anchor="middle" class="label" font-weight="bold">Domain Object</text>
+  <text x="60" y="160" class="small">{ name: "alice", email: "alice@ex.com",</text>
+  <text x="60" y="175" class="small">  phone: 5551234567, tags: ["vip", "active"] }</text>
+
+  <line x1="240" y1="190" x2="240" y2="220" class="data-arrow"/>
+  <text x="250" y="208" class="small">Serialize</text>
+
+  <!-- Enforce A1-A3 -->
+  <rect x="50" y="220" width="380" height="80" class="box" rx="3" stroke-width="2" stroke="#1E2761"/>
+  <text x="240" y="240" text-anchor="middle" class="label" font-weight="bold">Apply Rules A1–A3</text>
+  <text x="60" y="260" class="small">✓ No inheritance (A1) — use nested maps</text>
+  <text x="60" y="275" class="small">✓ Explicit type tags (A2) — {type:"str", value:"alice"}</text>
+  <text x="60" y="290" class="small">✓ Homogeneous arrays (A3) — ["vip", "active"] all strings</text>
+
+  <line x1="240" y1="300" x2="240" y2="330" class="data-arrow"/>
+  <text x="250" y="318" class="small">Apply R4</text>
+
+  <!-- Canonical sorting -->
+  <rect x="50" y="330" width="380" height="70" class="box" rx="3" stroke-width="2" stroke="#B8791C"/>
+  <text x="240" y="350" text-anchor="middle" class="label" font-weight="bold">Sort Keys (R4 — Canonical)</text>
+  <text x="60" y="370" class="small">email, name, phone, tags (alphabetical by code point)</text>
+  <text x="60" y="385" class="small">Result: deterministic byte order, repeatable hashes</text>
+
+  <line x1="240" y1="400" x2="240" y2="430" class="data-arrow"/>
+  <text x="250" y="418" class="small">Compute R7</text>
+
+  <!-- Hash -->
+  <rect x="50" y="430" width="380" height="70" class="box" rx="3" stroke-width="2" stroke="#2C5F2D"/>
+  <text x="240" y="450" text-anchor="middle" class="label" font-weight="bold">SHA-256 Hash (R7 — Integrity)</text>
+  <text x="60" y="470" class="small">__hash: sha256:a7f2e9d1c4e8f3a2b9d6e1c8f5a2b9d6</text>
+  <text x="60" y="485" class="small">Appended to packet. Tamper detection proof.</text>
+
+  <line x1="240" y1="500" x2="240" y2="530" class="data-arrow"/>
+
+  <!-- Final packet -->
+  <rect x="50" y="530" width="380" height="60" class="box" rx="3" stroke-width="2" stroke="#2C5F2D"/>
+  <text x="240" y="550" text-anchor="middle" class="label" font-weight="bold">Final 121XML Packet Ready</text>
+  <text x="60" y="567" class="small">&lt;map profile="...121xml/1.1" version="1.1"&gt;...&lt;/map&gt;</text>
+
+  <!-- PHASE 2: TRANSMISSION (CENTER) -->
+  <rect x="500" y="60" width="400" height="40" fill="#1E2761" rx="3"/>
+  <text x="700" y="85" text-anchor="middle" class="section-label">PHASE 2: TRANSMISSION</text>
+
+  <!-- Encode for wire -->
+  <rect x="520" y="120" width="360" height="70" class="box" rx="3" stroke-width="2" stroke="#1E2761"/>
+  <text x="700" y="140" text-anchor="middle" class="label" font-weight="bold">Encode for Wire</text>
+  <text x="530" y="160" class="small">XML: &lt;map profile=...&gt; OR</text>
+  <text x="530" y="175" class="small">JSON: { "profile": "...", "email": "alice@ex.com", ... }</text>
+
+  <line x1="700" y1="190" x2="700" y2="220" class="data-arrow"/>
+  <text x="720" y="208" class="small">Send</text>
+
+  <!-- Network transmission -->
+  <rect x="520" y="220" width="360" height="80" class="box" rx="3" stroke-width="2" stroke="#B8791C"/>
+  <text x="700" y="240" text-anchor="middle" class="label" font-weight="bold">Network Transmission</text>
+  <text x="530" y="260" class="small">HTTPS, gRPC, Kafka, REST API</text>
+  <text x="530" y="275" class="small">Optional: TLS encryption, digital signature</text>
+  <text x="530" y="290" class="small">__hash field travels with packet</text>
+
+  <line x1="700" y1="300" x2="700" y2="330" class="data-arrow"/>
+  <text x="720" y="318" class="small">Receive</text>
+
+  <!-- Packet arrives -->
+  <rect x="520" y="330" width="360" height="70" class="box" rx="3" stroke-width="2" stroke="#2C5F2D"/>
+  <text x="700" y="350" text-anchor="middle" class="label" font-weight="bold">Packet Arrives at Receiver</text>
+  <text x="530" y="370" class="small">No pre-shared schema required ← KEY POINT</text>
+  <text x="530" y="385" class="small">Profile URI tells receiver what fields to expect (R6)</text>
+
+  <!-- PHASE 3: DECODING (RIGHT) -->
+  <rect x="950" y="60" width="420" height="40" fill="#1E2761" rx="3"/>
+  <text x="1160" y="85" text-anchor="middle" class="section-label">PHASE 3: DECODING (Receiver)</text>
+
+  <!-- Parse packet -->
+  <rect x="970" y="120" width="380" height="80" class="box" rx="3" stroke-width="2" stroke="#1E2761"/>
+  <text x="1160" y="140" text-anchor="middle" class="label" font-weight="bold">Parse 121XML Packet</text>
+  <text x="980" y="160" class="small">1. Read profile URI (R6) — know schema</text>
+  <text x="980" y="175" class="small">2. For each element, read type tag FIRST</text>
+  <text x="980" y="190" class="small">3. Allocate memory based on tag</text>
+
+  <line x1="1160" y1="200" x2="1160" y2="230" class="data-arrow"/>
+  <text x="1180" y="218" class="small">Decode</text>
+
+  <!-- Reconstruct -->
+  <rect x="970" y="230" width="380" height="100" class="box" rx="3" stroke-width="2" stroke="#1E2761"/>
+  <text x="1160" y="250" text-anchor="middle" class="label" font-weight="bold">Reconstruct Domain Object</text>
+  <text x="980" y="270" class="small">{ name: "alice",</text>
+  <text x="980" y="285" class="small">  email: "alice@ex.com",</text>
+  <text x="980" y="300" class="small">  phone: 5551234567,</text>
+  <text x="980" y="315" class="small">  tags: ["vip", "active"] }</text>
+
+  <line x1="1160" y1="330" x2="1160" y2="360" class="data-arrow"/>
+  <text x="1180" y="348" class="small">Verify</text>
+
+  <!-- Verify hash -->
+  <rect x="970" y="360" width="380" height="100" class="box" rx="3" stroke-width="2" stroke="#2C5F2D"/>
+  <text x="1160" y="380" text-anchor="middle" class="label" font-weight="bold">Verify Hash (R7)</text>
+  <text x="980" y="400" class="small">1. Extract __hash from packet</text>
+  <text x="980" y="415" class="small">2. Recompute SHA-256 over sorted bytes</text>
+  <text x="980" y="430" class="small">3. Compare: packet hash == computed hash?</text>
+
+  <!-- Success or error path -->
+  <line x1="1160" y1="460" x2="1160" y2="490" class="data-arrow"/>
+  <text x="1180" y="478" class="small">Result</text>
+
+  <!-- Success -->
+  <rect x="970" y="490" width="180" height="60" class="box" rx="3" stroke-width="2" stroke="#2C5F2D" fill="#F1F7F1"/>
+  <text x="1060" y="510" text-anchor="middle" class="label" font-weight="bold">✓ Data Trusted</text>
+  <text x="975" y="530" class="small">Hash match = no tampering</text>
+
+  <!-- Error -->
+  <rect x="1170" y="490" width="180" height="60" class="box" rx="3" stroke-width="2" stroke="#9E2B25" fill="#FBF6F5"/>
+  <text x="1260" y="510" text-anchor="middle" class="label" font-weight="bold">✗ Reject Packet</text>
+  <text x="1175" y="530" class="small">Hash mismatch = corrupted</text>
+
+  <!-- Error line from verify -->
+  <line x1="1160" y1="460" x2="1260" y2="490" class="error-arrow"/>
+
+  <!-- BOTTOM: KEY PROPERTIES BOX -->
+  <rect x="30" y="600" width="1340" height="280" fill="none" stroke="#DFE4EC" stroke-width="2" rx="3"/>
+
+  <text x="50" y="625" class="label" font-weight="bold">KEY PROPERTIES OF THIS DATA FLOW</text>
+
+  <rect x="50" y="640" width="630" height="220" fill="#F1F7F1" stroke="#2C5F2D" stroke-width="1" rx="3"/>
+  <text x="70" y="665" class="label" font-weight="bold">✓ WHAT THIS ENABLES</text>
+  <text x="70" y="685" class="small">1. Receiver needs NO pre-shared schema</text>
+  <text x="70" y="700" class="small">   The packet carries its own definition</text>
+  <text x="70" y="720" class="small">2. Receiver can parse data it has never seen</text>
+  <text x="70" y="735" class="small">   Profile URI (R6) tells it what to expect</text>
+  <text x="70" y="755" class="small">3. New field in domain object = automatic</text>
+  <text x="70" y="770" class="small">   No redeployment, no code generation needed</text>
+  <text x="70" y="790" class="small">4. Hash proves integrity without external sig</text>
+  <text x="70" y="805" class="small">   Provenance travels with data (R7)</text>
+  <text x="70" y="825" class="small">5. Round-trip fidelity is testable</text>
+  <text x="70" y="840" class="small">   Source → 121XML → Source, byte-identical</text>
+
+  <rect x="720" y="640" width="630" height="220" fill="#FEF6F1" stroke="#B8791C" stroke-width="1" rx="3"/>
+  <text x="740" y="665" class="label" font-weight="bold">⚠ TRADE-OFFS</text>
+  <text x="740" y="685" class="small">1. More bytes on the wire than Protobuf</text>
+  <text x="740" y="700" class="small">   Self-describing text is verbose</text>
+  <text x="740" y="720" class="small">2. Parsing work happens at runtime</text>
+  <text x="740" y="735" class="small">   Type interpretation per field (not pre-compiled)</text>
+  <text x="740" y="755" class="small">3. Use where flexibility binds</text>
+  <text x="740" y="770" class="small">   Not suitable for latency-critical systems</text>
+  <text x="740" y="790" class="small">4. Schema churn becomes a feature</text>
+  <text x="740" y="805" class="small">   Packets remain parseable across versions</text>
+  <text x="740" y="825" class="small">5. Ordering constraint (R4) costs sort time</text>
+  <text x="740" y="840" class="small">   Necessary for hashing; trade for integrity</text>
+</svg>

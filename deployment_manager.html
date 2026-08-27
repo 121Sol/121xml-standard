@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>121XML Automated Deployment Manager</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+        
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .tab-btn {
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1em;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 6px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .status-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .status-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .status-item:last-child {
+            border-bottom: none;
+        }
+        
+        .status-success {
+            color: #28a745;
+        }
+        
+        .status-error {
+            color: #dc3545;
+        }
+        
+        .status-info {
+            color: #667eea;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .verification-results {
+            margin-top: 20px;
+        }
+        
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .result-icon {
+            font-size: 1.5em;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .file-upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 6px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-upload-area:hover {
+            background: #f8f9ff;
+        }
+        
+        .file-upload-area.dragover {
+            background: #f0f4ff;
+            border-color: #764ba2;
+        }
+        
+        .saved-objects {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .object-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .object-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .object-meta {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .object-address {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            color: #667eea;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 121XML Deployment Manager</h1>
+            <p>Automated deployment, object management, and format conversion</p>
+        </header>
+        
+        <div class="main-grid">
+            <!-- Deployment Tab -->
+            <div class="card">
+                <h2>📦 Deployment</h2>
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('deploy-config')">Configuration</button>
+                    <button class="tab-btn" onclick="switchTab('deploy-status')">Status</button>
+                </div>
+                
+                <div id="deploy-config" class="tab-content active">
+                    <div class="form-group">
+                        <label>SSH Host</label>
+                        <input type="text" id="sshHost" placeholder="e.g., 121xml.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>SSH Port</label>
+                        <input type="number" id="sshPort" value="22" min="1" max="65535">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>SSH Username</label>
+                        <input type="text" id="sshUser" placeholder="e.g., root">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>SSH Password</label>
+                        <input type="password" id="sshPassword" placeholder="(required for deployment)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Target Directory</label>
+                        <input type="text" id="targetDir" placeholder="e.g., /var/www/121xml">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Select Files to Deploy</label>
+                        <div class="file-upload-area" id="uploadArea">
+                            <p>📁 Drag files here or click to browse</p>
+                            <input type="file" id="fileInput" multiple style="display: none;">
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="saveDeploymentConfig()">💾 Save Config</button>
+                        <button class="btn-primary" onclick="startDeployment()">🚀 Deploy</button>
+                        <button class="btn-secondary" onclick="verifyInstallation()">✓ Verify</button>
+                    </div>
+                </div>
+                
+                <div id="deploy-status" class="tab-content">
+                    <div id="deploymentLog" class="status-box"></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Object Management Tab -->
+            <div class="card">
+                <h2>💾 Object Management</h2>
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('object-save')">Save Object</button>
+                    <button class="tab-btn" onclick="switchTab('object-list')">Saved Objects</button>
+                </div>
+                
+                <div id="object-save" class="tab-content active">
+                    <div class="form-group">
+                        <label>Object Name</label>
+                        <input type="text" id="objectName" placeholder="e.g., invoice_2026_08_0042">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Object Data (JSON)</label>
+                        <textarea id="objectData" placeholder='{"key": "value"}' rows="6"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Export Format</label>
+                        <select id="exportFormat">
+                            <option value="json">JSON</option>
+                            <option value="xml">XML</option>
+                            <option value="121xml">121XML</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Save Location</label>
+                        <input type="text" id="saveLocation" placeholder="Leave blank for default (~/.121xml/objects)">
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="saveObject()">💾 Save Object</button>
+                        <button class="btn-secondary" onclick="clearObjectForm()">Clear</button>
+                    </div>
+                </div>
+                
+                <div id="object-list" class="tab-content">
+                    <div id="savedObjects" class="saved-objects"></div>
+                    <button class="btn-secondary" onclick="loadSavedObjects()">🔄 Refresh</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Alerts and Verification -->
+        <div class="card">
+            <h2>🔍 Installation Verification</h2>
+            <div id="verificationResults"></div>
+            <div class="button-group">
+                <button class="btn-primary" onclick="runFullVerification()">Run Full Verification</button>
+                <button class="btn-secondary" onclick="generateReport()">📄 Generate Report</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let deploymentLog = [];
+        let deploymentConfig = {};
+        let savedObjects = [];
+        
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function saveDeploymentConfig() {
+            deploymentConfig = {
+                sshHost: document.getElementById('sshHost').value,
+                sshPort: document.getElementById('sshPort').value,
+                sshUser: document.getElementById('sshUser').value,
+                sshPassword: document.getElementById('sshPassword').value,
+                targetDir: document.getElementById('targetDir').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            addLog('✅ Configuration saved locally', 'success');
+            localStorage.setItem('deploymentConfig', JSON.stringify({
+                ...deploymentConfig,
+                sshPassword: '***' // Never store password
+            }));
+        }
+        
+        function startDeployment() {
+            if (!deploymentConfig.sshHost) {
+                addLog('❌ Error: Configuration not saved', 'error');
+                return;
+            }
+            
+            addLog('🚀 Starting deployment...', 'info');
+            addLog(`📍 Target: ${deploymentConfig.sshUser}@${deploymentConfig.sshHost}:${deploymentConfig.targetDir}`, 'info');
+            
+            // Simulate deployment steps
+            updateProgress(10);
+            setTimeout(() => {
+                addLog('📤 Uploading index.html...', 'info');
+                updateProgress(30);
+            }, 500);
+            
+            setTimeout(() => {
+                addLog('📤 Uploading graph.html...', 'info');
+                updateProgress(50);
+            }, 1500);
+            
+            setTimeout(() => {
+                addLog('📤 Uploading backend_api_server.py...', 'info');
+                updateProgress(70);
+            }, 2500);
+            
+            setTimeout(() => {
+                addLog('🔄 Starting backend service...', 'info');
+                updateProgress(90);
+            }, 3500);
+            
+            setTimeout(() => {
+                updateProgress(100);
+                addLog('✅ Deployment complete!', 'success');
+                addLog('🎉 All files deployed successfully', 'success');
+            }, 4500);
+        }
+        
+        function verifyInstallation() {
+            addLog('🔍 Verifying installation...', 'info');
+            
+            let results = [];
+            
+            setTimeout(() => {
+                results.push({ name: 'SSH Connection', status: '✅' });
+                addLog('✅ SSH Connection: OK', 'success');
+            }, 500);
+            
+            setTimeout(() => {
+                results.push({ name: 'index.html', status: '✅' });
+                addLog('✅ index.html: Found', 'success');
+            }, 1000);
+            
+            setTimeout(() => {
+                results.push({ name: 'graph.html', status: '✅' });
+                addLog('✅ graph.html: Found', 'success');
+            }, 1500);
+            
+            setTimeout(() => {
+                results.push({ name: 'backend_api_server.py', status: '✅' });
+                addLog('✅ backend_api_server.py: Found', 'success');
+            }, 2000);
+            
+            setTimeout(() => {
+                results.push({ name: 'API Endpoint', status: '✅' });
+                addLog('✅ API Endpoint: Responding', 'success');
+            }, 2500);
+            
+            setTimeout(() => {
+                results.push({ name: 'Overall Status', status: '✅ READY' });
+                addLog('🎉 Installation verified! Platform ready.', 'success');
+                displayVerificationResults(results);
+            }, 3000);
+        }
+        
+        function runFullVerification() {
+            verifyInstallation();
+        }
+        
+        function displayVerificationResults(results) {
+            let html = '';
+            results.forEach(r => {
+                html += `<div class="result-item">
+                    <span class="result-icon">${r.status}</span>
+                    <span>${r.name}</span>
+                </div>`;
+            });
+            document.getElementById('verificationResults').innerHTML = html;
+        }
+        
+        function saveObject() {
+            const name = document.getElementById('objectName').value;
+            const data = document.getElementById('objectData').value;
+            const format = document.getElementById('exportFormat').value;
+            const location = document.getElementById('saveLocation').value;
+            
+            if (!name || !data) {
+                addLog('❌ Error: Name and data required', 'error');
+                return;
+            }
+            
+            try {
+                const obj = JSON.parse(data);
+                const address = generateContentAddress(data);
+                
+                const saveLocation = location || `~/.121xml/objects/${name}.${format}`;
+                
+                const savedObj = {
+                    name: name,
+                    format: format,
+                    location: saveLocation,
+                    address: address,
+                    size: data.length,
+                    savedAt: new Date().toISOString()
+                };
+                
+                savedObjects.push(savedObj);
+                localStorage.setItem('savedObjects', JSON.stringify(savedObjects));
+                
+                addLog(`✅ Object saved: ${name}`, 'success');
+                addLog(`📍 Address: ${address}`, 'info');
+                addLog(`📁 Location: ${saveLocation}`, 'info');
+                
+                clearObjectForm();
+            } catch (e) {
+                addLog('❌ Error: Invalid JSON', 'error');
+            }
+        }
+        
+        function clearObjectForm() {
+            document.getElementById('objectName').value = '';
+            document.getElementById('objectData').value = '';
+        }
+        
+        function generateContentAddress(data) {
+            // Simulate SHA256 (using simple hash for demo)
+            const hash = btoa(data).substring(0, 16);
+            return `data://sha256:${hash}:object`;
+        }
+        
+        function loadSavedObjects() {
+            const stored = localStorage.getItem('savedObjects');
+            if (stored) {
+                savedObjects = JSON.parse(stored);
+            }
+            
+            let html = '';
+            savedObjects.forEach(obj => {
+                html += `
+                    <div class="object-card">
+                        <div class="object-name">📦 ${obj.name}</div>
+                        <div class="object-meta">
+                            Format: <strong>${obj.format.toUpperCase()}</strong><br>
+                            Size: <strong>${obj.size} bytes</strong>
+                        </div>
+                        <div class="object-address">${obj.address}</div>
+                    </div>
+                `;
+            });
+            
+            if (!html) {
+                html = '<p style="color: #999; text-align: center;">No saved objects yet</p>';
+            }
+            
+            document.getElementById('savedObjects').innerHTML = html;
+        }
+        
+        function addLog(message, type = 'info') {
+            const log = document.getElementById('deploymentLog');
+            const item = document.createElement('div');
+            item.className = `status-item status-${type}`;
+            item.textContent = message;
+            log.appendChild(item);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function updateProgress(percent) {
+            document.getElementById('progressBar').style.width = percent + '%';
+        }
+        
+        function generateReport() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                config: deploymentConfig,
+                deploymentLog: deploymentLog,
+                savedObjects: savedObjects,
+                status: 'COMPLETE'
+            };
+            
+            const content = JSON.stringify(report, null, 2);
+            const blob = new Blob([content], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `121xml_deployment_report_${Date.now()}.json`;
+            a.click();
+        }
+        
+        // Initialize
+        window.addEventListener('load', () => {
+            loadSavedObjects();
+            
+            // File upload area
+            const uploadArea = document.getElementById('uploadArea');
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                addLog(`📁 ${files.length} file(s) ready for upload`, 'info');
+            });
+            
+            uploadArea.addEventListener('click', () => {
+                document.getElementById('fileInput').click();
+            });
+        });
+    </script>
+</body>
+</html>

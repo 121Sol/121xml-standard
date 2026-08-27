@@ -1,0 +1,271 @@
+================================================================================
+                    121XML.COM - DEPLOYMENT QUICK START
+================================================================================
+
+CHOOSE YOUR METHOD BELOW (Pick One)
+
+================================================================================
+METHOD 1: AUTOMATIC DEPLOYMENT (EASIEST) ✓ RECOMMENDED
+================================================================================
+
+SYSTEM: Windows
+STEPS:
+  1. Open Command Prompt or PowerShell
+  2. Navigate to: F:\AI\Claude\Projects\121XML
+  3. Run ONE of these commands:
+
+     Option A (Recommended):
+     .\DEPLOY.bat
+
+     Option B (PowerShell):
+     .\DEPLOY_PowerShell.ps1
+
+  4. Follow the prompts
+  5. Wait for completion message
+  6. Done! Your website is live
+
+SYSTEM: Linux / Mac
+STEPS:
+  1. Open Terminal
+  2. Navigate to: F:/AI/Claude/Projects/121XML
+  3. Run:
+     bash DEPLOYMENT_SCRIPT.sh
+  4. Follow the prompts
+  5. Done! Your website is live
+
+REQUIREMENTS:
+  - Git Bash OR OpenSSH installed (for SSH access)
+  - FTP/cPanel credentials ready
+  - website_index.html in the project folder
+
+
+================================================================================
+METHOD 2: MANUAL FILE MANAGER (SIMPLEST, NO COMMAND LINE)
+================================================================================
+
+TIME: 5 minutes
+NO TECHNICAL SKILLS REQUIRED
+
+STEPS:
+
+1. Open your browser
+2. Go to: https://121xml.com:2083
+3. Login with your cPanel credentials:
+   Username: 121xml
+   Password: [Your cPanel password]
+
+4. Click "File Manager" (on left side)
+
+5. Make sure "public_html" folder is selected
+   Click "Go"
+
+6. Look for the "Upload" button
+   Click it
+
+7. Select website_index.html from your computer
+   Click "Upload"
+
+8. Wait for upload to finish
+
+9. Right-click on website_index.html
+   Select "Rename"
+   Change name to: index.html
+   Click "Rename"
+
+10. Right-click on index.html
+    Select "Change Permissions"
+    Set to: 644
+    Click "Change Permissions"
+
+11. Done!
+    Visit: https://121xml.com
+    Your website is now live!
+
+
+================================================================================
+METHOD 3: FTP UPLOAD (FileZilla)
+================================================================================
+
+TIME: 10 minutes
+SLIGHTLY MORE TECHNICAL
+
+REQUIREMENTS:
+  - Download FileZilla: https://filezilla-project.org/download.php
+  - Install it
+
+STEPS:
+
+1. Open FileZilla
+
+2. Enter connection details:
+   Host:     hosting121.com
+   Username: 121xml
+   Password: [Your cPanel password]
+   Port:     21
+
+   Click "Quickconnect"
+
+3. Wait for connection (left side = local, right side = remote)
+
+4. On LEFT side: Find website_index.html
+   Drag it to RIGHT side (to public_html folder)
+
+5. Wait for upload to complete
+
+6. On RIGHT side: Find website_index.html
+   Right-click → "Rename"
+   Change to: index.html
+
+7. Right-click index.html
+   "File permissions" → Set to 644
+
+8. Done!
+   Visit: https://121xml.com
+
+
+================================================================================
+METHOD 4: COMMAND LINE SSH (FOR POWER USERS)
+================================================================================
+
+TIME: 2 minutes
+REQUIRES: Git Bash or native SSH
+
+COPY & PASTE (one by one):
+
+# Upload file
+scp -P 22 website_index.html 121xml@hosting121.com:~/public_html/
+
+# Connect to server
+ssh -p 22 121xml@hosting121.com
+
+# Once connected, paste these:
+cd public_html
+mv website_index.html index.html
+chmod 644 index.html
+ls -lh index.html
+exit
+
+Done! Check: https://121xml.com
+
+
+================================================================================
+AFTER DEPLOYMENT - VERIFICATION
+================================================================================
+
+VERIFY YOUR WEBSITE:
+
+1. Open browser
+2. Visit: https://121xml.com
+3. Should see your website
+4. Test interactive features:
+   - Click documentation tabs
+   - Open infographic modals
+   - Test Q&A form
+   - Check mobile view (F12)
+
+IF YOU SEE "CERTIFICATE ERROR":
+   - This is normal
+   - AutoSSL is generating certificate (takes 30 min)
+   - Wait 30 minutes
+   - Refresh browser: Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac)
+   - Try again
+
+IF WEBSITE DOESN'T LOAD:
+   - Check file exists: https://121xml.com:2083 (cPanel) → File Manager
+   - Should see index.html in public_html
+   - Check permissions: Should be 644
+   - Try Method 2 (File Manager) if unsure
+
+
+================================================================================
+NEXT STEPS (OPTIONAL)
+================================================================================
+
+WHEN READY TO ADD PYTHON BACKEND:
+  1. See: DEPLOYMENT_AND_GETTING_STARTED.md
+  2. Create subdomain: api.121xml.com
+  3. Deploy Python files there
+  4. Update website to call: https://api.121xml.com/...
+
+ANALYTICS:
+  - Google Analytics (optional)
+  - See: DEPLOYMENT_CONFIG.md for setup
+
+MONITORING:
+  - cPanel → Uptime Monitor
+  - Add: https://121xml.com
+  - Alerts on downtime
+
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+PROBLEM: "Permission Denied" during upload
+FIX:
+  - Use Method 2 (File Manager) instead
+  - Or check SSH credentials
+
+PROBLEM: Website shows blank page
+FIX:
+  - Verify index.html exists (use File Manager)
+  - Check file size (~50 KB)
+  - Check permissions (644)
+
+PROBLEM: Can't connect via SSH/FTP
+FIX:
+  - Verify credentials are correct
+  - Try Method 2 (File Manager, no SSH needed)
+
+PROBLEM: HTTPS shows certificate warning
+FIX:
+  - Wait 30 minutes (AutoSSL generates certificate)
+  - Then refresh browser
+  - Force refresh: Ctrl+Shift+R
+
+PROBLEM: Domain not resolving
+FIX:
+  - Check DNS settings point to hosting121.com
+  - May take 24 hours to propagate
+  - Try: nslookup 121xml.com
+
+
+================================================================================
+SUPPORT
+================================================================================
+
+NEED HELP?
+
+1. Check DEPLOYMENT_CONFIG.md (detailed troubleshooting)
+2. HostArmada Support: https://hosting121.com/support
+3. cPanel Help: https://121xml.com:2083 (click Help icon)
+4. SSH Issues: Ensure OpenSSH/Git Bash installed
+
+
+================================================================================
+DEPLOYMENT STATUS
+================================================================================
+
+Website:        https://121xml.com  ← YOUR LIVE SITE
+cPanel:         https://121xml.com:2083  ← Admin panel
+File Manager:   Use cPanel → File Manager
+Backups:        Stored on server (Method 1 creates backup)
+Monitoring:     Set up in cPanel
+
+
+================================================================================
+                            YOU'RE READY!
+                   Choose a method above and deploy now
+================================================================================
+
+Questions? See these files for detailed info:
+  - DEPLOYMENT_CONFIG.md      (Full deployment guide)
+  - DEPLOYMENT_AND_GETTING_STARTED.md  (Backend info)
+  - README_IMPLEMENTATION.md   (Overall project info)
+
+For Python API backend later:
+  - DEPLOYMENT_AND_GETTING_STARTED.md
+  - Create: api.121xml.com subdomain
+  - Follow Python deployment section
+
+================================================================================

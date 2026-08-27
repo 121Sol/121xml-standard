@@ -1,0 +1,928 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<banking_workflows>
+  <schema_version>121xml/1.0</schema_version>
+  <document_type>banking_payment_workflows</document_type>
+  <created>2026-08-06T23:00:00Z</created>
+  <title>121XML Banking Workflows: SWIFT & ISO 20022 Complete Transaction Flow</title>
+
+  <!-- ============================================================ -->
+  <!-- PART 1: SWIFT SCHEMA CONVERSION TO 121XML -->
+  <!-- ============================================================ -->
+  
+  <swift_to_121xml_schema>
+    <title>SWIFT Format Schema Definition in 121XML</title>
+    <description>SWIFT MT103 wire transfer format converted to 121XML intermediate representation</description>
+    
+    <profile_uri>urn:121xml:banking-swift-mt103/1.0</profile_uri>
+    
+    <swift_message_structure>
+      <header>
+        <description>Message header identifying the SWIFT message type</description>
+        <fields>
+          <field>
+            <swift_tag>:20:</swift_tag>
+            <name>Transaction Reference</name>
+            <type>STRING</type>
+            <length>16</length>
+            <required>true</required>
+            <description>Unique transaction reference number assigned by sender</description>
+          </field>
+          <field>
+            <swift_tag>:13C:</swift_tag>
+            <name>Time Code</name>
+            <type>STRING</type>
+            <required>false</required>
+            <description>When message was created (YYMMDD and HHMM)</description>
+          </field>
+        </fields>
+      </header>
+      
+      <amount_and_date>
+        <field>
+          <swift_tag>:32A:</swift_tag>
+          <name>Value Date and Amount</name>
+          <type>COMPOSITE</type>
+          <required>true</required>
+          <sub_fields>
+            <sub_field>
+              <name>Value Date</name>
+              <format>YYMMDD</format>
+              <description>Date funds should be available (settlement date)</description>
+            </sub_field>
+            <sub_field>
+              <name>Currency Code</name>
+              <format>ISO4217</format>
+              <description>3-letter currency code (USD, EUR, GBP, etc.)</description>
+            </sub_field>
+            <sub_field>
+              <name>Amount</name>
+              <type>DECIMAL</type>
+              <description>Transaction amount with up to 15 digits and 2 decimals</description>
+            </sub_field>
+          </sub_fields>
+        </field>
+      </amount_and_date>
+      
+      <sender_receiver>
+        <field>
+          <swift_tag>:50A:</swift_tag>
+          <name>Ordering Customer Account</name>
+          <type>COMPOSITE</type>
+          <required>true</required>
+          <description>Account number of person/entity ordering the payment</description>
+          <sub_fields>
+            <sub_field>
+              <name>Account Type</name>
+              <values>["A", "D"]</values>
+              <description>A=Account, D=IBAN</description>
+            </sub_field>
+            <sub_field>
+              <name>Account Identifier</name>
+              <format>STRING</format>
+              <max_length>34</max_length>
+            </sub_field>
+          </sub_fields>
+        </field>
+        
+        <field>
+          <swift_tag>:50F:</swift_tag>
+          <name>Ordering Customer Name and Address</name>
+          <type>COMPOSITE</type>
+          <required>false</required>
+          <sub_fields>
+            <sub_field><name>Name</name><max_length>35</max_length></sub_field>
+            <sub_field><name>Address Line 1</name><max_length>35</max_length></sub_field>
+            <sub_field><name>Address Line 2</name><max_length>35</max_length></sub_field>
+            <sub_field><name>City Country Code</name><format>ISO2</format></sub_field>
+          </sub_fields>
+        </field>
+        
+        <field>
+          <swift_tag>:59A:</swift_tag>
+          <name>Beneficiary Customer Account</name>
+          <type>COMPOSITE</type>
+          <required>true</required>
+          <description>Account number of person/entity receiving the funds</description>
+          <sub_fields>
+            <sub_field>
+              <name>Account Type</name>
+              <values>["A", "D"]</values>
+            </sub_field>
+            <sub_field>
+              <name>Account Identifier</name>
+              <max_length>34</max_length>
+            </sub_field>
+          </sub_fields>
+        </field>
+        
+        <field>
+          <swift_tag>:59F:</swift_tag>
+          <name>Beneficiary Customer Name and Address</name>
+          <type>COMPOSITE</type>
+          <required>false</required>
+          <sub_fields>
+            <sub_field><name>Name</name><max_length>35</max_length></sub_field>
+            <sub_field><name>Address Line 1</name><max_length>35</max_length></sub_field>
+            <sub_field><name>Address Line 2</name><max_length>35</max_length></sub_field>
+            <sub_field><name>City Country Code</name><format>ISO2</format></sub_field>
+          </sub_fields>
+        </field>
+      </sender_receiver>
+      
+      <intermediaries>
+        <field>
+          <swift_tag>:56A:</swift_tag>
+          <name>Intermediary Bank</name>
+          <type>COMPOSITE</type>
+          <required>false</required>
+          <description>Bank handling the payment in intermediate currency</description>
+          <sub_fields>
+            <sub_field><name>Bank Code</name><format>SWIFT_BIC</format><length>8-11</length></sub_field>
+            <sub_field><name>Account</name><max_length>34</max_length></sub_field>
+          </sub_fields>
+        </field>
+        
+        <field>
+          <swift_tag>:57A:</swift_tag>
+          <name>Account with Bank</name>
+          <type>COMPOSITE</type>
+          <required>true</required>
+          <description>Bank where beneficiary has account (correspondent bank)</description>
+          <sub_fields>
+            <sub_field><name>Bank Code</name><format>SWIFT_BIC</format><length>8-11</length></sub_field>
+            <sub_field><name>Account</name><max_length>34</max_length></sub_field>
+          </sub_fields>
+        </field>
+      </intermediaries>
+      
+      <payment_details>
+        <field>
+          <swift_tag>:70:</swift_tag>
+          <name>Remittance Information</name>
+          <type>STRING</type>
+          <max_length>140</max_length>
+          <required>false</required>
+          <description>Invoice number, PO number, or payment purpose</description>
+        </field>
+        
+        <field>
+          <swift_tag>:71A:</swift_tag>
+          <name>Details of Charges</name>
+          <type>STRING</type>
+          <required>true</required>
+          <values>["SHA", "OUR", "BEN"]</values>
+          <description>SHA=Shared, OUR=Sender pays all, BEN=Beneficiary pays all</description>
+        </field>
+      </payment_details>
+    </swift_message_structure>
+  </swift_to_121xml_schema>
+
+  <!-- ============================================================ -->
+  <!-- PART 2: ISO 20022 SCHEMA CONVERSION TO 121XML -->
+  <!-- ============================================================ -->
+  
+  <iso20022_to_121xml_schema>
+    <title>ISO 20022 Format Schema Definition in 121XML</title>
+    <description>ISO 20022 PACS.008 credit transfer format converted to 121XML</description>
+    
+    <profile_uri>urn:121xml:banking-iso20022-pacs008/1.0</profile_uri>
+    
+    <iso20022_message_structure>
+      <group_header>
+        <description>High-level information about the payment group</description>
+        <fields>
+          <field>
+            <name>Message ID</name>
+            <iso_element>GrpHdr/MsgId</iso_element>
+            <type>STRING</type>
+            <required>true</required>
+            <description>Unique message identifier</description>
+          </field>
+          <field>
+            <name>Creation Date Time</name>
+            <iso_element>GrpHdr/CreDtTm</iso_element>
+            <type>DATETIME</type>
+            <required>true</required>
+            <format>ISO8601</format>
+          </field>
+          <field>
+            <name>Number of Transactions</name>
+            <iso_element>GrpHdr/NbOfTxns</iso_element>
+            <type>INTEGER</type>
+            <required>true</required>
+          </field>
+          <field>
+            <name>Control Sum</name>
+            <iso_element>GrpHdr/CtrlSum</iso_element>
+            <type>DECIMAL</type>
+            <required>false</required>
+            <description>Total amount of all transactions</description>
+          </field>
+          <field>
+            <name>Initiation Party</name>
+            <iso_element>GrpHdr/InitgPty</iso_element>
+            <type>COMPOSITE</type>
+            <description>Entity initiating the credit transfer</description>
+            <sub_fields>
+              <sub_field><name>Name</name></sub_field>
+              <sub_field><name>ID</name><description>Business Identification Code</description></sub_field>
+            </sub_fields>
+          </field>
+        </fields>
+      </group_header>
+      
+      <payment_information>
+        <field>
+          <name>Payment Information ID</name>
+          <iso_element>PmtInf/PmtInfId</iso_element>
+          <type>STRING</type>
+          <required>true</required>
+          <description>Unique identifier for this payment batch</description>
+        </field>
+        <field>
+          <name>Payment Method</name>
+          <iso_element>PmtInf/PmtMtd</iso_element>
+          <type>STRING</type>
+          <required>true</required>
+          <values>["TRF", "DD", "CHK", "TRC"]</values>
+          <description>TRF=Credit Transfer, DD=Direct Debit, CHK=Check, TRC=Transfer</description>
+        </field>
+        <field>
+          <name>Batch Booking</name>
+          <iso_element>PmtInf/BtchBookg</iso_element>
+          <type>BOOLEAN</type>
+          <description>Whether transactions should be processed as batch or individually</description>
+        </field>
+        <field>
+          <name>Requested Execution Date</name>
+          <iso_element>PmtInf/ReqdExctnDt</iso_element>
+          <type>DATE</type>
+          <required>true</required>
+          <description>Date when payment should be executed</description>
+        </field>
+        <field>
+          <name>Debtor</name>
+          <iso_element>PmtInf/Debtor</iso_element>
+          <type>COMPOSITE</type>
+          <required>true</required>
+          <sub_fields>
+            <sub_field><name>Name</name><max_length>140</max_length></sub_field>
+            <sub_field><name>Organization ID</name></sub_field>
+            <sub_field><name>Country</name><format>ISO2</format></sub_field>
+          </sub_fields>
+        </field>
+        <field>
+          <name>Debtor Account</name>
+          <iso_element>PmtInf/DbtrAcct</iso_element>
+          <type>COMPOSITE</type>
+          <required>true</required>
+          <sub_fields>
+            <sub_field><name>IBAN</name><format>IBAN</format></sub_field>
+            <sub_field><name>Account Type</name><values>["CACC", "CACH", "SVGS"]</values></sub_field>
+            <sub_field><name>Currency</name><format>ISO4217</format></sub_field>
+          </sub_fields>
+        </field>
+        <field>
+          <name>Debtor Agent (Bank)</name>
+          <iso_element>PmtInf/DbtrAgt</iso_element>
+          <type>COMPOSITE</type>
+          <required>true</required>
+          <description>Debtor's bank (originating bank)</description>
+          <sub_fields>
+            <sub_field><name>BIC</name><format>SWIFT_BIC</format></sub_field>
+            <sub_field><name>Clearing System</name></sub_field>
+          </sub_fields>
+        </field>
+      </payment_information>
+      
+      <credit_transfer_transaction>
+        <field>
+          <name>Payment ID</name>
+          <iso_element>CdtTrfTxInf/PmtId</iso_element>
+          <type>COMPOSITE</type>
+          <required>true</required>
+          <sub_fields>
+            <sub_field><name>Instruction ID</name><description>Unique instruction identifier</description></sub_field>
+            <sub_field><name>End-to-End ID</name><description>Reference for entire payment chain</description></sub_field>
+          </sub_fields>
+        </field>
+        <field>
+          <name>Amount</name>
+          <iso_element>CdtTrfTxInf/Amt</iso_element>
+          <type>COMPOSITE</type>
+          <required>true</required>
+          <sub_fields>
+            <sub_field><name>Instructed Amount</name><type>DECIMAL</type><required>true</required></sub_field>
+            <sub_field><name>Currency</name><format>ISO4217</format><required>true</required></sub_field>
+          </sub_fields>
+        </field>
+        <field>
+          <name>Creditor</name>
+          <iso_element>CdtTrfTxInf/Cdtr</iso_element>
+          <type>COMPOSITE</type>
+          <required>true</required>
+          <description>Party receiving the funds (beneficiary)</description>
+          <sub_fields>
+            <sub_field><name>Name</name><max_length>140</max_length></sub_field>
+            <sub_field><name>Organization ID</name></sub_field>
+          </sub_fields>
+        </field>
+        <field>
+          <name>Creditor Account</name>
+          <iso_element>CdtTrfTxInf/CdtrAcct</iso_element>
+          <type>COMPOSITE</type>
+          <required>true</required>
+          <sub_fields>
+            <sub_field><name>IBAN</name><format>IBAN</format></sub_field>
+            <sub_field><name>Account Currency</name><format>ISO4217</format></sub_field>
+          </sub_fields>
+        </field>
+        <field>
+          <name>Creditor Agent (Bank)</name>
+          <iso_element>CdtTrfTxInf/CdtrAgt</iso_element>
+          <type>COMPOSITE</type>
+          <required>true</required>
+          <description>Creditor's bank (receiving bank)</description>
+          <sub_fields>
+            <sub_field><name>BIC</name><format>SWIFT_BIC</format></sub_field>
+          </sub_fields>
+        </field>
+        <field>
+          <name>Remittance Information</name>
+          <iso_element>CdtTrfTxInf/RmtInf</iso_element>
+          <type>COMPOSITE</type>
+          <required>false</required>
+          <sub_fields>
+            <sub_field><name>Unstructured</name><max_length>4*35</max_length><description>Invoice/PO number</description></sub_field>
+            <sub_field><name>Structured</name><description>Reference Code and Amount</description></sub_field>
+          </sub_fields>
+        </field>
+      </credit_transfer_transaction>
+    </iso20022_message_structure>
+  </iso20022_to_121xml_schema>
+
+  <!-- ============================================================ -->
+  <!-- PART 3: REAL-LIFE EXAMPLE 1 - SWIFT MT103 TO 121XML -->
+  <!-- ============================================================ -->
+  
+  <real_example_swift_mt103>
+    <title>SWIFT MT103 Wire Transfer - Paying Invoice INV-2026-08-0042</title>
+    <scenario>
+      Company: Acme Manufacturing Corp (USA)
+      Paying: Smith & Associates Ltd (UK)
+      Invoice: INV-2026-08-0042 for $450,000.00 in goods
+      Payment Method: Wire Transfer via SWIFT
+    </scenario>
+    
+    <swift_mt103_raw>
+:20:PAYMT-20260806-001
+:13C:260806HHMM
+:32A:260810USD450000,00
+:50A:A/123456789012
+:50F:/John Anderson
+      Acme Manufacturing Corp
+      1500 Industrial Drive
+      Chicago IL 60601
+      US
+:59A:A/GB98NWAB60161331926819
+:59F:/Smith & Associates Ltd
+      45 Cambridge Street
+      London SW1A 1AR
+      GB
+:56A:DEUTDEDD
+:57A:/GB82WEST12345698765432
+      WESTGBXX
+:70:INVOICE INV-2026-08-0042 FOR GOODS SHIPMENT
+:71A:SHA
+    </swift_mt103_raw>
+    
+    <swift_to_121xml_conversion>
+      <profile_uri>urn:121xml:payment-swift-wire/1.0</profile_uri>
+      <payment_type>WIRE_TRANSFER_SWIFT</payment_type>
+      <timestamp>2026-08-06T14:35:00Z</timestamp>
+      
+      <transaction_reference>
+        <reference_number>PAYMT-20260806-001</reference_number>
+        <message_created>260806</message_created>
+      </transaction_reference>
+      
+      <payment_amount>
+        <value_date>2026-08-10</value_date>
+        <currency>USD</currency>
+        <amount>450000.00</amount>
+        <amount_numeric>450000</amount_numeric>
+        <decimal_places>2</decimal_places>
+      </payment_amount>
+      
+      <ordering_customer>
+        <account_type>A</account_type>
+        <account_number>123456789012</account_number>
+        <name>John Anderson</name>
+        <company>Acme Manufacturing Corp</company>
+        <address_line1>1500 Industrial Drive</address_line1>
+        <city>Chicago</city>
+        <state>IL</state>
+        <postal_code>60601</postal_code>
+        <country>US</country>
+        <country_code>US</country_code>
+      </ordering_customer>
+      
+      <beneficiary_customer>
+        <account_type>A</account_type>
+        <account_number>GB98NWAB60161331926819</account_number>
+        <iban>GB98NWAB60161331926819</iban>
+        <name>Smith & Associates Ltd</name>
+        <address_line1>45 Cambridge Street</address_line1>
+        <city>London</city>
+        <postal_code>SW1A 1AR</postal_code>
+        <country>GB</country>
+        <country_code>GB</country_code>
+      </beneficiary_customer>
+      
+      <intermediary_bank>
+        <bank_code>DEUTDEDD</bank_code>
+        <bank_name>Deutsche Bank</bank_name>
+        <role>INTERMEDIARY_CURRENCY_CONVERSION</role>
+      </intermediary_bank>
+      
+      <receiving_bank>
+        <bank_code>WESTGBXX</bank_code>
+        <bank_name>West Bank GB</bank_name>
+        <account>GB82WEST12345698765432</account>
+        <role>BENEFICIARY_BANK</role>
+      </receiving_bank>
+      
+      <payment_details>
+        <remittance_info>INVOICE INV-2026-08-0042 FOR GOODS SHIPMENT</remittance_info>
+        <invoice_number>INV-2026-08-0042</invoice_number>
+        <payment_purpose>GOODS_PURCHASE</payment_purpose>
+        <charges_option>SHA</charges_option>
+        <charges_meaning>Shared - charges split between sender and receiver</charges_meaning>
+      </payment_details>
+      
+      <routing>
+        <swift_path>
+          <step1>Acme Bank (CHIUS33) → Deutsche Bank (DEUTDEDD)</step1>
+          <step2>Deutsche Bank (DEUTDEDD) → West Bank GB (WESTGBXX)</step2>
+          <step3>West Bank GB → Smith & Associates Ltd Account</step3>
+        </swift_path>
+        <estimated_delivery>2026-08-11T09:00:00Z</estimated_delivery>
+      </routing>
+      
+      <content_address>data://sha256:swift003a1b2c3d4e5f6g7h8i9j0k:payment-swift-wire</content_address>
+    </swift_to_121xml_conversion>
+  </real_example_swift_mt103>
+
+  <!-- ============================================================ -->
+  <!-- PART 4: REAL-LIFE EXAMPLE 2 - ISO 20022 PACS.008 TO 121XML -->
+  <!-- ============================================================ -->
+  
+  <real_example_iso20022_pacs008>
+    <title>ISO 20022 PACS.008 Credit Transfer - Same Invoice Payment</title>
+    <scenario>
+      Same payment as above but using ISO 20022 PACS.008 format
+      Sender: Uses ISO 20022 compliant system
+      Receiver: Uses ISO 20022 compliant system
+      Benefit: Direct bank-to-bank XML, no SWIFT intermediate conversion
+    </scenario>
+    
+    <iso20022_pacs008_raw><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.10">
+  <CstmrCdtTrfInitn>
+    <GrpHdr>
+      <MsgId>ISO20220806001</MsgId>
+      <CreDtTm>2026-08-06T14:35:00Z</CreDtTm>
+      <NbOfTxns>1</NbOfTxns>
+      <CtrlSum>450000.00</CtrlSum>
+      <InitgPty>
+        <Nm>Acme Manufacturing Corp</Nm>
+        <Id>
+          <OrgId>
+            <BICFIId>CHIUS33XXX</BICFIId>
+            <Othr>
+              <Id>US123456789</Id>
+              <SchmeNm>
+                <Cd>USID</Cd>
+              </SchmeNm>
+            </Othr>
+          </OrgId>
+        </Id>
+      </InitgPty>
+    </GrpHdr>
+    <PmtInf>
+      <PmtInfId>PAYINFO20260806001</PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <BtchBookg>false</BtchBookg>
+      <NbOfTxns>1</NbOfTxns>
+      <CtrlSum>450000.00</CtrlSum>
+      <ReqdExctnDt>2026-08-10</ReqdExctnDt>
+      <Dbtr>
+        <Nm>Acme Manufacturing Corp</Nm>
+        <PstlAdr>
+          <Ctry>US</Ctry>
+          <AdrLine>1500 Industrial Drive, Chicago, IL 60601</AdrLine>
+        </PstlAdr>
+        <Id>
+          <OrgId>
+            <Othr>
+              <Id>EIN123456789</Id>
+              <SchmeNm>
+                <Cd>USID</Cd>
+              </SchmeNm>
+            </Othr>
+          </OrgId>
+        </Id>
+      </Dbtr>
+      <DbtrAcct>
+        <Id>
+          <IBAN>US12CHASUS33123456789012</IBAN>
+        </Id>
+        <Ccy>USD</Ccy>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId>
+          <BICFIId>CHIUS33XXX</BICFIId>
+        </FinInstnId>
+      </DbtrAgt>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>TXN20260806001</InstrId>
+          <EndToEndId>INV-2026-08-0042</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="USD">450000.00</InstdAmt>
+        </Amt>
+        <ChrgBr>SHARED</ChrgBr>
+        <CdtrAgt>
+          <FinInstnId>
+            <BICFIId>WESTGBXXXX</BICFIId>
+          </FinInstnId>
+        </CdtrAgt>
+        <Cdtr>
+          <Nm>Smith & Associates Ltd</Nm>
+          <PstlAdr>
+            <Ctry>GB</Ctry>
+            <AdrLine>45 Cambridge Street, London, SW1A 1AR</AdrLine>
+          </PstlAdr>
+          <Id>
+            <OrgId>
+              <Othr>
+                <Id>GB987654321</Id>
+                <SchmeNm>
+                  <Cd>GBID</Cd>
+                </SchmeNm>
+              </Othr>
+            </OrgId>
+          </Id>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>GB98NWAB60161331926819</IBAN>
+          </Id>
+          <Ccy>GBP</Ccy>
+        </CdtrAcct>
+        <RmtInf>
+          <Ustrd>INVOICE INV-2026-08-0042 FOR GOODS SHIPMENT</Ustrd>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <Cd>CINV</Cd>
+              </Tp>
+              <Ref>INV-2026-08-0042</Ref>
+            </CdtRfInf>
+            <Invcr>
+              <Nm>Smith & Associates Ltd</Nm>
+            </Invcr>
+            <Invcee>
+              <Nm>Acme Manufacturing Corp</Nm>
+            </Invcee>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+    </PmtInf>
+  </CstmrCdtTrfInitn>
+</Document>
+    ]]></iso20022_pacs008_raw>
+    
+    <iso20022_to_121xml_conversion>
+      <profile_uri>urn:121xml:payment-iso20022-pacs008/1.0</profile_uri>
+      <payment_type>CREDIT_TRANSFER_ISO20022</payment_type>
+      <timestamp>2026-08-06T14:35:00Z</timestamp>
+      
+      <group_header>
+        <message_id>ISO20220806001</message_id>
+        <creation_datetime>2026-08-06T14:35:00Z</creation_datetime>
+        <total_transactions>1</total_transactions>
+        <control_sum>450000.00</control_sum>
+        <initiating_party>
+          <name>Acme Manufacturing Corp</name>
+          <bic>CHIUS33XXX</bic>
+          <organization_id>US123456789</organization_id>
+          <id_type>USID</id_type>
+        </initiating_party>
+      </group_header>
+      
+      <payment_information>
+        <payment_info_id>PAYINFO20260806001</payment_info_id>
+        <payment_method>TRF</payment_method>
+        <payment_method_description>Credit Transfer</payment_method_description>
+        <batch_booking>false</batch_booking>
+        <requested_execution_date>2026-08-10</requested_execution_date>
+        <control_sum>450000.00</control_sum>
+        
+        <debtor>
+          <name>Acme Manufacturing Corp</name>
+          <country>US</country>
+          <address>1500 Industrial Drive, Chicago, IL 60601</address>
+          <organization_id>EIN123456789</organization_id>
+          <id_type>USID</id_type>
+        </debtor>
+        
+        <debtor_account>
+          <iban>US12CHASUS33123456789012</iban>
+          <currency>USD</currency>
+          <account_type>CACC</account_type>
+        </debtor_account>
+        
+        <debtor_agent>
+          <bic>CHIUS33XXX</bic>
+          <bank_name>Chase Manhattan Bank</bank_name>
+          <role>ORIGINATING_BANK</role>
+        </debtor_agent>
+      </payment_information>
+      
+      <credit_transfer_transaction>
+        <payment_id>
+          <instruction_id>TXN20260806001</instruction_id>
+          <end_to_end_id>INV-2026-08-0042</end_to_end_id>
+        </payment_id>
+        
+        <amount>
+          <instructed_amount>450000.00</instructed_amount>
+          <currency>USD</currency>
+        </amount>
+        
+        <charges>
+          <option>SHARED</option>
+          <description>Charges split between sender and receiver</description>
+        </charges>
+        
+        <creditor>
+          <name>Smith & Associates Ltd</name>
+          <country>GB</country>
+          <address>45 Cambridge Street, London, SW1A 1AR</address>
+          <organization_id>GB987654321</organization_id>
+          <id_type>GBID</id_type>
+        </creditor>
+        
+        <creditor_account>
+          <iban>GB98NWAB60161331926819</iban>
+          <currency>GBP</currency>
+          <account_type>CACC</account_type>
+        </creditor_account>
+        
+        <creditor_agent>
+          <bic>WESTGBXXXX</bic>
+          <bank_name>West Bank GB</bank_name>
+          <role>RECEIVING_BANK</role>
+        </creditor_agent>
+        
+        <remittance_information>
+          <unstructured>INVOICE INV-2026-08-0042 FOR GOODS SHIPMENT</unstructured>
+          <structured>
+            <creditor_ref_type>CINV</creditor_ref_type>
+            <invoice_number>INV-2026-08-0042</invoice_number>
+            <invoicer>Smith & Associates Ltd</invoicer>
+            <invoicee>Acme Manufacturing Corp</invoicee>
+          </structured>
+        </remittance_information>
+      </credit_transfer_transaction>
+      
+      <routing>
+        <direct_path>ISO20022 System to ISO20022 System (No SWIFT bridge needed)</direct_path>
+        <estimated_delivery>2026-08-11T09:00:00Z</estimated_delivery>
+      </routing>
+      
+      <content_address>data://sha256:iso002a2b3c4d5e6f7g8h9i0j1:payment-iso20022-pacs008</content_address>
+    </iso20022_to_121xml_conversion>
+  </real_example_iso20022_pacs008>
+
+  <!-- ============================================================ -->
+  <!-- PART 5: COMPLETE TRANSACTION FLOW -->
+  <!-- ============================================================ -->
+  
+  <complete_transaction_flow>
+    <title>End-to-End Invoice Payment Flow: SWIFT Sender → ISO 20022 Receiver</title>
+    <description>Complete real-world payment for invoice INV-2026-08-0042 showing all intermediaries</description>
+    
+    <payment_flow_steps>
+      <step sequence="1">
+        <timestamp>2026-08-06T14:35:00Z</timestamp>
+        <actor>Acme Manufacturing Corp (Chicago, USA)</actor>
+        <action>CREATE_PAYMENT_INSTRUCTION</action>
+        <details>
+          <amount>USD 450,000.00</amount>
+          <invoice>INV-2026-08-0042</invoice>
+          <description>Payment for goods shipment to Smith & Associates Ltd</description>
+        </details>
+        <system>Corporate Treasury System (SWIFT-enabled)</system>
+        <output_format>SWIFT MT103</output_format>
+      </step>
+      
+      <step sequence="2">
+        <timestamp>2026-08-06T14:40:00Z</timestamp>
+        <actor>Chase Manhattan Bank (CHIUS33XXX) - Acme's Bank</actor>
+        <action>RECEIVE_AND_VALIDATE_INSTRUCTION</action>
+        <details>
+          <validation_checks>
+            <check>Account holder signature valid</check>
+            <check>Sufficient funds (USD 450,000.00 available)</check>
+            <check>BIC codes valid for all parties</check>
+            <check>IBAN format valid</check>
+          </validation_checks>
+          <status>APPROVED</status>
+        </details>
+        <fee>USD 25.00 (flat wire fee)</fee>
+      </step>
+      
+      <step sequence="3">
+        <timestamp>2026-08-06T15:00:00Z</timestamp>
+        <actor>Chase Manhattan Bank (Initiates SWIFT Transfer)</actor>
+        <action>SEND_SWIFT_MT103</action>
+        <details>
+          <message_id>PAYMT-20260806-001</message_id>
+          <routing>Chase (CHIUS33XXX) → Deutsche Bank (DEUTDEDD) [Intermediary for EUR/GBP]</routing>
+          <message_type>MT103 (Single Customer Credit Transfer)</message_type>
+        </details>
+        <status>SENT_TO_SWIFT_NETWORK</status>
+        <swift_network_status>Message delivered to SWIFT (SWIFTnet)</swift_network_status>
+      </step>
+      
+      <step sequence="4">
+        <timestamp>2026-08-06T15:30:00Z</timestamp>
+        <actor>Deutsche Bank (DEUTDEDD) - Intermediary</actor>
+        <action>CONVERT_CURRENCY_IF_NEEDED</action>
+        <details>
+          <incoming_amount>USD 450,000.00</incoming_amount>
+          <conversion>USD → GBP (if applicable for receiver's bank requirements)</conversion>
+          <exchange_rate>1 USD = 0.79 GBP</exchange_rate>
+          <converted_amount>GBP 355,500.00</converted_amount>
+          <conversion_fee>USD 500.00 (0.11% of amount)</conversion_fee>
+        </details>
+        <status>CURRENCY_CONVERTED</status>
+      </step>
+      
+      <step sequence="5">
+        <timestamp>2026-08-06T16:00:00Z</timestamp>
+        <actor>Deutsche Bank → West Bank GB (WESTGBXXXX)</actor>
+        <action>SEND_PAYMENT_TO_RECEIVING_BANK</action>
+        <details>
+          <transmission_method>SWIFT MT103 or ISO20022 PACS.008 bridge</transmission_method>
+          <final_amount>GBP 355,500.00 (after all conversions)</final_amount>
+          <invoice_reference>INV-2026-08-0042</invoice_reference>
+        </details>
+        <status>IN_TRANSIT_TO_RECEIVING_BANK</status>
+      </step>
+      
+      <step sequence="6">
+        <timestamp>2026-08-06T16:30:00Z</timestamp>
+        <actor>West Bank GB (WESTGBXXXX) - Smith's Bank</actor>
+        <action>RECEIVE_AND_VALIDATE_PAYMENT</action>
+        <details>
+          <validation_checks>
+            <check>SWIFT MT103 or ISO20022 PACS.008 integrity verified</check>
+            <check>Beneficiary account exists (GB98NWAB60161331926819)</check>
+            <check>Amount matches expectations</check>
+            <check>All required fields present</check>
+          </validation_checks>
+          <status>APPROVED_FOR_CREDIT</status>
+        </details>
+        <fee>GBP 15.00 (receiving bank fee)</fee>
+      </step>
+      
+      <step sequence="7">
+        <timestamp>2026-08-10T09:00:00Z</timestamp>
+        <actor>West Bank GB → Smith & Associates Ltd</actor>
+        <action>CREDIT_BENEFICIARY_ACCOUNT</action>
+        <details>
+          <beneficiary_account>GB98NWAB60161331926819</beneficiary_account>
+          <beneficiary_name>Smith & Associates Ltd</beneficiary_name>
+          <credit_amount>GBP 355,485.00 (after West Bank fee)</credit_amount>
+          <reference>INV-2026-08-0042</reference>
+          <posting_date>2026-08-10</posting_date>
+        </details>
+        <status>FUNDS_AVAILABLE_TO_BENEFICIARY</status>
+      </step>
+      
+      <step sequence="8">
+        <timestamp>2026-08-10T09:15:00Z</timestamp>
+        <actor>Smith & Associates Ltd</actor>
+        <action>RECEIVE_PAYMENT_NOTIFICATION</action>
+        <details>
+          <notification_method>Bank statement, email alert</notification_method>
+          <amount_received>GBP 355,485.00</amount_received>
+          <original_amount_usd>USD 450,000.00</original_amount_usd>
+          <payment_reference>INV-2026-08-0042</payment_reference>
+          <status>COMPLETE</status>
+        </details>
+      </step>
+    </payment_flow_steps>
+    
+    <summary_statistics>
+      <total_time_elapsed>3 days 18 hours 40 minutes (from initiation to receipt)</total_time_elapsed>
+      <original_amount_sent>USD 450,000.00</original_amount_sent>
+      <final_amount_received>GBP 355,485.00</final_amount_received>
+      <total_fees>USD 540.00 (Chase: $25, Deutsche: $500, West: ~$15)</total_fees>
+      <exchange_rate_used>1 USD = 0.79 GBP</exchange_rate_used>
+      <all_fields_preserved_in_121xml>Yes - all sender, receiver, intermediary, amount, dates, invoice reference, charges intact</all_fields_preserved_in_121xml>
+    </summary_statistics>
+  </complete_transaction_flow>
+
+  <!-- ============================================================ -->
+  <!-- PART 6: 121XML UNIFIED REPRESENTATION -->
+  <!-- ============================================================ -->
+  
+  <unified_121xml_payment_schema>
+    <title>Universal 121XML Payment Format (SWIFT + ISO 20022 Merged)</title>
+    <description>Single 121XML schema that can represent both SWIFT and ISO 20022 payments identically</description>
+    
+    <profile_uri>urn:121xml:universal-banking-payment/2.0</profile_uri>
+    
+    <key_insight>
+      Both SWIFT MT103 and ISO 20022 PACS.008 contain the same logical information:
+      - Sender details and account
+      - Receiver details and account
+      - Amount and currency
+      - Execution date
+      - Intermediaries
+      - Payment reference/invoice number
+      
+      121XML provides ONE schema that captures all this identically,
+      enabling lossless conversion between SWIFT and ISO 20022.
+    </key_insight>
+    
+    <unified_payment_structure>
+      <payment_id>Unique transaction identifier (works for SWIFT reference number or ISO PmtId)</payment_id>
+      <payment_type>WIRE_TRANSFER | CREDIT_TRANSFER | ACH | OTHER</payment_type>
+      <source_format>SWIFT_MT103 | ISO20022_PACS008 | ACH | 121XML</source_format>
+      <target_format>SWIFT_MT103 | ISO20022_PACS008 | ACH | 121XML</target_format>
+      
+      <parties>
+        <ordering_party>
+          <name>Organization name</name>
+          <account>Account identifier (IBAN, account number, etc.)</account>
+          <bank_bic>8-11 char BIC code</bank_bic>
+          <address>Full address</address>
+          <country>ISO2 country code</country>
+        </ordering_party>
+        
+        <beneficiary_party>
+          <name>Organization name</name>
+          <account>Account identifier</account>
+          <bank_bic>8-11 char BIC code</bank_bic>
+          <address>Full address</address>
+          <country>ISO2 country code</country>
+        </beneficiary_party>
+        
+        <intermediary_banks>
+          <bank sequence="1">
+            <bic>BIC code</bic>
+            <name>Bank name</name>
+            <function>CURRENCY_CONVERSION | CLEARING | ROUTING</function>
+            <account>Account for this leg of payment</account>
+          </bank>
+        </intermediary_banks>
+      </parties>
+      
+      <payment_details>
+        <amount>Numeric amount</amount>
+        <currency>ISO 4217 code</currency>
+        <original_amount>Amount before any conversions</original_amount>
+        <original_currency>Currency before conversion</original_currency>
+        <conversion_rate>Exchange rate if applicable</conversion_rate>
+        <value_date>Date funds should be available</value_date>
+        <execution_date>Date payment should execute</execution_date>
+      </payment_details>
+      
+      <reference_and_charges>
+        <remittance_info>Invoice/PO/payment purpose</remittance_info>
+        <invoice_number>Optional invoice reference</invoice_number>
+        <charges_code>SHA | OUR | BEN (Shared, Sender pays all, Beneficiary pays all)</charges_code>
+        <fees>Array of fees applied (wire fee, conversion fee, receiving fee, etc.)</fees>
+      </reference_and_charges>
+      
+      <routing_path>
+        <step sequence="1">
+          <from_party>Sending bank/customer</from_party>
+          <to_party>Next hop (intermediary or receiving bank)</to_party>
+          <method>SWIFT | ISO20022 | ACH | FEDWIRE</method>
+          <timestamp>When this leg occurred</timestamp>
+        </step>
+      </routing_path>
+      
+      <content_address>data://sha256:HASH:universal-payment</content_address>
+    </unified_payment_structure>
+  </unified_121xml_payment_schema>
+
+</banking_workflows>

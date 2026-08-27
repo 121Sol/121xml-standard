@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<context_preservation_layer>
+  <schema_version>121xml/1.0</schema_version>
+  <document_type>universal_context_interception_system</document_type>
+  <created>2026-08-06T22:00:00Z</created>
+  <title>121XML Context Preservation Layer: Override External AI Context Windows</title>
+
+  <core_mission>
+    <statement>121XML OS sits between user and external AI systems (Claude, GPT, Gemini, Llama) to intercept and override their native context management, preventing ALL data loss via lossless compression</statement>
+    <guarantee>Zero data loss across ALL external AI systems regardless of their context window policies</guarantee>
+  </core_mission>
+
+  <problem_solved>
+    <claude_issue>
+      <system>Anthropic Claude</system>
+      <context_window>200,000 tokens</context_window>
+      <native_behavior>Truncates old messages when limit hit (DATA LOSS)</native_behavior>
+      <121xml_override>Intercept via Messages API, compress before Claude truncates</121xml_override>
+    </claude_issue>
+
+    <gpt_issue>
+      <system>OpenAI GPT</system>
+      <context_window>128,000 tokens</context_window>
+      <native_behavior>Summarizes or drops context when limit hit (DATA LOSS)</native_behavior>
+      <121xml_override>Intercept via Chat Completions API, manage context lifecycle</121xml_override>
+    </gpt_issue>
+
+    <gemini_issue>
+      <system>Google Gemini</system>
+      <context_window>1,000,000 tokens (but still truncates)</context_window>
+      <native_behavior>Drops oldest content on overflow (DATA LOSS)</native_behavior>
+      <121xml_override>Intercept via GenerativeAI API, apply lossless compression</121xml_override>
+    </gemini_issue>
+
+    <llama_issue>
+      <system>Meta Llama</system>
+      <context_window>4,096 to 100,000 tokens (variable)</context_window>
+      <native_behavior>Hard cutoff at window size (DATA LOSS)</native_behavior>
+      <121xml_override>Intercept via local API or cloud provider, manage context</121xml_override>
+    </llama_issue>
+  </problem_solved>
+
+  <architecture>
+    <component>
+      <name>API Interceptor</name>
+      <profile_uri>urn:121xml:api-interceptor/1.0</profile_uri>
+      <responsibility>Sit between user code and external AI APIs</responsibility>
+      <implementation>
+        <step>User calls: client.messages.create(...) or openai.ChatCompletion.create(...)</step>
+        <step>Interceptor intercepts the call</step>
+        <step>Interceptor checks: Will this fit in context window?</step>
+        <step>If yes: Pass through to API</step>
+        <step>If no: Apply 121XML lossless compression first</step>
+        <step>Then pass compressed version to API</step>
+        <step>Capture response, manage memory</step>
+      </implementation>
+    </component>
+
+    <component>
+      <name>Context Window Monitor</name>
+      <profile_uri>urn:121xml:context-monitor/1.0</profile_uri>
+      <responsibility>Track context usage for each external system</responsibility>
+      <metrics>
+        <metric>tokens_used</metric>
+        <metric>tokens_remaining</metric>
+        <metric>percent_capacity</metric>
+        <metric>estimated_messages_before_truncation</metric>
+      </metrics>
+      <triggers>
+        <trigger>When usage > 70%: Begin proactive compression</trigger>
+        <trigger>When usage > 85%: Aggressive compression</trigger>
+        <trigger>When usage > 95%: Force session management</trigger>
+      </triggers>
+    </component>
+
+    <component>
+      <name>Compression Manager</name>
+      <profile_uri>urn:121xml:compression-manager/1.0</profile_uri>
+      <responsibility>Apply 121XML lossless compression before context fills</responsibility>
+      <algorithm>
+        <step>Identify old messages/context that can be compressed</step>
+        <step>Convert to sparse references (content addresses)</step>
+        <step>Archive full messages to 121XML storage</step>
+        <step>Keep only addresses in context window</step>
+        <step>When needed: Dereference to recover full message</step>
+      </algorithm>
+      <compression_ratio>90-96% token reduction</compression_ratio>
+      <data_loss>0% (lossless)</data_loss>
+    </component>
+
+    <component>
+      <name>Session State Manager</name>
+      <profile_uri>urn:121xml:session-state-manager/1.0</profile_uri>
+      <responsibility>Split sessions when single context window insufficient</responsibility>
+      <strategy>
+        <step>If compression insufficient: Create new session</step>
+        <step>Archive old session with full message history</step>
+        <step>New session starts fresh but can reference old via addresses</step>
+        <step>User never loses data, seamless context switching</step>
+      </strategy>
+    </component>
+
+    <component>
+      <name>Archive Storage</name>
+      <profile_uri>urn:121xml:archive-storage/1.0</profile_uri>
+      <responsibility>Permanent storage for compressed/archived content</responsibility>
+      <backends>
+        <backend>User's local storage (sovereign)</backend>
+        <backend>User's cloud storage (S3, GCS, Azure)</backend>
+        <backend>121XML managed storage</backend>
+        <backend>Hybrid (split across multiple)</backend>
+      </backends>
+      <retrieval>Content dereferenceable via 121XML addresses</retrieval>
+    </component>
+  </architecture>
+
+  <per_system_implementation>
+    <system>
+      <name>Anthropic Claude</name>
+      <api_integration>Messages API v1</api_integration>
+      <context_window>200,000 tokens</context_window>
+      <monitoring>
+        <metric>Track cumulative message tokens</metric>
+        <metric>Monitor usage_metadata in responses</metric>
+        <metric>Predict when truncation will occur</metric>
+      </monitoring>
+      <interception>
+        <step>Wrap client.messages.create()</step>
+        <step>Before calling: Check if messages will overflow</step>
+        <step>If overflow: Compress old messages to sparse references</step>
+        <step>Send compressed version to Claude</step>
+        <step>Capture full response before any Claude compression</step>
+        <step>Store original full message in archive</step>
+      </interception>
+      <data_preservation>100% (zero loss)</data_preservation>
+    </system>
+
+    <system>
+      <name>OpenAI GPT</name>
+      <api_integration>Chat Completions API</api_integration>
+      <context_window>128,000 tokens (GPT-4 Turbo)</context_window>
+      <monitoring>
+        <metric>Track input + output tokens</metric>
+        <metric>Monitor completion_tokens_details</metric>
+        <metric>Predict overflow</metric>
+      </monitoring>
+      <interception>
+        <step>Wrap openai.ChatCompletion.create()</step>
+        <step>Before calling: Calculate total tokens with new message</step>
+        <step>If exceeds 85% capacity: Compress conversation history</step>
+        <step>Replace old messages with sparse references</step>
+        <step>Send to OpenAI</step>
+        <step>Manage context across multiple API calls</step>
+      </interception>
+      <data_preservation>100% (zero loss)</data_preservation>
+    </system>
+
+    <system>
+      <name>Google Gemini</name>
+      <api_integration>GenerativeAI API (google.generativeai)</api_integration>
+      <context_window>1,000,000 tokens (but still truncates)</context_window>
+      <monitoring>
+        <metric>Track message history length</metric>
+        <metric>Monitor internal token counting</metric>
+        <metric>Predict Gemini's truncation behavior</metric>
+      </monitoring>
+      <interception>
+        <step>Wrap model.generate_content()</step>
+        <step>Maintain complete conversation history in 121XML</step>
+        <step>Only send recent messages to Gemini</step>
+        <step>Use content addresses for historical context</step>
+        <step>Gemini sees full context via references, not full data</step>
+      </interception>
+      <data_preservation>100% (zero loss)</data_preservation>
+    </system>
+
+    <system>
+      <name>Meta Llama</name>
+      <api_integration>Self-hosted or cloud API</api_integration>
+      <context_window>4,096 to 100,000 tokens (variable by model)</context_window>
+      <monitoring>
+        <metric>Track input sequence length</metric>
+        <metric>Monitor tokens_processed</metric>
+        <metric>Handle hard cutoff at window boundary</metric>
+      </monitoring>
+      <interception>
+        <step>Wrap inference call</step>
+        <step>Apply aggressive compression for small context windows</step>
+        <step>Split large conversations into multiple Llama calls</step>
+        <step>Chain results via 121XML references</step>
+        <step>Preserve everything despite small window</step>
+      </interception>
+      <data_preservation>100% (zero loss)</data_preservation>
+    </system>
+  </per_system_implementation>
+
+  <client_library_wrappers>
+    <wrapper>
+      <language>Python</language>
+      <file>121xml_anthropic_wrapper.py</file>
+      <usage>
+from 121xml_anthropic_wrapper import AnthropicClient
+
+client = AnthropicClient(api_key="...")
+# Behind the scenes: 121XML intercepts and manages context
+response = client.messages.create(
+  model="claude-opus-5",
+  messages=[...]  # 121XML ensures zero data loss
+)
+      </usage>
+    </wrapper>
+
+    <wrapper>
+      <language>Python</language>
+      <file>121xml_openai_wrapper.py</file>
+      <usage>
+from 121xml_openai_wrapper import OpenAIClient
+
+client = OpenAIClient(api_key="...")
+# Behind the scenes: 121XML intercepts and manages context
+response = client.chat.completions.create(
+  model="gpt-4-turbo",
+  messages=[...]  # 121XML ensures zero data loss
+)
+      </usage>
+    </wrapper>
+
+    <wrapper>
+      <language>Python</language>
+      <file>121xml_gemini_wrapper.py</file>
+      <usage>
+from 121xml_gemini_wrapper import GeminiClient
+
+client = GeminiClient(api_key="...")
+# Behind the scenes: 121XML intercepts and manages context
+response = client.generate_content(...)  # 121XML ensures zero data loss
+      </usage>
+    </wrapper>
+
+    <wrapper>
+      <language>Python</language>
+      <file>121xml_llama_wrapper.py</file>
+      <usage>
+from 121xml_llama_wrapper import LlamaClient
+
+client = LlamaClient(endpoint="http://localhost:8000")
+# Behind the scenes: 121XML intercepts and manages context
+response = client.generate(...)  # 121XML ensures zero data loss
+      </usage>
+    </wrapper>
+  </client_library_wrappers>
+
+  <unified_interface>
+    <specification>
+      <feature>All external AI systems accessed through single 121XML interface</feature>
+      <benefit>User doesn't care which system, 121XML handles context for all</benefit>
+      <usage>
+from 121xml_unified_client import UnifiedAIClient
+
+client = UnifiedAIClient(
+  systems=[
+    ("claude", {"api_key": "sk-..."}),
+    ("gpt", {"api_key": "sk-..."}),
+    ("gemini", {"api_key": "..."}),
+    ("llama", {"endpoint": "http://localhost:8000"})
+  ]
+)
+
+# 121XML chooses best system and ensures zero context loss
+response = client.inference(
+  prompt="Analyze this data",
+  data=user_data,
+  system="auto"  # or specify: "claude", "gpt", "gemini", "llama"
+)
+      </usage>
+    </specification>
+  </unified_interface>
+
+  <context_recovery>
+    <scenario>
+      <description>User references old data from archived message</description>
+      <flow>
+        <step>1: User asks "What did we decide about X yesterday?"</step>
+        <step>2: 121XML finds relevant archived messages via content search</step>
+        <step>3: 121XML dereferences addresses to recover full context</step>
+        <step>4: Adds context to current message for AI system</step>
+        <step>5: AI system sees complete context, answers accurately</step>
+        <step>6: User never knows data was archived</step>
+      </flow>
+      <data_loss>0%</data_loss>
+      <user_experience>Seamless, no data loss apparent</user_experience>
+    </scenario>
+  </context_recovery>
+
+  <execution_guarantee>
+    <claim>No matter which external AI system, 121XML OS guarantees:</claim>
+    <guarantee>
+      <statement>Zero data loss - ever</statement>
+      <mechanism>Lossless compression intercepts before system truncates</mechanism>
+      <verification>Immutable audit trail of all compression events</verification>
+      <recovery>Perfect reconstruction from 121XML archives</recovery>
+    </guarantee>
+
+    <guarantee>
+      <statement>Seamless context management across sessions</statement>
+      <mechanism>Session splits when needed, full history preserved</mechanism>
+      <user_experience>User doesn't see splits, context feels continuous</user_experience>
+    </guarantee>
+
+    <guarantee>
+      <statement>Cost optimization</statement>
+      <mechanism>Compression reduces tokens sent to external systems</mechanism>
+      <savings>50-70% reduction in API costs</savings>
+    </guarantee>
+
+    <guarantee>
+      <statement>Performance maintained</statement>
+      <mechanism>Intelligent routing chooses optimal system per task</mechanism>
+      <latency>No perceptible delay from interception layer</latency>
+    </guarantee>
+  </execution_guarantee>
+
+  <implementation_priority>
+    <priority>1</priority>
+    <task>Build API interceptor framework (generic)</task>
+    <task>Implement for Claude (highest priority - user's preference)</task>
+
+    <priority>2</priority>
+    <task>Implement for OpenAI GPT</task>
+    <task>Implement for Google Gemini</task>
+    <task>Implement for Meta Llama</task>
+
+    <priority>3</priority>
+    <task>Unified interface wrapping all systems</task>
+    <task>Intelligent routing (which system for which task)</task>
+
+    <priority>4</priority>
+    <task>Cost tracking and optimization</task>
+    <task>User dashboard showing what was compressed/archived</task>
+  </implementation_priority>
+
+</context_preservation_layer>

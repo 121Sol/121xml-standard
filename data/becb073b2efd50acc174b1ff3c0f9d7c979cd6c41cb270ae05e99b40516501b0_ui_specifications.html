@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>121XML AI OS - User Interface Specifications</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; transition: all 0.3s; }
+        body.dark-mode { background: #1e1e1e; color: #e0e0e0; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%); color: white; padding: 40px 20px; margin-bottom: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .controls { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        button { background: #0066cc; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; transition: all 0.3s; }
+        button:hover { background: #0052a3; }
+        section { background: white; padding: 30px; margin-bottom: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        body.dark-mode section { background: #2d2d2d; }
+        section h2 { font-size: 1.8em; color: #0066cc; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #0066cc; }
+        section h3 { font-size: 1.3em; color: #333; margin-top: 25px; margin-bottom: 15px; }
+        body.dark-mode section h3 { color: #e0e0e0; }
+        .ui-component { background: #f9f9f9; padding: 20px; border-left: 4px solid #0066cc; margin: 20px 0; border-radius: 4px; }
+        body.dark-mode .ui-component { background: #333; border-left-color: #0099ff; }
+        .mockup { background: #f0f0f0; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 20px 0; text-align: center; min-height: 200px; display: flex; align-items: center; justify-content: center; }
+        body.dark-mode .mockup { background: #1a1a1a; border-color: #555; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #0066cc; color: white; font-weight: 600; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        body.dark-mode th, body.dark-mode td { border-color: #444; }
+        body.dark-mode tr:nth-child(even) { background: #1a1a1a; }
+        footer { background: #f5f5f5; padding: 20px; text-align: center; color: #666; border-top: 1px solid #ddd; margin-top: 40px; }
+        body.dark-mode footer { background: #1e1e1e; border-top-color: #444; color: #999; }
+        .highlight { background: #e3f2fd; border-left: 4px solid #0066cc; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        body.dark-mode .highlight { background: #0f1f30; border-left-color: #0099ff; }
+        @media print { body { background: white; color: black; } section { box-shadow: none; border: 1px solid #ddd; } }
+        @media (max-width: 768px) { header h1 { font-size: 1.8em; } section { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>121XML AI OS</h1>
+            <p style="font-size: 1.2em; margin-bottom: 10px;">User Interface Specifications</p>
+            <span style="opacity: 0.9;">Version 1.0 | August 7, 2026 | Production Ready</span>
+        </header>
+        
+        <div class="controls">
+            <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+            <button onclick="printDocument()">🖨️ Print</button>
+        </div>
+        
+        <section>
+            <h2>1. Engine Selector Widget</h2>
+            <p>Allow users to select, preview capabilities, and switch between AI systems with one click.</p>
+            
+            <h3>Interactive Mockup</h3>
+            <div class="mockup" style="min-height: 300px;">
+                <div style="width: 100%; text-align: left;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 20px;">
+                        <div style="border: 2px solid #0066cc; padding: 15px; border-radius: 8px; cursor: pointer;">
+                            <strong>Claude</strong><br><span style="font-size: 12px; color: #666;">Complex Reasoning<br>1M Context</span>
+                        </div>
+                        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer;">
+                            <strong>GPT</strong><br><span style="font-size: 12px; color: #666;">General Purpose<br>128K Context</span>
+                        </div>
+                        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer;">
+                            <strong>Gemini</strong><br><span style="font-size: 12px; color: #666;">Extended Context<br>2M Context</span>
+                        </div>
+                        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer;">
+                            <strong>Qwen</strong><br><span style="font-size: 12px; color: #666;">Multilingual<br>128K Context</span>
+                        </div>
+                        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer;">
+                            <strong>DeepSeek</strong><br><span style="font-size: 12px; color: #666;">Cost-Free<br>128K Context</span>
+                        </div>
+                        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer;">
+                            <strong>Hunyuan</strong><br><span style="font-size: 12px; color: #666;">3D/Video<br>256K Context</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Specifications</h3>
+            <table>
+                <tr>
+                    <th>Component</th>
+                    <th>Description</th>
+                    <th>Interaction</th>
+                </tr>
+                <tr>
+                    <td>Model Card</td>
+                    <td>Displays model name, strengths, context window</td>
+                    <td>Click to select, hover for full details</td>
+                </tr>
+                <tr>
+                    <td>Selection Indicator</td>
+                    <td>Blue border shows currently active model</td>
+                    <td>Updates in real-time</td>
+                </tr>
+                <tr>
+                    <td>Auto-Select Button</td>
+                    <td>Lets orchestration engine select optimal model</td>
+                    <td>Click for auto-routing</td>
+                </tr>
+                <tr>
+                    <td>Model Details Panel</td>
+                    <td>Expands to show capabilities, pricing, context</td>
+                    <td>Slide in from right on selection</td>
+                </tr>
+            </table>
+            
+            <div class="highlight">
+                <strong>Accessibility:</strong> WCAG 2.1 AA compliant. Keyboard navigation (Tab/Arrow keys). Screen reader support for all model names and capabilities.
+            </div>
+        </section>
+        
+        <section>
+            <h2>2. Workflow Builder (DAG Editor)</h2>
+            <p>Visual interface for building multi-AI workflows with task chaining.</p>
+            
+            <h3>Workflow Example</h3>
+            <div class="mockup" style="min-height: 400px;">
+                <div style="width: 100%; padding: 20px; text-align: left;">
+                    <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+                        <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border: 2px solid #0066cc; text-align: center; min-width: 100px;">
+                            <strong>Input</strong><br><span style="font-size: 12px;">User Query</span>
+                        </div>
+                        <div style="font-size: 24px; color: #666;">→</div>
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border: 2px solid #ffc107; text-align: center; min-width: 120px;">
+                            <strong>Claude</strong><br><span style="font-size: 12px;">Reasoning</span>
+                        </div>
+                        <div style="font-size: 24px; color: #666;">→</div>
+                        <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; border: 2px solid #4caf50; text-align: center; min-width: 120px;">
+                            <strong>GPT</strong><br><span style="font-size: 12px;">Generation</span>
+                        </div>
+                        <div style="font-size: 24px; color: #666;">→</div>
+                        <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; border: 2px solid #7b1fa2; text-align: center; min-width: 100px;">
+                            <strong>Output</strong><br><span style="font-size: 12px;">Response</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Features</h3>
+            <ul style="margin-left: 20px; line-height: 2;">
+                <li>✓ Drag-and-drop node creation</li>
+                <li>✓ Connect nodes to create workflows</li>
+                <li>✓ Configure each node (model, parameters, timeout)</li>
+                <li>✓ Save/load workflow templates</li>
+                <li>✓ Test workflows with sample data</li>
+                <li>✓ View execution trace (which model ran when)</li>
+                <li>✓ Branching logic (if/then workflows)</li>
+                <li>✓ Error handling nodes (retry, fallback)</li>
+            </ul>
+        </section>
+        
+        <section>
+            <h2>3. Memory & Audit Trail Dashboard</h2>
+            <p>Visual display of conversation history with content addressing and immutable audit trail.</p>
+            
+            <h3>Layout</h3>
+            <table>
+                <tr>
+                    <th>Panel</th>
+                    <th>Content</th>
+                    <th>Updates</th>
+                </tr>
+                <tr>
+                    <td>Left Sidebar</td>
+                    <td>Conversation history (chronological list)</td>
+                    <td>Real-time as messages arrive</td>
+                </tr>
+                <tr>
+                    <td>Center Panel</td>
+                    <td>Full message with formatting</td>
+                    <td>Updates when message selected</td>
+                </tr>
+                <tr>
+                    <td>Right Sidebar</td>
+                    <td>Message metadata (SHA256, model, tokens, timestamp)</td>
+                    <td>Real-time updates</td>
+                </tr>
+                <tr>
+                    <td>Top Bar</td>
+                    <td>Session info, active model, context usage</td>
+                    <td>Real-time</td>
+                </tr>
+            </table>
+            
+            <div class="highlight">
+                <strong>Audit Trail:</strong> Every message gets SHA256 content address. Immutable. Tamper-proof. Export as PDF for compliance.
+            </div>
+        </section>
+        
+        <section>
+            <h2>4. Cost Optimization Panel</h2>
+            <p>Real-time cost breakdown and optimization recommendations.</p>
+            
+            <h3>Dashboard Metrics</h3>
+            <table>
+                <tr>
+                    <th>Metric</th>
+                    <th>Display</th>
+                    <th>Recommendation</th>
+                </tr>
+                <tr>
+                    <td>Total Cost (Session)</td>
+                    <td>Large number, currency ($0.47)</td>
+                    <td>Estimate if task continued</td>
+                </tr>
+                <tr>
+                    <td>Cost by Model</td>
+                    <td>Pie chart (Claude 45%, GPT 30%, Qwen 25%)</td>
+                    <td>Suggest cheaper alternatives</td>
+                </tr>
+                <tr>
+                    <td>Token Usage</td>
+                    <td>Progress bars per model</td>
+                    <td>Warn if approaching limits</td>
+                </tr>
+                <tr>
+                    <td>Compression Ratio</td>
+                    <td>Display 94% savings</td>
+                    <td>Show original vs. compressed tokens</td>
+                </tr>
+                <tr>
+                    <td>Potential Savings</td>
+                    <td>"Save 60% by using DeepSeek"</td>
+                    <td>Clickable to switch models</td>
+                </tr>
+            </table>
+        </section>
+        
+        <section>
+            <h2>5. Settings & Configuration UI</h2>
+            <p>User-customizable options for behavior, appearance, and integrations.</p>
+            
+            <h3>Settings Categories</h3>
+            <ul style="margin-left: 20px; line-height: 2;">
+                <li><strong>Appearance:</strong> Dark mode, theme, layout density</li>
+                <li><strong>AI Preferences:</strong> Default model, temperature, max tokens</li>
+                <li><strong>Data & Privacy:</strong> Data location, retention, export options</li>
+                <li><strong>Integrations:</strong> Enable/disable Slack, Jira, Salesforce, etc.</li>
+                <li><strong>API Keys:</strong> Manage external AI system credentials</li>
+                <li><strong>Notifications:</strong> Alert preferences, webhooks</li>
+                <li><strong>Advanced:</strong> Performance tuning, caching, experimental features</li>
+            </ul>
+        </section>
+        
+        <section>
+            <h2>6. Onboarding Flow</h2>
+            <p>Guided setup for new users to get productive in 5 minutes.</p>
+            
+            <h3>Steps</h3>
+            <table>
+                <tr>
+                    <th>Step</th>
+                    <th>Action</th>
+                    <th>Time</th>
+                </tr>
+                <tr>
+                    <td>1. Welcome</td>
+                    <td>Explain 121XML benefits (video + text)</td>
+                    <td>1 min</td>
+                </tr>
+                <tr>
+                    <td>2. API Setup</td>
+                    <td>Add API keys for Claude, OpenAI, Google (with links)</td>
+                    <td>2 min</td>
+                </tr>
+                <tr>
+                    <td>3. Pick First Model</td>
+                    <td>Select preferred AI system for trial</td>
+                    <td>30 sec</td>
+                </tr>
+                <tr>
+                    <td>4. First Query</td>
+                    <td>Try an example query (pre-filled templates)</td>
+                    <td>1 min</td>
+                </tr>
+                <tr>
+                    <td>5. Explore Features</td>
+                    <td>Guided tour of workflow builder, settings, etc.</td>
+                    <td>Optional</td>
+                </tr>
+            </table>
+        </section>
+        
+        <section style="background: #e8f5e9; border-left: 4px solid #4caf50;">
+            <h2>✅ Phase B Complete</h2>
+            <p><strong>Status:</strong> UI Specifications ready for Phase C</p>
+            <p><strong>Components Specified:</strong> 6 (Engine Selector, Workflow Builder, Memory Dashboard, Cost Optimizer, Settings, Onboarding)</p>
+            <p><strong>Accessibility:</strong> WCAG 2.1 AA compliant throughout</p>
+            <p><strong>Responsive:</strong> Mobile (320px) → Desktop (1920px)</p>
+        </section>
+    </div>
+    
+    <footer>
+        <p>121XML AI OS - User Interface Specifications v1.0 | Generated August 7, 2026</p>
+    </footer>
+    
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+        function printDocument() {
+            window.print();
+        }
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
+</body>
+</html>
