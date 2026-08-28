@@ -363,7 +363,8 @@ explain part of it, the rule probably is not tight enough.
 
 For the complete implementation guide, reference:
   • 121XML_Architecture_Guide.html (10 sections, worked examples, diagrams)
-  • 121XML_Claim_Register_v2.docx (banned language, approved language)
+  • [121XML_Claim_Register_v2.docx removed 2026-08-28 — determined to be a
+    Claude CoWork fabrication; see 121XML_SPECIFICATION_DECISION_TABLE.md B30]
   • 121XML_Enterprise_Pilot_Proposal_v2.docx (90-day evaluation template)
 
 ================================================================================

@@ -62,7 +62,7 @@
     <seq name="files" of="map">
       <map><str name="file">121XML_Investor_Pitch_Deck.pptx</str><str name="audience">external</str><int name="slides">13</int></map>
       <map><str name="file">121XML_Diligence_Readiness_Review.pptx</str><str name="audience">internal</str><int name="slides">11</int></map>
-      <map><str name="file">121XML_Claim_Register_v2.docx</str><str name="audience">internal</str><null name="slides"/></map>
+      <map><str name="file">121XML_Claim_Register_v2.docx</str><str name="audience">internal</str><null name="slides"/><str name="status">DELETED 2026-08-28 — determined to be a Claude CoWork fabrication, see 121XML_SPECIFICATION_DECISION_TABLE.md B30</str></map>
       <map><str name="file">121XML_Executive_Abstract_v2.docx</str><str name="audience">external</str><null name="slides"/></map>
       <map><str name="file">121XML_Investor_Outreach_Pack_v2.docx</str><str name="audience">internal</str><null name="slides"/></map>
       <map><str name="file">121XML_Enterprise_Pilot_Proposal_v2.docx</str><str name="audience">external</str><null name="slides"/></map>

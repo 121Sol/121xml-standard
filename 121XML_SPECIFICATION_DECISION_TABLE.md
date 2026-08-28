@@ -52,7 +52,7 @@
 | B27 | Embedded-platform template | þ Agreed — **scope: lives in 121Enterprise** |
 | B28 | 121XMLSilicon | þ Agreed — **stays a separate project** (confirmed, not pulled back into 121XML scope) |
 | B29 | Session-continuity / anti-drift protocol | þ Agreed — **must be built in** (enforced mechanism going forward, not just a documented process) |
-| B30 | Claim Register / banned-claims governance | `OPEN` — **needs clarification**, not yet decided |
+| B30 | Claim Register / banned-claims governance | **Resolved 2026-08-28: `121XML_Claim_Register_v2.docx` determined to be a Claude CoWork fabrication (including its cited "approved" sources, e.g. the "Fivetran Enterprise Data Infrastructure Benchmark, 2026" and the $7.5B–$33.8B market-size range) — deleted, both copies. The document's 4-part *structure* (banned language / approved claims / claims-with-cost / sourcing standard) is accepted as a governance framework to reuse going forward. Its specific *content* — every banned/approved claim, every cited figure — is void and must be rebuilt from genuinely verified sources, not reused from the deleted file.** |
 | B31 | 121xml-banking plugin | þ Agreed — kept as the reference working example |
 
 ---
@@ -128,7 +128,7 @@ RK's clarification splits this into two genuinely separate concerns that earlier
 | C4 — dedup/privacy tradeoff reconciliation | 121Enterprise specialist |
 | C5 — remove false "complete" claims; rebuild affected components post-spec-agreement | 121Enterprise team |
 | D1 — Lumo-style multi-backend-router decision | `OPEN` — needs an explicit decision, owner TBD |
-| B30 — Claim Register clarification | `OPEN` — needs more discussion with RK directly |
+| B30 — Claim Register clarification | **Resolved** — document was fabricated, deleted; framework kept, content voided (see B30 row above) |
 
 ### D4. Build sequencing (proposed, not yet executed)
 
@@ -145,6 +145,6 @@ Phase 1 is running now. **Phases 2–3 are a much larger commitment (real build 
 
 ## Next steps
 
-1. `OPEN` items (A4 branding, D1 backend-router, B30 Claim Register) still need decisions — flag for a follow-up round.
+1. `OPEN` items remaining: A4 (branding) and D1 (Lumo-style backend router) still need decisions. B30 (Claim Register) is now resolved — see above.
 2. Phase 1 QA agent pass is running against this table.
 3. Once Phase 1 lands: review its output, then decide whether to proceed to Phase 2 (design) per track.

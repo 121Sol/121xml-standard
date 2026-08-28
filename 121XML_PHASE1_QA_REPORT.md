@@ -5,6 +5,13 @@
 `121XML_SPECIFICATION_DECISION_TABLE.md` Round 1 rulings. This is a QA/reconciliation pass, not a redesign —
 no new architecture was invented and no `OPEN` item was treated as resolved.
 
+**Addendum (2026-08-28, post-report):** `121XML_Claim_Register_v2.docx`, referenced below in the C2 findings
+as the governance document banning the "100x"/CPU-register claims, was itself subsequently determined to be a
+Claude CoWork fabrication (including its own cited "approved" sources) and has been deleted — see the B30
+row in the decision table. This does not change the C2 findings below (no live violation of those specific
+banned phrases was found in the corpus either way), but the Claim Register should no longer be cited as an
+authority anywhere in this report.
+
 ---
 
 ## 1. Summary
