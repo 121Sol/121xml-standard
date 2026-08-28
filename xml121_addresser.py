@@ -167,9 +167,12 @@ class ContentAddresser:
         if not content_list:
             return {"root": None, "tree": [], "height": 0}
 
-        # Address all items
+        # Address all items (create_addressing_record both computes the address
+        # AND registers/verifies it in self.addressing_index — using the lighter
+        # address_content() here left the index empty, which made the "verified"
+        # check below crash with AttributeError on the {} fallback default).
         addresses = [
-            self.address_content(item).hash_value
+            self.create_addressing_record(item).address.hash_value
             for item in content_list
         ]
 
@@ -198,7 +201,7 @@ class ContentAddresser:
             "tree": tree_levels,
             "height": len(tree_levels),
             "leaf_count": len(addresses),
-            "verified": all(self.addressing_index.get(addr, {}).verified for addr in addresses)
+            "verified": all(getattr(self.addressing_index.get(addr), "verified", False) for addr in addresses)
         }
 
     def create_hash_chain(

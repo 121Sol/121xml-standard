@@ -16,7 +16,7 @@ import sys
 
 # Import compaction engine
 sys.path.insert(0, '/F/AI/Claude/Projects/121XML')
-from 121xml_compaction_engine import (
+from xml_121xml_compaction_engine import (
     ContentAddressManager, TokenBudgetManager, LosslessCompressor,
     CompactionStrategyEngine, CompactionEvent, CompactionResult,
     LosslessCompactionEngine, CompactionPolicy, CompactionStrategy

@@ -18,7 +18,7 @@ import hashlib
 import sys
 sys.path.insert(0, '/F/AI/Claude/Projects/121XML')
 
-from 121xml_library import (
+from xml_121xml_library import (
     ContentAddress, ObjectType, PermissionType, ObjectCategory,
     Base121XMLObject, CoreObject, Message, Tool, Agent,
     PermissionGrant, WorkflowStep, Workflow, ExecutionContext,

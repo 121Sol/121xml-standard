@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 import uuid
 import json
 
-from agentic_os_core import (
+from xml_121xml_agentic_os_core import (
     AgenticEngine, ToolDefinition, AgentDefinition, ExecutionContext,
     PermissionGrant, PermissionType, ContentAddress
 )

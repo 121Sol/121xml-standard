@@ -18,6 +18,7 @@ import uuid
 class OperationType(Enum):
     """Types of operations tracked"""
     READ = "read"
+    WRITE = "write"
     CREATE = "create"
     UPDATE = "update"
     DELETE = "delete"
