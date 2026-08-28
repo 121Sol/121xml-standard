@@ -12,7 +12,7 @@
 |---|---|---|
 | A1 | Narrow vertical vs. universal-everything claim? | **No v1 scope restriction.** 121xml is a standard for converting *any* format. Any programming language with a definitive spec (rules, syntax, semantics, attributes) is itself a set of objects expressible in 121xml value pairs — Python, Rust, etc. — so automated cross-language conversion is feasible and in scope. This explicitly overrides the earlier "narrow & deep, ERP-only" recommendation. |
 | A2 | Funding/scale target? | **Not needed at this stage.** No funding-scale decision required right now. |
-| A3 | First vertical/use case? | **Contact Federation / CRM.** |
+| A3 | First vertical/use case? | ~~**Contact Federation / CRM.**~~ **Superseded 2026-08-28: CRM taken out of scope for this project entirely** (per Rashad Khan, after two 121DevTeam sessions correctly declined to guess at CRM's undiscovered scope rather than invent it). No Industry Vertical is currently in active scope. `121Enterprises/docs/prd-crm-contact-federation.md` marked out-of-scope, kept as historical record. |
 | A4 | Brand/positioning stance? | `OPEN` — **assigned to a branding specialist** (subagent or 121Enterprises) to research and decide. Not decided by RK directly. |
 | A5 | Is 121XML=standard, 121XQ=product split final? | **Yes, final.** 121XML = standard/format layer. 121XQ = the AI OS built on 121XML principles/specs — see D1 below, largely compatible with Proton Lumo's architecture. |
 | A6 | Standards-body partner vs. "universal replacement" stance? | **Collaboration is better.** Pursue the standards-body partnering stance, not a "we replace everything" stance. |
