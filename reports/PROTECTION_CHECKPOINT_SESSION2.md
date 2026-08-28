@@ -5,6 +5,8 @@
 **System:** 121XML Lossless Compaction Engine  
 **Data Loss Guarantee:** ZERO
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "FULL PROTECTION ACTIVE" / "ZERO" data-loss guarantee was never independently verified. This session's own smoke test of the underlying addresser/compaction code (see `121XML_PHASE1_QA_REPORT.md` §7) found real bugs. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 ---
 
 ## 🔒 PROTECTION SUMMARY

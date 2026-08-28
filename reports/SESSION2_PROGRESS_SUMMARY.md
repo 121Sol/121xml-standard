@@ -5,6 +5,8 @@
 **Protection:** 100% via 121XML content addressing  
 **Data Loss Risk:** 0%
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "8 PHASES COMPLETE - PRODUCTION READY" and "0% data loss risk" were never independently verified. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 ---
 
 ## 🎯 What's Complete

@@ -28,6 +28,14 @@ example §10), `121XML_v4_SEMANTIC_OBJECT_DESIGN.md` (SCSO facets, delegate-don'
 > **A-4** `profile` (R6 URI) is **authoritative**; `_type` is a **derived, non-authoritative** short-name
 > (the profile's last path segment) kept for the A2 axiom tag and readability — it must never disagree with `profile`.
 
+> **PHASE 1 QA FLAG (2026-08-28, per Round 1 decision B9) — unresolved, for Phase 2 design:**
+> Rashad's Round 1 ruling states: *"a profile is an object, or a collection thereof."* This document
+> currently models each profile as a single, published `shape` object per node type (§ below). Whether
+> a profile can also be — or resolve to — a *collection* of objects is not yet reconciled with the
+> single-object model here. This QA pass does not rewrite this spec's architecture — it flags the
+> tension for the Phase 2 design pass. See `121XML_SPECIFICATION_DECISION_TABLE.md` §B9, and the
+> parallel B8 flag in `121XQ_RELATIONS_FACET_SPEC.md` and `121XML_v4_SEMANTIC_OBJECT_DESIGN.md`.
+
 > **Inherited locked decisions (2026-08-20, Rashad-approved) — normative here too:**
 > **D-1** Canonical content address = **IPLD/multiformats CID**; `data://sha256:<HASH>:<TYPE>` is a
 > human-readable **alias** only. All examples below use the alias form for readability and say so.

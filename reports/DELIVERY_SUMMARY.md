@@ -6,6 +6,8 @@
 **Version:** v1.0  
 **Copyright:** © 121 Solutions 2026
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "COMPLETE"/"Production-Ready" claims in this package were never independently verified. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 ---
 
 ## WHAT HAS BEEN DELIVERED

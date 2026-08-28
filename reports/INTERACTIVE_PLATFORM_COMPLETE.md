@@ -4,6 +4,8 @@
 **Date:** August 7, 2026  
 **Protection:** 121XML Compaction Engine (ZERO DATA LOSS)
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** The "COMPLETE"/"PRODUCTION READY"/"FULLY DEPLOYED" claims below were never independently verified (see `reports/PHASE0_GROUND_TRUTH.md`) and are superseded by `121XML_SPECIFICATION_DECISION_TABLE.md` §C5, which directs 121Enterprise to rebuild affected components after the revised specs are agreed rather than relabel status. Treat all status language in this document as historical/aspirational, not current fact.
+
 ---
 
 ## 🎯 What Users Can Now Do

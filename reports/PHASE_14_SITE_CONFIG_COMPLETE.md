@@ -2,6 +2,8 @@
 
 **Production-Ready Configuration File with Comprehensive Documentation**
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "COMPLETE & DOCUMENTED" / "Production-Ready" was never independently verified. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 ---
 
 ## 📋 **What's Included**

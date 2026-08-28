@@ -6,6 +6,8 @@
 **Archive:** data/0d48f0640326ccea_121xml_ai_os.archive  
 **Protection:** ✅ ARCHIVED & IMMUTABLE
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "PRODUCTION READY" was never independently verified. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 ---
 
 ## 🎯 What This Solves

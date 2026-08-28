@@ -5,6 +5,8 @@
 **Date**: August 8, 2026  
 **Phase**: 10J - Platform Adapters (Apple, Google, Microsoft Native Features)  
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "Production Ready" was never independently verified — none of the native apps or backend code in this report were smoke-tested (see `reports/PHASE0_GROUND_TRUTH.md`). See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5. The platform list below is also superseded per §B20 — see the note at the end of this document.
+
 ---
 
 ## 📋 Executive Summary
@@ -584,11 +586,27 @@ await deviceIntegration.ProcessCortanaCommandAsync(
 
 ---
 
-**Status**: 🚀 **PRODUCTION READY**
+**Status**: 🚀 **PRODUCTION READY** (unverified — see status note at top of document, per C5)
 
 **Specification**: Phase 10J - Platform Adapters (Apple, Google, Microsoft Native Features)  
 **Implementation Date**: August 8, 2026  
 **Tested On**: iOS 17+, Android 13+, Windows 11, HarmonyOS 4.0+
+
+---
+
+## 🔊 Voice/Native-Device Platform List — RECONCILED (2026-08-28, per Round 1 decision B20)
+
+This report's platform coverage (§"Platform Coverage" above: Siri/Google Assistant/Cortana) is
+**superseded** by the reconciled, ordered list now canonical in
+`specs/121XML_AI_OS_MASTER_SPEC.md` §"Voice Orchestration (Multi-Modal)". Summary (approximate
+descending reach, 2026, figures are estimates mixing device-installed-base and MAU disclosures):
+
+1. **Apple Siri** (now Gemini-powered, per the Apple–Google deal announced WWDC 2026) — ~2B active devices
+2. **Google Gemini** (subsumes Google Assistant) — ~1B+ MAU
+3. **HarmonyOS / Celia** (Huawei) — ~1.3B device ecosystem, China-concentrated
+4. **Amazon Alexa** — ~500–600M devices sold/active globally
+5. **Samsung Bixby** — hundreds of millions of Galaxy devices, declining since Gemini became the Galaxy S25+ default
+6. **Microsoft Cortana — removed.** Discontinued as a consumer assistant (retired 2023, replaced by Windows Copilot); the Windows/Cortana integration described in this report's "Platform Coverage" section below is no longer a live target.
 
 ---
 

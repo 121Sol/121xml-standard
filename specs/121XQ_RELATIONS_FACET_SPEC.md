@@ -23,6 +23,13 @@ and **#5** (Tab 2 / 121ObjectMap renderer). This document is that contract.
 
 ---
 
+> **PHASE 1 QA FLAG (2026-08-28, per Round 1 decision B8) — unresolved, for Phase 2 design:**
+> Rashad's Round 1 ruling states: *"relations are just another object in 121xml, not a
+> privileged/special facet type."* This nuances the entire premise of this document, which specs
+> `relations` as a distinct, privileged SCSO facet (per `121XML_v4_SEMANTIC_OBJECT_DESIGN.md` §2).
+> This QA pass does not rewrite this spec's architecture — it flags the tension for the Phase 2 design
+> pass to resolve. See `121XML_SPECIFICATION_DECISION_TABLE.md` §B8.
+
 ## 1. Purpose & one-paragraph thesis
 
 The `relations` facet is the **graph**. It is the ordered set of **typed, directed edges** that leave a

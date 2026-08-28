@@ -3,6 +3,8 @@
 **Date:** August 7, 2026  
 **Project:** 121XML Agentic Operating System & Website  
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "Production Ready" / "fully functional" claims below were never independently verified; this session's own smoke test (see `121XML_PHASE1_QA_REPORT.md` §7) found the referenced MCP server's underlying dependencies contain real bugs. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 ---
 
 ## ✅ COMPLETED

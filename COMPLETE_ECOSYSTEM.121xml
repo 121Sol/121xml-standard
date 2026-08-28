@@ -4,6 +4,10 @@
   <document_type>ecosystem_specification</document_type>
   <created>2026-08-06T21:45:00Z</created>
   <title>121XML Complete Ecosystem: Website → Platform → Silicon</title>
+  <!-- STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).
+       Layer statuses below (e.g. "PRODUCTION NOW") were never independently verified;
+       reports/PHASE0_GROUND_TRUTH.md found the live site stale vs. current canon.
+       See 121XML_SPECIFICATION_DECISION_TABLE.md sec C5. -->
 
   <ecosystem_layers>
     <layer>

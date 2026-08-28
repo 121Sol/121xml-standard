@@ -5,6 +5,8 @@
 **Status:** COMPLETE SPECIFICATION PACKAGE  
 **Reference:** MASTER_DEFINITIONS.121xml (data://sha256:5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d:definition)
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "COMPLETE SPECIFICATION PACKAGE" and the per-vendor "✓ COMPLETE" markers below were never independently verified — per the project's own Business Case Validation Report, only Claude+SWIFT+ISO20022 has been verified working; every other vendor adapter is blueprint, not deployed. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 ---
 
 ## WHAT WAS CREATED

@@ -204,8 +204,10 @@ Every graph interaction protected by 121XML:
 
 ## ✅ Status
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 **Phase 12: Object Relationship Graph Visualizer**
-- Status: PRODUCTION READY
+- Status: PRODUCTION READY (unverified — see note above)
 - File: 121xml_object_graph_visualizer.html (12.5 KB)
 - Protection: 121XML content addressing active
 - Integration: Full 121XML ecosystem support

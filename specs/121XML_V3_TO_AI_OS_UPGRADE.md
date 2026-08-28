@@ -115,6 +115,8 @@ nginx.conf (reverse proxy)     → /etc/nginx/sites-available/121xml.com
 
 ## ✅ READY TO DEPLOY - v3 REPLACEMENT
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "production-ready" / "ready to deploy" was never independently verified — see `reports/PHASE0_GROUND_TRUTH.md`. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 The 121XML AI OS is production-ready and waiting to replace v3.
 
 **Next step:** Execute deployment command above to make it live.

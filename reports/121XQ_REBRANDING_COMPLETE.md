@@ -5,6 +5,8 @@
 **Completed:** August 9, 2026  
 **Status:** ✅ Ready for Deployment
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "Complete"/"Ready for Deployment" was never independently verified; `reports/PHASE0_GROUND_TRUTH.md` found the live site still served the pre-rebrand page. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 ---
 
 ## What Was Created

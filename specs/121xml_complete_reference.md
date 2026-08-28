@@ -5,6 +5,8 @@
 **Date:** August 6, 2026  
 **Status:** Production Ready  
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "Production Ready" was never independently verified. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 ---
 
 ## Table of Contents
@@ -785,7 +787,7 @@ python3 demo_complete_infrastructure.py
 **Author:** 121XML Foundation  
 **Date:** August 6, 2026  
 
-**Status:** Production Ready ✅
+**Status:** Production Ready ✅ (unverified — see status note at top of document, per C5)
 
 ---
 

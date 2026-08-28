@@ -4,6 +4,8 @@
 **Date**: August 8, 2026  
 **Version**: 1.0.0  
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "Complete"/"added to all interfaces" was never independently verified. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 ---
 
 ## 🎨 121AI Logo Design

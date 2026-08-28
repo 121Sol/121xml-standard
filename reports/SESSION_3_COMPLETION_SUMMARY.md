@@ -5,6 +5,8 @@
 **Date**: August 8, 2026  
 **Build Status**: READY FOR PRODUCTION  
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "ALL DELIVERABLES COMPLETE" / "READY FOR PRODUCTION" was never independently verified — see `reports/PHASE0_GROUND_TRUTH.md`. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5. The voice/native-device platform list in this report is also superseded per §B20.
+
 ---
 
 ## 🎯 MISSION ACCOMPLISHED

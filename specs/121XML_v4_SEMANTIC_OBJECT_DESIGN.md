@@ -29,6 +29,14 @@ graph TD
 **One signature** over the root CID ⇒ the entire object is tamper-evident and owned.
 **Version history** = a `prev`-CID chain ⇒ git-for-objects, immutable and auditable.
 
+> **PHASE 1 QA FLAG (2026-08-28, per Round 1 decision B8) — unresolved, for Phase 2 design:**
+> Rashad's Round 1 ruling on the relations facet states: *"relations are just another object in
+> 121xml, not a privileged/special facet type."* This nuances the facet-based design below, where
+> `relations` (§2) is currently modeled as one of several named, privileged facets alongside `payload`,
+> `shape`, `context`, `rules`, `provenance`, and `space`. The two framings are not yet reconciled — this
+> QA pass does **not** rewrite the facet architecture; it flags the tension for the Phase 2 design pass.
+> See `121XML_SPECIFICATION_DECISION_TABLE.md` §B8, and the parallel flag in `121XQ_RELATIONS_FACET_SPEC.md`.
+
 ## 2. The facets (each defers to a best-in-class formalism — no reinvention)
 
 | Facet | Carries | Delegate standard | Notes |

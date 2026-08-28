@@ -6,6 +6,8 @@
 **Document Type:** Technical Reference & Implementation Guide  
 **Classification:** Public (Non-Confidential)
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** "PRODUCTION READY" was never independently verified — see `reports/PHASE0_GROUND_TRUTH.md`. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5. This document's voice-connector platform list and converter target list are also updated below per §B20/§B21 (2026-08-28 QA pass).
+
 ---
 
 ## Table of Contents
@@ -51,6 +53,16 @@ This approach has profound implications:
 ### Key Capabilities
 
 **1. Universal Format Conversion (50+ Formats)**
+
+> **NOTE (2026-08-28, per Round 1 decisions B21/B24):** the converter target list below is a starting
+> illustrative set. It is **superseded/extended** by the real-world-standards target list in
+> `121XML_SPECIFICATION_DECISION_TABLE.md` Part D2 — a prioritized table of 20+ named XML-based
+> standards (SVG, RSS/Atom, SAML, XMPP, SOAP, XBRL, FpML, FIXML, ISO 20022, cXML, Office Open XML,
+> ODF, DITA, HL7 v3/CDA, GPX, KML, AIXM, FIXM, NASA-UTM, MAVLink, STANAG 4586/4609, Cursor-on-Target,
+> etc.) with real usage-scale figures per standard. That table is now the authoritative reference for
+> B21 (Format converters); the old, more abstract `121xml_AUTO_CONVERSION_FEASIBILITY_MATRIX.md`
+> (backup folder) is superseded and should not be treated as the current target list.
+
 - Banking: SWIFT MT101/103/104, ISO 20022 PACS/CAMT/PAIN
 - Healthcare: HL7 v2.x, v3.x, FHIR, CCD
 - Logistics: EDI X12, EDIFACT, JSON
@@ -59,10 +71,20 @@ This approach has profound implications:
 - Custom: User-defined schemas via Profile URIs
 
 **2. Voice Orchestration (Multi-Modal)**
-- **Apple Siri**: Native iOS/macOS integration
-- **Google Assistant**: Android, Google Home, embedded devices
-- **Amazon Alexa**: Echo devices, automotive, smart home
-- **Hybrid Routing**: Automatic device detection and fallback
+
+> **UPDATED 2026-08-28 per Round 1 decision B20** — reconciles the split platform lists that
+> previously existed here (Siri/Google/Alexa) and in `reports/NATIVE_DEVICE_INTEGRATION_COMPLETE.md`
+> (Siri/Google/Cortana/HarmonyOS) into one ordered list, ranked by approximate descending reach
+> (active-device / monthly-active-user figures, 2026, **order is an estimate — figures mix device
+> installed-base and MAU counts from different vendor disclosures and are not apples-to-apples**):
+
+- **Apple Siri** (rebuilt on Google Gemini per the Apple–Google deal announced WWDC 2026): ~2B active Apple devices; Siri AI rolled out to ~1.5B daily users via iOS 26.4 (Mar–Apr 2026). Native iOS/macOS integration.
+- **Google Gemini** (subsumes/replaces Google Assistant as Google's primary assistant surface): ~1B+ monthly active users (Google, Jul 2026). Android, Google Home, embedded devices.
+- **HarmonyOS / Celia** (Huawei): ~1.3B device ecosystem-wide (HDC 2026), China-concentrated; Celia is the voice-assistant layer.
+- **Amazon Alexa**: ~500–600M Alexa-enabled devices sold/active globally. Echo devices, automotive, smart home.
+- **Samsung Bixby**: installed on hundreds of millions of Galaxy devices, though Google Gemini replaced Bixby as the *default* assistant on Galaxy S25+ (2025) — Bixby's active-user reach is smaller and declining relative to the above.
+- **Microsoft Cortana** — **removed from this list**: Microsoft retired Cortana as a consumer voice assistant (standalone app end-of-support 2023; fully removed from Windows by 2026), replaced by Windows Copilot. No longer a live voice-connector target.
+- **Hybrid Routing**: Automatic device detection and fallback across the above.
 
 **3. Hybrid Local/Cloud Inference**
 - On-device: Lightweight models for latency-sensitive tasks
@@ -671,6 +693,12 @@ mapping:
 ```
 
 ### 3. Voice Connectors (250 words each, platform-specific)
+
+> **NOTE (2026-08-28, per B20):** the platform *priority order* is now Siri → Gemini/Google Assistant →
+> HarmonyOS/Celia → Alexa → Bixby, per the reconciled list in §"Voice Orchestration" above. The worked
+> adapter examples below (Siri/Google Assistant/Alexa only) were written before this reconciliation and
+> are illustrative code patterns, not a claim about which platforms are implemented — HarmonyOS/Celia and
+> Bixby adapters do not yet have worked examples here; Cortana is removed (discontinued, see above).
 
 **Siri Adapter** (~250 words)
 

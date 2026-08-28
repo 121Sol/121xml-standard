@@ -5,6 +5,8 @@
 **Validation Scope:** Business claims vs. technical implementation  
 **Status:** PRODUCTION-READY (with noted considerations)
 
+> **STATUS CLAIM UNVERIFIED — removed per Round 1 decision C5 (2026-08-28).** This report's own "✅ Validated"/"✅ Working" line items rest on evidence documents (e.g. `121XML_MCP_INFRASTRUCTURE_DEPLOYMENT_COMPLETE.md`) that were themselves never independently verified. This session's own smoke test of the underlying code (see `121XML_PHASE1_QA_REPORT.md` §7) found real bugs in the content-addressing/Merkle-tree path (`xml121_addresser.py`) that this report's "Perfect audit trails ✅ Validated 92%" and content-addressing claims depend on, and 2 of 3 test suites either failed or could not even be imported (`tests_compaction_engine.py`, `tests_phase2_complete.py`). Treat "Validated"/"Working"/"Production-Ready" language in this document as unverified pending the C5 rebuild. See `121XML_SPECIFICATION_DECISION_TABLE.md` §C5.
+
 ---
 
 ## Executive Summary
