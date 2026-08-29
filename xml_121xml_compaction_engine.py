@@ -5,7 +5,7 @@
 Replaces token-based truncation with lossless content-addressed compression.
 
 Features:
-- 90-96% token compression with 0% data loss
+- ~75% token compression for mixed sessions (up to ~87% for long-form content); 0% data loss
 - Sparse reference encoding
 - Immutable compaction audit trail
 - Perfect context reconstruction
@@ -168,7 +168,7 @@ class LosslessCompressor:
         """
         Compress context to sparse references.
 
-        Achieves 90-96% compression with 0% data loss.
+        Achieves ~75% compression for mixed sessions (0% data loss). See b13-compaction-benchmark.md.
 
         Args:
             context: Full context object
@@ -414,7 +414,7 @@ class LosslessCompactionEngine:
     Complete 121XML Lossless Compaction Engine
 
     Replaces token-based truncation with:
-    - 90-96% compression
+    - ~75% compression (mixed sessions); up to ~87% for long-form content
     - 0% data loss
     - Immutable audit trail
     - Perfect reconstruction

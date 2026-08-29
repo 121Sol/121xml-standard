@@ -35,7 +35,7 @@
 | B10 | Encrypted local-first vault (L3.5) | þ Agreed |
 | B11 | Schema embedding vs. schema-free-by-reference | þ Agreed (schema embedding) / ý Not Agreed (that it's a contradiction). **See D2 below — this is fully resolved, not a contradiction: two different things were being conflated.** |
 | B12 | Universal specification language claim | þ Agreed — **verify** (technical verification needed before relying on the unbounded claim) |
-| B13 | Lossless compaction engine | þ Agreed — **verify** (run against a real long session before trusting the 90–96% figure) |
+| B13 | Lossless compaction engine | þ Agreed — **VERIFIED 2026-08-29**: real ratio ~75% for mixed sessions (up to ~87% for long-form content); 0% data loss confirmed. See `121Enterprises/docs/b13-compaction-benchmark.md`. The 90–96% figure is overstated for typical sessions. |
 | B14 | Content-addressed inference architecture | þ Agreed — **needs refining** |
 | B15 | Universal Memory Architecture | þ Agreed |
 | B16 | Sovereign data architecture | þ Agreed |

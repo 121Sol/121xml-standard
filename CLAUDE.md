@@ -98,7 +98,7 @@ Create File → Generate SHA256 Address → Store in data/ → Update CLAUDE.md 
 ### Infrastructure (Production)
 ✅ xml121_mcp_server.py - Full MCP with 121XML native format
 ✅ mcp_121xml_translator.py - Bidirectional translation layer
-✅ xml121_compaction_engine.py - 90-96% lossless compression
+✅ xml121_compaction_engine.py - lossless compression (~75% mixed sessions, 0% data loss) [B13 benchmarked 2026-08-29]
 ✅ xml121_persistence_layer.py - Content-addressed storage
 ✅ plugin_auto_generator.py - Auto-generate Claude plugins
 
