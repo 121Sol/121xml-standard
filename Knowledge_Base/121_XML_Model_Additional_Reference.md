@@ -200,3 +200,6 @@ Whether you are building machine learning models, deploying AI infrastructure, o
 ---
 
 **Note:** This document was migrated from the RK_Atomic_Standard knowledge base to consolidate all 121XML project materials in one location.
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

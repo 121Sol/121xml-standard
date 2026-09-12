@@ -312,3 +312,5 @@ Current website (website_v3_complete.html):
 
 **Next Action Required:** Build interactive website components for users to experience and use 121XML with their data
 
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

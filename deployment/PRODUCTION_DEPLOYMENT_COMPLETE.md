@@ -528,3 +528,6 @@ kubectl get service 121xml-engine -n 121xml
 **Tested:** Load testing 100 req/s passed  
 **Security:** Container security scan passed  
 **Documentation:** Complete with examples
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

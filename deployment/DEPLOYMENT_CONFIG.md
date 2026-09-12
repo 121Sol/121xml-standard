@@ -426,3 +426,6 @@ See: **DEPLOYMENT_AND_GETTING_STARTED.md** for Python backend setup
 **Website:** https://121xml.com  
 **Backend (Future):** https://api.121xml.com  
 **Admin Panel:** https://121xml.com:2083 (cPanel)
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

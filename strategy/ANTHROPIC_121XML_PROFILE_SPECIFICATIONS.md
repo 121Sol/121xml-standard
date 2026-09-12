@@ -665,3 +665,6 @@ Before accepting any profile:
 - VALIDATION_FRAMEWORK.121xml
 - def_121xml_axioms (data://sha256:7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b:definition)
 - def_121xml_rules (data://sha256:2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f:definition)
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

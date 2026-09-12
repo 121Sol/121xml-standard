@@ -484,3 +484,6 @@ curl -X POST http://localhost:8000/api/process \
 *121AI: The unified orchestration platform - powered entirely through APIs*
 *No AI system names visible to end users*
 *All interactions routed through 121AI layer*
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

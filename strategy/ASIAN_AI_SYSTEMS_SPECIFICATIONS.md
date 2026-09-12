@@ -390,3 +390,5 @@ However, **none of them solve**:
 
 **121XML AI OS is the infrastructure layer that makes ALL AI systems (Asian, Western, local) interoperable and compliant.**
 
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

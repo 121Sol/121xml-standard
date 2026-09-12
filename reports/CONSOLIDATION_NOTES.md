@@ -46,3 +46,6 @@ accumulated in the folder.
   concept README extracted from the relevant passages in
   `Business\121XML Discussion on Monetizing.docx`. The source document itself was left intact in
   `Business/` for full context.
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

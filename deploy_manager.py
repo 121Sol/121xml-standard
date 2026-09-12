@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# © 2026 121 Solutions USA. All rights reserved.
+#
+# The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive
+# property of 121 Solutions USA.
+#
+# Unauthorized use, reproduction, or distribution of this material,
+# including any proprietary designs, software, or documentation, is
+# strictly prohibited without prior written permission from 121 Solutions USA.
 """
 121XML Automated Deployment Manager
 Handles SSH deployment, installation verification, and object management

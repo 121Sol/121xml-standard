@@ -217,3 +217,6 @@ Flagged because a single-file idea is the one most at risk of being lost:
 | backup `121XML_PROJECT_RECAP_STATUS.md` | July 27 status recap; original R5/R6 definitions; 879→341 dedup proof point |
 | backup `121XMLSilicon/README.md` | Hardware track rationale and spin-off history |
 | backup `121XMLSilicon/PROCESSOR_LEVEL_ROADMAP.md` | Staged hardware roadmap (CAS runtime → FPGA → IP licensing) |
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

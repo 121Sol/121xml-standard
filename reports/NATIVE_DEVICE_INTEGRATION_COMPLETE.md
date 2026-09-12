@@ -611,3 +611,6 @@ descending reach, 2026, figures are estimates mixing device-installed-base and M
 ---
 
 *121AI Native Device Integration - Unified orchestration across all platforms*
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

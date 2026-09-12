@@ -953,3 +953,6 @@ eventual implementation — neither validator exists yet). Nothing is built, wir
 A1–A3 and R4 (sorted keys), R5 (null-vs-absent), R6 (profile URIs), R7 (content addressing); honors D-1…D-5.
 A profile is a content-addressed `shape` object that narrows the shared edge vocabulary for one node type —
 nothing new is invented at the node layer. Nothing here is built, validated, or deployed.*
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

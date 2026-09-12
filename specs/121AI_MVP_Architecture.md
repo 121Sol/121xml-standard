@@ -101,3 +101,6 @@ Nothing here requires a token, blockchain, or custom silicon — and the silicon
 - **Pick one profile URI scheme** (§1) — recommend `https://spec.121.us/121xml/1.1/...` over the `urn:121xml:...` form used in the Architecture Guide's examples.
 - **Locate and inspect the six "working" components** referenced in the Program State before scoping new build work — if the 3D relationship workspace or contact importer already exist as real code (not just claims), this MVP could be mostly integration rather than new development.
 - Electron vs. web app for the UI, and whether the round-trip scoreboard goes public now or stays internal — both carried over from v1, still open.
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

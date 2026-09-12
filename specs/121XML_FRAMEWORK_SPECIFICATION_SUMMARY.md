@@ -453,3 +453,5 @@ User controls where data lives. No mandatory cloud storage.
 
 **This is the foundation for 121XML AI OS specifications brainstorming.**
 
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

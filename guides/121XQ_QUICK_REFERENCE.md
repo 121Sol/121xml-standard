@@ -269,3 +269,6 @@ A: No disruption. New 121xq.com portal optional. Existing URLs/APIs continue wor
 *Execution Coefficient Platform | Powered by 121XML Standard*
 
 *Registration Date: August 9, 2026 | Domain: 121xq.com*
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

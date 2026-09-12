@@ -793,3 +793,5 @@ python3 demo_complete_infrastructure.py
 
 **This reference guide covers the complete 121XML ecosystem with all specifications, rules, concepts, objects, methods, tools, converters, and plugins.**
 
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

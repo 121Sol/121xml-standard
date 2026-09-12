@@ -113,3 +113,6 @@ that (CAS runtime → DPU/CXL offload → FPGA proof → IP-licensable accelerat
 
 ---
 *Design draft. Nothing published. For your red-line before it becomes the canonical v4 spec.*
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

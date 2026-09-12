@@ -267,3 +267,5 @@ Refer to: Document 3 + governance section
 
 *Generated: July 5, 2026 | (C) 121 Solutions 2026 | All Rights Reserved*
 
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

@@ -197,3 +197,6 @@ ssh -p 19199 xml@121xml.com "ls -la /var/www/121xml/index.html"
 - ✅ SSH_DEPLOYMENT_GUIDE.md (this guide)
 
 **Next step:** Run deploy_ssh.ps1 or deploy_ssh_key.ps1 with your SSH password/key
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

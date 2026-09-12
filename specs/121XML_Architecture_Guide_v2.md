@@ -737,3 +737,5 @@ The implementation is small (~500 lines per language generator), the validation 
 
 **Next step:** Choose your first vertical, run a 90-day pilot, and publish your field coverage scoreboard.
 
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

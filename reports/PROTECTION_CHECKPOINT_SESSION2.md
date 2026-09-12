@@ -196,3 +196,5 @@ All work from Session 2 has been archived with SHA256 content addressing:
 
 **Data is sovereign. Context is preserved. Information is lossless. 🔒**
 
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

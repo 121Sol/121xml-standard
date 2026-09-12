@@ -68,3 +68,6 @@ D. Verify (self-QA, no "done" until these pass)
 ---
 *Sites and explainer are finished and viewable now; the three gates above are the only thing between
 here and the custom domains being live. Sequence is ~30–45 min once we're both online.*
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

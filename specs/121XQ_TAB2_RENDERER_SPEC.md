@@ -637,3 +637,6 @@ A-1/A-4, B-3, and principles P9 (graph-native), P11 (one store, many views), P12
 renderer is a pure projection: it reads objects, derives inverses/history/backlinks at render time, owns
 all styling in tables the objects never see, and writes only immutable new versions through the editor —
 so restyling, relayout, and expansion change no object CID. Nothing here is built, wired, or deployed.*
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

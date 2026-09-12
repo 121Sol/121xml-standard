@@ -981,3 +981,5 @@ This is not incremental improvement. This is **architectural transformation** of
 
 **Implementation begins with 121XML profiles for memory nodes and edges. Everything else flows from that foundation.**
 
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

@@ -121,3 +121,5 @@ The 121XML AI OS is production-ready and waiting to replace v3.
 
 **Next step:** Execute deployment command above to make it live.
 
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

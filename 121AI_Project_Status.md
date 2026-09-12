@@ -28,3 +28,6 @@
 2. Locate and audit the six components the Program State claims are already "working" (AST compiler, JSON proxy, hash envelope, 3D relationship workspace, contact importer, test suite) — the MVP may be mostly integration if they're real.
 3. ~~Decide whether to redline the three newest pitch decks against the Claim Register.~~ Claim Register deleted 2026-08-28 (fabricated) — re-audit these decks once a real, verified Claim Register exists.
 4. Open `FDrive_Folder_Mindmap_3D.html` in a real browser and report bugs.
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

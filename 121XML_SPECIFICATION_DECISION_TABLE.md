@@ -148,3 +148,6 @@ Phase 1 is running now. **Phases 2–3 are a much larger commitment (real build 
 1. `OPEN` items remaining: A4 (branding) and D1 (Lumo-style backend router) still need decisions. B30 (Claim Register) is now resolved — see above.
 2. Phase 1 QA agent pass is running against this table.
 3. Once Phase 1 lands: review its output, then decide whether to proceed to Phase 2 (design) per track.
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

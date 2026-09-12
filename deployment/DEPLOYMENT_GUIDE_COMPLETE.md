@@ -399,3 +399,5 @@ After deployment, you can:
 
 All files ready to deploy. Platform fully protected. Zero data loss guaranteed.
 
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

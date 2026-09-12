@@ -640,3 +640,6 @@ Fix: Verify network connection and HTTPS certificate
 **Version**: 1.0.0  
 **Last Updated**: August 8, 2026  
 **Prepared By**: 121 Group Development Team
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

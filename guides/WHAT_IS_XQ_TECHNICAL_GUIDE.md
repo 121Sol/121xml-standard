@@ -432,3 +432,6 @@ See `121XQ_IMPLEMENTATION_GUIDE.md` for step-by-step deployment instructions, in
 
 **121XQ: Good Intelligence for Better Results**  
 *Execution Coefficient = (Results × Quality × Reliability) / Time*
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

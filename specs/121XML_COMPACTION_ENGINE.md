@@ -604,3 +604,6 @@ if tokens_used > max_tokens * 0.85:
 **Status: SPECIFICATION COMPLETE**
 
 This architecture must be implemented at the infrastructure level to solve the fundamental memory loss problem in AI systems. 121XML cannot be considered complete without it.
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

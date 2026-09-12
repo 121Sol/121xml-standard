@@ -585,3 +585,6 @@ deployed. No renderer reads it yet; no profile validates against it yet; no comp
 obeys R4 (sorted keys), R5 (null-vs-absent), R6 (namespaced type URIs), and R7 (content addressing).
 An edge is an RDF triple with property-graph props and an IPLD link — nothing new invented at the edge
 layer. Nothing here is built or deployed.*
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

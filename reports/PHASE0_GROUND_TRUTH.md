@@ -143,3 +143,6 @@ copies detected (dedupe).
 
 ---
 *End of Phase 0. Read-only. Awaiting your review + the §6 decisions before any Phase 1 build.*
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

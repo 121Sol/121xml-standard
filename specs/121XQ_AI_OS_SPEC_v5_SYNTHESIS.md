@@ -300,3 +300,6 @@ HostArmada SSH origin/key, `121xq.com` DNS — only you can open these; nothing 
 *Spec draft for your red-line. Grounded in v4 SCSO; retains engine-agnosticism and all converters;
 adds the sovereign-workspace surface (Proton/Lumo privacy + Obsidian graph + Notion structure + Graphify
 render) as views over one content-addressed 121XML object graph. Nothing here is built or deployed yet.*
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

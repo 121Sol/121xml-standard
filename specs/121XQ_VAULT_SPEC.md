@@ -646,3 +646,6 @@ honors D-1 (IPLD CID), A-3 (secret handles), B-1 (two encryption modes), B-2 (as
 adds no new SCSO facet: it is a storage + key + index layer under the object model. Two-plane CIDs keep object
 identity mode-independent while dedup operates on ciphertext. Nothing here is built, keyed, indexed, synced,
 or deployed.*
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*

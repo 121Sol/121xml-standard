@@ -251,3 +251,6 @@ design work:**
 **Bottom line:** proceed to Phase 2 design. Flag item (1) above for an explicit Phase 2 kickoff decision
 before the relations/profiles/SCSO design work locks in, and treat items (2)-(3) as inputs to — not
 blockers of — the eventual 121Enterprise rebuild under C5/C4.
+
+---
+*© 2026 121 Solutions USA. All rights reserved. The trademarks 121XQ, 121XML, and 121MetaVerse are the exclusive property of 121 Solutions USA. Unauthorized use, reproduction, or distribution of this material is strictly prohibited without prior written permission.*
